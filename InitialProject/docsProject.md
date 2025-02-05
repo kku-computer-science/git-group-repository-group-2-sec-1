@@ -13,11 +13,17 @@ XAMPP เป็นซอฟต์แวร์ที่ช่วยจำลอ�
 
 1. เปิด `Edit the system environment variables`
 2. ไปที่ `Environment Variables...`
+
 ![alt text](ImageMarkDown/image.png)
+
 3. เลือก `Path` แล้วกด `Edit...`
+
 ![alt text](ImageMarkDown/image-1.png)
-3. กด `New` แล้วเพิ่ม `C:\xampp\php`
+
+4. กด `New` แล้วเพิ่ม `C:\xampp\php`
+
 ![alt text](ImageMarkDown/image-2.png)
+
 5. กด `OK` เพื่อบันทึก
 
 ## 2. ติดตั้ง Composer
@@ -59,8 +65,11 @@ Composer เป็นตัวจัดการแพ็คเกจสำห�
 - กด `Start` ที่ Apache และ MySQL
 - ตรวจสอบว่า MySQL ทำงานได้โดยไปที่ `localhost/phpmyadmin`
     - New Database Schema
+      
     ![alt text](ImageMarkDown/image-3.png)
+  
     - สร้าง Database `example_app` ตามไฟล์ `.env`
+      
     ![alt text](ImageMarkDown/image-4.png)
 
 ### 3.5 ตั้งค่า Database และรัน Migration
@@ -73,8 +82,11 @@ Composer เป็นตัวจัดการแพ็คเกจสำห�
   ```sh
   php artisan migrate
   ```
+
   ![alt text](ImageMarkDown/image-5.png)
+  
 - Import ข้อมูลใน `phpMyAdmin` (ไฟล์ Database.sql ใน project)
+  
   ![alt text](ImageMarkDown/image-6.png)
 
 ### 3.6 เริ่มเซิร์ฟเวอร์ Laravel
