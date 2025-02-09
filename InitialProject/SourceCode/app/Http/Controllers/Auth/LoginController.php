@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
+use App\Models\Log;
 
 class LoginController extends Controller
 {
@@ -47,6 +49,11 @@ class LoginController extends Controller
         $this->middleware(['guest'])->except('logout');
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        LogHelper::writeLog('login', $user->email . ' logged in');
+    }
+
     public function username()
     {
         return 'email';
@@ -54,9 +61,13 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user(); // เก็บ email ไว้ก่อน Session จะถูกล้าง
+        LogHelper::writeLog('logout', $user ? $user->email . ' logged out' : 'Guest logged out');
+
+        Auth::logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        Auth::logout();
+
         return redirect('/login');
     }
 
@@ -158,7 +169,13 @@ class LoginController extends Controller
                     //$user->givePermissionTo('addResearchProject','editResearchProject','deleteResearchProject');
                     //return redirect()->route('teacher.dashboard');
                     return redirect()->route('dashboard');
-                } 
+                } elseif (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+                    $user = Auth::user();
+                    if ($user) {
+                        LogHelper::writeLog('login', 'User logged in: ' . $user->email);
+                    }
+                    return redirect()->route('dashboard');
+                }
             } else {
                 //fail
                 $this->incrementLoginAttempts($request);
