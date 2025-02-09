@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
     // Sorting functionality
     let currentSort = {
         column: 'created_at',
