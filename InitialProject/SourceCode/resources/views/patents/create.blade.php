@@ -37,19 +37,18 @@
     <div class="col-md-8 grid-margin stretch-card">
         <div class="card" style="padding: 16px;">
             <div class="card-body">
-                <h4 class="card-title">เพิ่มผลงานวิชาการด้านอื่นๆ</h4>
-                <p class="card-description">กรอกข้อมูลรายละเอียดผลงานวิชาการด้านอื่นๆ (สิทธิบัตร, อนุสิทธิบัตร,
-                    ลิขสิทธิ์)</p>
+                <h4 class="card-title">{{ trans('message.add_other_work') }}</h4>
+                <p class="card-description">{{  trans('message.fill_in_other_work') }}</p>
                 <form class="forms-sample" action="{{ route('patents.store') }}" method="POST">
                     @csrf
                     <div class="form-group row">
-                        <label for="exampleInputac_name" class="col-sm-3">ชื่อ (สิทธิบัตร,อนุสิทธิบัตร, ลิขสิทธิ์)</label>
+                        <label for="exampleInputac_name" class="col-sm-3">{{ trans('message.name') }}</label>
                         <div class="col-sm-9">
                             <input type="text" name="ac_name" class="form-control" placeholder="name">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputac_type" class="col-sm-3 ">ประเภท</label>
+                        <label for="exampleInputac_type" class="col-sm-3 ">{{ trans('message.type') }}</label>
                         <div class="col-sm-4">
                             <select id="category" class="custom-select my-select" name="ac_type">
                                 <option value="" disabled selected >---- โปรดระบุประเภท ----</option>
@@ -80,21 +79,21 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputac_year" class="col-sm-3 ">วันที่ได้รับลิขสิทธิ์</label>
+                        <label for="exampleInputac_year" class="col-sm-3 ">{{ trans('message.acquisition_date') }}</label>
                         <div class="col-sm-4">
                             <input type="date" name="ac_year" class="form-control" placeholder="ac_year">
 
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputac_refnumber" class="col-sm-3 ">เลขทะเบียน</label>
+                        <label for="exampleInputac_refnumber" class="col-sm-3 ">{{ trans('message.registration_number') }}</label>
                         <div class="col-sm-4">
                             <input type="text" name="ac_refnumber" class="form-control" placeholder="เลขทะเบียน">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="exampleInputac_doi" class="col-sm-3 ">อาจารย์ในสาขา</label>
+                        <label for="exampleInputac_doi" class="col-sm-3 ">{{ trans('message.author') }}</label>
                         <div class="col-sm-9">
                             <div class="table-responsive">
                                 <table class="table table-hover small-text" id="dynamicAddRemove">
@@ -129,14 +128,14 @@
                         </div>
                     </div> -->
                     <div class="form-group row ">
-                        <label for="exampleInputpaper_doi" class="col-sm-3 ">บุคลลภายนอก</label>
+                        <label for="exampleInputpaper_doi" class="col-sm-3 ">{{ trans('message.co-author') }}</label>
                         <div class="col-sm-9">
                             <div class="table-responsive">
                                 <table class="table table-hover small-text" id="tb">
                                     <tr class="tr-header">
                                         
-                                        <th>ชื่อ</th>
-                                        <th>นามสกุล</th>
+                                        <th>{{ trans('message.name') }}</th>
+                                        <th>{{ trans('message.last_name') }}</th>
                                         <!-- <th>Email Id</th> -->
                                             <!-- <button type="button" name="add" id="add" class="btn btn-success btn-sm"><i class="mdi mdi-plus"></i></button> -->
                                         <th><a href="javascript:void(0);" style="font-size:18px;" id="addMore2" title="Add More Person"><i class="mdi mdi-plus"></i></span></a></th>

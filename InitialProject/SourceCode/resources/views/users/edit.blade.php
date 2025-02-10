@@ -14,8 +14,8 @@
         @endif
         <div class="card col-8" style="padding: 16px;"">
             <div class=" card-body">
-            <h4 class="card-title">แก้ไขข้อมูลผู้ใช้งาน</h4>
-            <p class="card-description">กรอกข้อมูลแก้ไขรายละเอียดผู้ใช้งาน</p>
+            <h4 class="card-title">{{ trans('message.edit_user') }}</h4>
+            <p class="card-description">{{ trans('message.edit_in_user') }}</p>
             {!! Form::model($user, ['route' => ['users.update', $user->id], 'method'=>'PATCH']) !!}
             <div class="form-group row">
                 <div class="col-sm-6">
@@ -29,11 +29,11 @@
             </div>
             <div class="form-group row">
                 <div class="col-sm-6">
-                    <p><b>ชื่อ (English)</b></p>
+                    <p><b>First Name (English)</b></p>
                     <input type="text" name="fname_en" value="{{ $user->fname_en }}" class="form-control" placeholder="{{ $user->fname_en }}">
                 </div>
                 <div class="col-sm-6">
-                    <p><b>นามสกุล (English)</b></p>
+                    <p><b>Last Name (English)</b></p>
                     <input type="text" name="lname_en" value="{{ $user->lname_en }}" class="form-control" placeholder="{{ $user->lname_en }}">
                 </div>
             </div>

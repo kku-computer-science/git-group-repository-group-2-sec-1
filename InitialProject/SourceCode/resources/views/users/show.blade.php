@@ -10,14 +10,14 @@
     <div class="col-md-8 grid-margin stretch-card">
         <div class="card" style="padding: 16px;">
             <div class="card-body">
-                <h4 class="card-title">ข้อมูลผู้ใช้งาน</h4>
-                <p class="card-description">ข้อมูลรายละเอียดผู้ใช้งาน</p>
+                <h4 class="card-title">{{ trans('message.user_info') }}</h4>
+                <p class="card-description">{{ trans('message.info_user_detail') }}</p>
                 <div class="row mt-2">
                     <h6 class="col-md-3"><b>ชื่อ (ภาษาไทย)</b></h6>
                     <h6 class="col-md-9">{{$user->title_name_th}} {{ $user->fname_th }} {{ $user->lname_th }}</h6>
                 </div>
                 <div class="row mt-2">
-                    <h6 class="col-md-3"><b>ชื่อ (English)</b></h6>
+                    <h6 class="col-md-3"><b>Name (English)</b></h6>
                     <h6 class="col-md-9">{{$user->title_name_en}} {{ $user->fname_en }} {{ $user->lname_en }}</h6>
                 </div>
                 <div class="row mt-2">
