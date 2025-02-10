@@ -6,7 +6,7 @@ use App\Models\Department;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Facades\Auth;
 class DepartmentController extends Controller
 {
     /**
@@ -49,6 +49,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Department'));
         $this->validate($request, [
             'department_name_th' => 'required',
             'department_name_th' => 'required',
@@ -94,6 +95,7 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Department'));
         $department->update($request->all());
         return redirect()->route('departments.index')
                         ->with('success','Department updated successfully');
@@ -107,6 +109,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Department'));
         $department->delete();
         return redirect()->route('departments.index')
                         ->with('success','Department delete successfully');

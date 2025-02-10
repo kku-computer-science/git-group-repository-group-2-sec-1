@@ -54,6 +54,8 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        event(new \App\Events\Logout($user));
         $request->session()->flush();
         $request->session()->regenerate();
         Auth::logout();

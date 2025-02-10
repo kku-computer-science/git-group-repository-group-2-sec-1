@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 class FileUpload extends Controller
 {
   public function createForm(){
@@ -12,6 +13,7 @@ class FileUpload extends Controller
   }
 
   public function fileUpload(Request $req){
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create File'));
         $req->validate([
         'file' => 'required|mimes:pdf|max:10240'
         ]);
@@ -45,6 +47,7 @@ class FileUpload extends Controller
      }
 public function update(Request $request, $id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update File'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',

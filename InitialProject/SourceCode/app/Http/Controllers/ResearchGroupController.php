@@ -9,7 +9,7 @@ use App\Models\Fund;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Auth;
 class ResearchGroupController extends Controller
 {
     /**
@@ -52,6 +52,7 @@ class ResearchGroupController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Group'));
         $request->validate([
             'group_name_th' => 'required',
             'group_name_en' => 'required',
@@ -122,6 +123,7 @@ class ResearchGroupController extends Controller
      */
     public function update(Request $request, ResearchGroup $researchGroup)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Group'));
         $request->validate([
             'group_name_th' => 'required',
             'group_name_en' => 'required',
@@ -164,6 +166,7 @@ class ResearchGroupController extends Controller
      */
     public function destroy(ResearchGroup $researchGroup)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Group'));
         $this->authorize('delete', $researchGroup);
         $researchGroup->delete();
         return redirect()->route('researchGroups.index')
