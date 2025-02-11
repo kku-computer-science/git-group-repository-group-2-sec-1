@@ -38,7 +38,6 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\TcicallController;
-use App\Http\Controllers\LogController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,9 +48,6 @@ use App\Http\Controllers\LogController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-
 
 /*Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
