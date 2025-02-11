@@ -13,16 +13,18 @@ class CreateCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('course_code');
-            $table->string('course_name');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('degree_id')->nullable();
-            $table->foreign('degree_id')->references('id')->on('degrees')->onDelete('cascade');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('courses')) {
+            Schema::create('courses', function (Blueprint $table) {
+                $table->id();
+                $table->string('course_code');
+                $table->string('course_name');
+                $table->unsignedBigInteger('user_id')->nullable();
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->unsignedBigInteger('degree_id')->nullable();
+                $table->foreign('degree_id')->references('id')->on('degrees')->onDelete('cascade');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

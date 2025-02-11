@@ -21,7 +21,7 @@
             <div class="card-body">
                 {!! Form::model($permission, ['route' => ['permissions.update', $permission->id], 'method'=>'PATCH']) !!}
                     <div class="form-group">
-                        <strong>Name:</strong>
+                        <strong>Permission Name:</strong>
                         {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

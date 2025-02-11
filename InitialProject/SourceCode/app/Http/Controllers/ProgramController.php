@@ -8,7 +8,7 @@ use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use SebastianBergmann\Environment\Console;
-
+use Illuminate\Support\Facades\Auth;
 class ProgramController extends Controller
 {
     /**
@@ -52,6 +52,7 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Program'));
         $r = $request->validate([
             'program_name_th' => 'required',
             'program_name_en' => 'required',
@@ -152,6 +153,7 @@ class ProgramController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Program'));
         $pro = Program::where('id', $id)->delete();
         return response()->json($pro);
     }

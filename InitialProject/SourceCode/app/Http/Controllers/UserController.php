@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\LogHelper;
 
 class UserController extends Controller
 {
@@ -21,16 +22,16 @@ class UserController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:user-create', ['only' => ['create','store']]);
-         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function index()
     {
@@ -46,17 +47,17 @@ class UserController extends Controller
      */
     public function create()
     {
-        
-        $roles = Role::pluck('name','name')->all();
+
+        $roles = Role::pluck('name', 'name')->all();
         //$roles = Role::all();
         //$deps = Department::pluck('department_name_EN','department_name_EN')->all();
         $departments = Department::all();
-        return view('users.create', compact('roles','departments'));
+        return view('users.create', compact('roles', 'departments'));
         // $subcat = Program::with('degree')->where('department_id', 1)->get();
         // return response()->json($subcat);
     }
 
-    
+
     public function getCategory(Request $request)
     {
         $cat = $request->cat_id;
@@ -74,6 +75,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'lname_en' => 'required',
@@ -85,12 +87,12 @@ class UserController extends Controller
             // 'position' => 'required',
             'sub_cat' => 'required',
         ]);
-    
+
         //$input = $request->all();
         //$input['password'] = Hash::make($input['password']);
-    
+
         //$user = User::create($input);
-        $user = User::create([  
+        $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'fname_en' => $request->fname_en,
@@ -99,7 +101,7 @@ class UserController extends Controller
             'lname_th' => $request->lname_th,
             // 'position' =>  $request->position,
         ]);
-        
+
         $user->assignRole($request->roles);
 
         //dd($request->deps->id);
@@ -135,18 +137,19 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Edit', 'Edit User'));
         $user = User::find($id);
         $departments = Department::all();
         $id = $user->program->department_id;
-        $programs = Program::whereHas('department', function($q) use ($id){    
+        $programs = Program::whereHas('department', function ($q) use ($id) {
             $q->where('id', '=', $id);
         })->get();
-        
+
         $roles = Role::pluck('name', 'name')->all();
-        $deps = Department::pluck('department_name_EN','department_name_EN')->all();
+        $deps = Department::pluck('department_name_EN', 'department_name_EN')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
-        $userDep = $user->department()->pluck('department_name_EN','department_name_EN')->all();
-        return view('users.edit', compact('user', 'roles','deps', 'userRole','userDep','programs','departments'));
+        $userDep = $user->department()->pluck('department_name_EN', 'department_name_EN')->all();
+        return view('users.edit', compact('user', 'roles', 'deps', 'userRole', 'userDep', 'programs', 'departments'));
     }
 
     /**
@@ -157,36 +160,43 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'fname_th' => 'required',
             'lname_en' => 'required',
             'lname_th' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'confirmed',
             'roles' => 'required'
         ]);
-    
+
         $input = $request->all();
-        
-        if(!empty($input['password'])) { 
+
+        if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
+            event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Password'));
         } else {
-            $input = Arr::except($input, array('password'));    
+            $input = Arr::except($input, array('password'));
         }
-    
+
         $user = User::find($id);
         $user->update($input);
 
         DB::table('model_has_roles')
             ->where('model_id', $id)
             ->delete();
-    
+
         $user->assignRole($request->input('roles'));
         $pro_id = $request->sub_cat;
         $program = Program::find($pro_id);
-        $user = $user->program()->associate($program)->save();
+        $user->program()->associate($program);
+        $user->save();
+
+        $user->update($request->all());
+
+        LogHelper::writeLog('edit user', 'User updated: ' . $user->email);
 
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');
@@ -200,47 +210,50 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        
+
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete User'));
         User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');
     }
 
-    function profile(){
+    function profile()
+    {
         return view('dashboards.users.profile');
     }
 
-    function updatePicture(Request $request){
+    function updatePicture(Request $request)
+    {
         $path = 'images/imag_user/';
         //return 'aaaaaa';
         $file = $request->file('admin_image');
-       $new_name = 'UIMG_'.date('Ymd').uniqid().'.jpg';
-        
+        $new_name = 'UIMG_' . date('Ymd') . uniqid() . '.jpg';
+
         //dd(public_path());
         //Upload new image
         $upload = $file->move(public_path($path), $new_name);
         //$filename = time() . '.' . $file->getClientOriginalExtension();
         //$upload = $file->move('user/images', $filename);
-     
-        if( !$upload ){
-            return response()->json(['status'=>0,'msg'=>'Something went wrong, upload new picture failed.']);
-        }else{
+
+        if (!$upload) {
+            return response()->json(['status' => 0, 'msg' => 'Something went wrong, upload new picture failed.']);
+        } else {
             //Get Old picture
             $oldPicture = User::find(Auth::user()->id)->getAttributes()['picture'];
 
-            if( $oldPicture != '' ){
-                if( \File::exists(public_path($path.$oldPicture))){
-                    \File::delete(public_path($path.$oldPicture));
+            if ($oldPicture != '') {
+                if (\File::exists(public_path($path . $oldPicture))) {
+                    \File::delete(public_path($path . $oldPicture));
                 }
             }
 
             //Update DB
-            $update = User::find(Auth::user()->id)->update(['picture'=>$new_name]);
+            $update = User::find(Auth::user()->id)->update(['picture' => $new_name]);
 
-            if( !$upload ){
-                return response()->json(['status'=>0,'msg'=>'Something went wrong, updating picture in db failed.']);
-            }else{
-                return response()->json(['status'=>1,'msg'=>'Your profile picture has been updated successfully']);
+            if (!$upload) {
+                return response()->json(['status' => 0, 'msg' => 'Something went wrong, updating picture in db failed.']);
+            } else {
+                return response()->json(['status' => 1, 'msg' => 'Your profile picture has been updated successfully']);
             }
         }
     }

@@ -6,7 +6,7 @@ use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
+use Illuminate\Support\Facades\Auth;
 class RoleController extends Controller
 {
     /**
@@ -54,6 +54,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Role'));
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
@@ -90,6 +91,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+    
         $role = Role::find($id);
         $permission = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
@@ -109,6 +111,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Role'));
         $this->validate($request, [
             'name' => 'required',
             'permission' => 'required',
@@ -132,6 +135,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Role'));   
         Role::find($id)->delete();
         
         return redirect()->route('roles.index')

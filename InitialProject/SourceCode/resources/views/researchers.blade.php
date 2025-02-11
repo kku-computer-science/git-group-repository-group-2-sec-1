@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
 <div class="container card-2">
-    <p class="title"> Researchers </p>
+    <p class="title"> {{ trans('message.researchers') }} </p>
     @foreach($request as $res)
     <span>
         <ion-icon name="caret-forward-outline" size="small"></ion-icon> {{$res->program_name_en}}
@@ -11,7 +11,7 @@
             <form class="row row-cols-lg-auto g-3" method="GET" action="{{ route('searchresearchers',['id'=>$res->id])}}">
                 <div class="col-md-8">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="textsearch" placeholder="Research interests">
+                        <input type="text" class="form-control" name="textsearch" placeholder={{ trans('message.research_interest') }}>
                     </div>
                 </div>
                 <!-- <div class="col-12">
@@ -30,6 +30,13 @@
         </div>
     </div>
 
+    {{ $Locale = ''; }}
+    @if(app()->getLocale() == 'ch')
+        {{ app()->setLocale('en'); }}
+        @php
+           $Locale = 'ch'; 
+        @endphp
+    @endif
 
     <div class="row row-cols-1 row-cols-md-2 g-0">
         @foreach($users as $r)
@@ -41,8 +48,7 @@
                     </div>
                     <div class="col-sm-8 overflow-hidden" style="text-overflow: clip; @if(app()->getLocale() == 'en') max-height: 220px; @else max-height: 210px;@endif">
                         <div class="card-body">
-                            @if(app()->getLocale() == 'en')
-
+                            @if(app()->getLocale() == 'en' || app()->getLocale() == 'ch')
                                 @if($r->doctoral_degree == 'Ph.D.')
                                 <h5 class="card-title">{{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}, {{$r->doctoral_degree}}
                                 @else
@@ -52,17 +58,17 @@
 
                                 <!-- <h5 class="card-title">{{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}</h5> -->
                                 <h5 class="card-title-2">{{ $r->{'academic_ranks_'.app()->getLocale()} }}</h5>
-                                @else
+                            @else
                                 <h5 class="card-title">{{ $r->{'position_'.app()->getLocale()} }}
                                     {{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}
                                 </h5>
-                                @endif
-                                <p class="card-text-1">{{ trans('message.expertise') }}</p>
-                                <div class="card-expertise">
-                                    @foreach($r->expertise->sortBy('expert_name') as $exper)
-                                    <p class="card-text"> {{$exper->expert_name}}</p>
-                                    @endforeach
-                                </div>
+                            @endif
+                            <p class="card-text-1">{{ trans('message.expertise') }}</p>
+                            <div class="card-expertise">
+                            @foreach($r->expertise->sortBy('expert_name') as $exper)
+                                <p class="card-text"> {{$exper->expert_name}}</p>
+                            @endforeach
+                            </div>
                         </div>
                     </diV>
                 </div>
@@ -70,6 +76,11 @@
         </a>
         @endforeach
         @endforeach
+
+        @if($Locale == 'ch')
+        {{ app()->setLocale('ch'); }}
+        @endif
+        
     </div>
 </div>
 

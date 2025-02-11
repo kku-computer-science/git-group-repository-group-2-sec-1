@@ -131,7 +131,7 @@
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Summary</button>
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">{{ trans('message.summary') }}</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="scopus-tab" data-bs-toggle="tab" data-bs-target="#scopus" type="button" role="tab" aria-controls="scopus" aria-selected="false">SCOPUS</button>
@@ -143,10 +143,10 @@
             <button class="nav-link" id="tci-tab" data-bs-toggle="tab" data-bs-target="#tci" type="button" role="tab" aria-controls="tci" aria-selected="false">TCI</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book" type="button" role="tab" aria-controls="book" aria-selected="false">หนังสือ</button>
+            <button class="nav-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book" type="button" role="tab" aria-controls="book" aria-selected="false">{{ trans('message.book') }}</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="patent-tab" data-bs-toggle="tab" data-bs-target="#patent" type="button" role="tab" aria-controls="patent" aria-selected="false">ผลงานวิชาการด้านอื่นๆ</button>
+            <button class="nav-link" id="patent-tab" data-bs-toggle="tab" data-bs-target="#patent" type="button" role="tab" aria-controls="patent" aria-selected="false">{{ trans('message.other_work') }}</button>
         </li>
     </ul>
     <br>
@@ -162,16 +162,16 @@
                         <th><a href="{{ route('excel', ['id' => $res->id]) }}" target="_blank">#Export</a></td>
                     </tr> -->
                     <tr>
-                        <th>No.</th>
-                        <th>Year</th>
-                        <th>Paper Name</th>
-                        <th>Author</th>
-                        <th>Document Type</th>
-                        <th>Page</th>
-                        <th>Journals/Transactions</th>
-                        <th>Ciations</th>
+                        <th>{{ trans('message.number_data') }}</th>
+                        <th>{{ trans('message.year') }}</th>
+                        <th>{{ trans('message.paper_name') }}</th>
+                        <th>{{ trans('message.author') }}</th>
+                        <th>{{ trans('message.document_type') }}</th>
+                        <th>{{ trans('message.page') }}</th>
+                        <th>{{ trans('message.journals_transactions') }}</th>
+                        <th>{{ trans('message.ciations') }}</th>
                         <th>Doi</th>
-                        <th>Source</th>
+                        <th>{{ trans('message.source') }}</th>
                     </tr>
                 </thead>
 
@@ -220,14 +220,14 @@
             <table id="example2" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Year</th>
-                        <th style="width:90%;">Paper Name</th>
-                        <th>Author</th>
-                        <th>Document Type</th>
-                        <th style="width:100%;">Page</th>
-                        <th>Journals/Transactions</th>
-                        <th>Ciations</th>
+                        <th>{{ trans('message.number_data') }}</th>
+                        <th>{{ trans('message.year') }}</th>
+                        <th style="width:90%;">{{ trans('message.paper_name') }}</th>
+                        <th>{{ trans('message.author') }}</th>
+                        <th>{{ trans('message.document_type') }}</th>
+                        <th style="width:100%;">{{ trans('message.page') }}</th>
+                        <th>{{ trans('message.journals_transactions') }}</th>
+                        <th>{{ trans('message.ciations') }}</th>
                         <th>Doi</th>
                     </tr>
                 </thead>
@@ -271,14 +271,14 @@
             <table id="example3" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Year</th>
-                        <th style="width:90%;">Paper Name</th>
-                        <th>Author</th>
-                        <th>Document Type</th>
-                        <th style="width:100%;">Page</th>
-                        <th>Journals/Transactions</th>
-                        <th>Ciations</th>
+                        <th>{{ trans('message.number_data') }}</th>
+                        <th>{{ trans('message.year') }}</th>
+                        <th style="width:90%;">{{ trans('message.paper_name') }}</th>
+                        <th>{{ trans('message.author') }}</th>
+                        <th>{{ trans('message.document_type') }}</th>
+                        <th style="width:100%;">{{ trans('message.page') }}</th>
+                        <th>{{ trans('message.journals_transactions') }}</th>
+                        <th>{{ trans('message.ciations') }}</th>
                         <th>Doi</th>
                     </tr>
                 </thead>
@@ -323,14 +323,14 @@
             <table id="example4" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Year</th>
-                        <th style="width:90%;">Paper Name</th>
-                        <th>Author</th>
-                        <th>Document Type</th>
-                        <th style="width:100%;">Page</th>
-                        <th>Journals/Transactions</th>
-                        <th>Ciations</th>
+                        <th>{{ trans('message.number_data') }}</th>
+                        <th>{{ trans('message.year') }}</th>
+                        <th style="width:90%;">{{ trans('message.paper_name') }}</th>
+                        <th>{{ trans('message.author') }}</th>
+                        <th>{{ trans('message.document_type') }}</th>
+                        <th style="width:100%;">{{ trans('message.page') }}</th>
+                        <th>{{ trans('message.journals_transactions') }}</th>
+                        <th>{{ trans('message.ciations') }}</th>
                         <th>Doi</th>
                     </tr>
                 </thead>
@@ -371,12 +371,12 @@
             <table id="example5" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th scope="col">Number</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Author</th>
-                        <th scope="col">สถานที่พิมพ์</th>
-                        <th scope="col">Page</th>
+                        <th scope="col">{{ trans('message.number_data') }}</th>
+                        <th scope="col">{{ trans('message.year') }}</th>
+                        <th scope="col">{{ trans('message.book_name') }}</th>
+                        <th scope="col">{{ trans('message.author') }}</th>
+                        <th scope="col">{{ trans('message.source') }}</th>
+                        <th scope="col">{{ trans('message.page') }}</th>
 
                     </tr>
                 </thead>
@@ -413,12 +413,12 @@
             <table id="example6" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th scope="col">Number</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Author</th>
-                        <th scope="col">ประเภท</th>
-                        <th scope="col">หมายเลขทะเบียน</th>
-                        <th scope="col">วันที่จดทะเบียน</th>
+                        <th scope="col">{{ trans('message.number_data') }}</th>
+                        <th scope="col">{{ trans('message.name')}}</th>
+                        <th scope="col">{{ trans('message.author') }}</th>
+                        <th scope="col">{{ trans('message.type') }}</th>
+                        <th scope="col">{{ trans('message.registration_number') }}</th>
+                        <th scope="col">{{ trans('message.registration_date') }}</th>
 
                     </tr>
                 </thead>
@@ -663,7 +663,7 @@
         //$("#scopus").append('data-to="100"');
         document.getElementById("all").innerHTML += `   
                 <h2 class="timer count-title count-number" data-to="${sum}" data-speed="1500"></h2>
-                <p class="count-text ">SUMMARY</p>`
+                <p class="count-text ">{{ trans('message.summary') }}</p>`
 
         document.getElementById("scopus_sum").innerHTML += `   
                 <h2 class="timer count-title count-number" data-to="${sumsco}" data-speed="1500"></h2>

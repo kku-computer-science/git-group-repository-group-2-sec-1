@@ -140,7 +140,7 @@
                         @if (!$loop->last)
                         {{$n}}
                         @else
-                        Before {{$n}}
+                        {{ trans('message.before') }} {{$n}}
                         @endif
 
                     </button>
@@ -248,6 +248,9 @@
     var temp1 = areaChartData.datasets[1]
     barChartData.datasets[0] = temp1
     barChartData.datasets[1] = temp0
+    var title = "<?php echo trans('message.total_report'); ?>";
+    var year = "<?php echo trans('message.year'); ?>";
+    var number = "<?php echo trans('message.number'); ?>";
 
     var barChartOptions = {
         responsive: true,
@@ -260,7 +263,7 @@
                 },
                 scaleLabel: {
                     display: true,
-                    labelString: 'Number',
+                    labelString: number,
 
                 },
                 ticks: {
@@ -271,14 +274,14 @@
             xAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: 'Year'
+                    labelString: year
                 }
             }]
         },
 
         title: {
             display: true,
-            text: 'Report the total number of articles ( 5 years : cumulative)',
+            text: title,
             fontSize: 20
         }
 
@@ -302,12 +305,13 @@
     (function($) {
         
         let sum = paper_wos + paper_tci + paper_scopus;
+        var summaryText = "<?php echo trans('message.summary'); ?>";
         //console.log(sum);
         //$("#scopus").append('data-to="100"');
         document.getElementById("all").innerHTML += `
                 <i class="count-icon fa fa-book fa-2x"></i>
                 <h2 class="timer count-title count-number" data-to="${sum}" data-speed="1500"></h2>
-                <p class="count-text ">SUMMARY</p>`
+                <p class="count-text ">${summaryText}</p>`
         document.getElementById("scopus").innerHTML += `
                 <i class="count-icon fa fa-book fa-2x"></i>
                 <h2 class="timer count-title count-number" data-to="${sumsco}" data-speed="1500"></h2>

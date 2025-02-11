@@ -47,6 +47,7 @@ class ExpertiseController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Expertise'));
         $r = $request->validate([
             'expert_name' => 'required',
 
@@ -127,6 +128,7 @@ class ExpertiseController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Expertise'));
         //dd($id);
         $exp = Expertise::where('id', $id)->delete();
         $msg = 'Expertise entry created successfully.';
