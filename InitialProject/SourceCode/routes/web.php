@@ -116,6 +116,9 @@ Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], functi
     // Route::get('export', [ImportExportController::class, 'export']);
 
 });
+Route::group(['middleware' => ['isAdmin']],function () {
+    Route::get('/download-log', [LogController::class, 'downloadLog'])->name('admin.downloadLog');
+});
 
 
 
@@ -147,7 +150,6 @@ Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
     Route::get('/ajax-get-subcat', [UserController::class, 'getCategory']);
     Route::get('tests', [TestController::class, 'index']); //call department
     Route::get('tests/{id}', [TestController::class, 'getCategory'])->name('tests'); //call program
-    Route::resource('logs', LogController::class);
 
 
 });

@@ -3,51 +3,53 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log as LaravelLog;
 use App\Models\Logs;
+use Illuminate\Support\Facades\Auth;
 
 class LogErrorMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        try {
-            return $next($request);
-        } catch (\Exception $e) {
-            // บันทึก Log ลง Database
-            Logs::create([
-                'email' => auth()->user() ? auth()->user()->email : null, // Logged-in user's email (if available)
-                'user_id' => auth()->user() ? auth()->user()->id : null, // User ID (if available)
-                'first_name' => auth()->user() ? auth()->user()->first_name : null, // First name (if available)
-                'last_name' => auth()->user() ? auth()->user()->last_name : null, // Last name (if available)
-                'role' => auth()->user() ? auth()->user()->role : null, // Role (if available)
-                'ip_address' => $request->ip(), // IP address
-                'browser' => $request->header('User-Agent'), // Browser info from the user agent
-                'device' => $request->header('Device'), // Device info (you may need to parse this manually)
-                'activity_type' => 'error', // Activity type for error logs
-                'details' => json_encode([ // Detailed error info
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                    'trace' => $e->getTraceAsString(),
+        return $next($request);
+    }
+    public function terminate($request, $response)
+    {
+        // Check if the status code is an error (4xx or 5xx)
+        if ($response->getStatusCode() >= 400) {
+            $user = Auth::check() ? Auth::user() : null;
+            $ip = Request::ip();
+            $userAgent = Request::header('User-Agent');
+            $logData = [
+                'email' => $user->email ?? 'Guest',
+                'user_id' => $user->id ?? null,
+                'first_name' => $user->first_name ?? null,
+                'last_name' => $user->last_name ?? null,
+                'role' => $user->role ?? null,
+                'ip_address' => $ip,
+                'browser' => $userAgent,
+                'device' => $this->getDeviceType($userAgent),
+                'activity_type' => "Error",
+                'details' => json_encode([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
+                    'status' => $response->getStatusCode(),
                 ]),
-            ]);
-
-            // บันทึก Log ลงไฟล์ `storage/logs/laravel.log`
-            LaravelLog::error('Middleware Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
-                'ip' => $request->ip(),
-            ]);
-
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            ];
+            $log = Logs::create($logData);
+            LaravelLog::info('Middleware Terminated', $logData);
         }
     }
+    protected function getDeviceType(string $userAgent): string
+    {
+        if (stripos($userAgent, 'mobile') !== false) {
+            return 'Mobile';
+        } elseif (stripos($userAgent, 'tablet') !== false) {
+            return 'Tablet';
+        } else {
+            return 'Desktop';
+        }
+    }
+
 }
-
-
