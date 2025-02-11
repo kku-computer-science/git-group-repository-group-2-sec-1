@@ -50,9 +50,6 @@ use App\Http\Controllers\TcicallController;
 |
 */
 
-
-
-
 /*Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
@@ -154,6 +151,7 @@ Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
 
 });
 
+
 // clear cache
 Route::get('/clear-all', function () {
     Artisan::call('cache:clear');     // Clear Cache facade
@@ -173,6 +171,7 @@ Route::get('/clear-all', function () {
         'optimize' => 'Class loader optimized'
     ], 200);
 });
+
 
 
 // Route::get('/example/pdf', 'ExampleController@pdf_index');
