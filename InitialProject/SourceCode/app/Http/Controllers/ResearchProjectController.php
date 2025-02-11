@@ -10,6 +10,10 @@ use SebastianBergmann\Environment\Console;
 use Illuminate\Support\Facades\Log;
 use App\Models\Fund;
 use App\Models\Outsider;
+use App\Helpers\LogHelper;
+use App\Models\Research;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ResearchProjectController extends Controller
 {
@@ -113,7 +117,7 @@ class ResearchProjectController extends Controller
         //$x = 1;
         //return isset($input['fname']);
         //$length = count($request->input('fname'));
-        if (isset($input['fname'][0]) and (!empty($input['fname'][0]))){
+        if (isset($input['fname'][0]) and (!empty($input['fname'][0]))) {
             foreach ($request->input('fname') as $key => $value) {
                 $data['fname'] = $input['fname'][$key];
                 $data['lname'] = $input['lname'][$key];
@@ -138,6 +142,8 @@ class ResearchProjectController extends Controller
 
         //$user = User::find(auth()->user()->id);
         //$user->researchProject()->attach(2);
+
+        LogHelper::writeLog('upload research', 'Research uploaded: ' . $researchProject->project_name . ' by ' . Auth::user()->email);
 
         return redirect()->route('researchProjects.index')->with('success', 'research projects created successfully.');
     }
@@ -231,13 +237,13 @@ class ResearchProjectController extends Controller
         //$x = 1;
         //$length = count($request->input('fname'));
         $researchProject->outsider()->detach();
-        if (isset($input['fname'][0]) and (!empty($input['fname'][0]))){
+        if (isset($input['fname'][0]) and (!empty($input['fname'][0]))) {
             foreach ($request->input('fname') as $key => $value) {
                 $data['fname'] = $input['fname'][$key];
                 $data['lname'] = $input['lname'][$key];
                 $data['title_name'] = $input['title_name'][$key];
 
-                if (Outsider::where([['fname', '=', $data['fname']],['lname', '=', $data['lname']]])->first() == null) {
+                if (Outsider::where([['fname', '=', $data['fname']], ['lname', '=', $data['lname']]])->first() == null) {
                     $author = new Outsider;
                     $author->fname = $data['fname'];
                     $author->lname = $data['lname'];
@@ -245,13 +251,17 @@ class ResearchProjectController extends Controller
                     $author->save();
                     $researchProject->outsider()->attach($author, ['role' => 2]);
                 } else {
-                    $author = Outsider::where([['fname', '=', $data['fname']],['lname', '=', $data['lname']]])->first();
+                    $author = Outsider::where([['fname', '=', $data['fname']], ['lname', '=', $data['lname']]])->first();
                     $authorid = $author->id;
                     $researchProject->outsider()->attach($authorid, ['role' => 2]);
                 }
                 //$x++;
             }
         }
+
+        $researchProject->update($request->all());
+
+        LogHelper::writeLog('edit research', 'Research updated: ' . $researchProject->project_name . ' by ' . Auth::user()->email);
         return redirect()->route('researchProjects.index')
             ->with('success', 'Research Project updated successfully');
     }

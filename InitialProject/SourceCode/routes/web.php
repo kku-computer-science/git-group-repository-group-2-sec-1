@@ -38,6 +38,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\TcicallController;
+use App\Http\Controllers\LogController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -148,6 +149,8 @@ Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
 
 
 });
+
+Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 
 
