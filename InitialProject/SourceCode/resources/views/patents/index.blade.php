@@ -14,19 +14,19 @@
     @endif
     <div class="card" style="padding: 16px;">
         <div class="card-body">
-            <h4 class="card-title">ผลงานวิชาการอื่นๆ (สิทธิบัตร, อนุสิทธิบัตร,ลิขสิทธิ์)</h4>
-            <a class="btn btn-primary btn-menu btn-icon-text btn-sm mb-3" href="{{ route('patents.create') }}"><i class="mdi mdi-plus btn-icon-prepend"></i> ADD </a>
+            <h4 class="card-title">{{ trans('message.other_work') }}</h4>
+            <a class="btn btn-primary btn-menu btn-icon-text btn-sm mb-3" href="{{ route('patents.create') }}"><i class="mdi mdi-plus btn-icon-prepend"></i>{{ trans('message.add') }}</a>
             <!-- <div class="table-responsive"> -->
                 <table id ="example1" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>ชื่อเรื่อง</th>
-                            <th>ประเภท</th>
-                            <th>วันที่จดทะเบียน</th>
-                            <th>เลขทะเบียน</th>
-                            <th>ผู้จัดทำ</th>
-                            <th width="280px">Action</th>
+                            <th>{{ trans('message.number_data') }}</th>
+                            <th>{{ trans('message.name') }}</th>
+                            <th>{{ trans('message.type') }}</th>
+                            <th>{{ trans('message.registration_date') }}</th>
+                            <th>{{ trans('message.registration_number') }}</th>
+                            <th>{{ trans('message.author') }}</th>
+                            <th width="280px">{{ trans('message.action') }}</th>
                         </tr>
                         <thead>
                         <tbody>
