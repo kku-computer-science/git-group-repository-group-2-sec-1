@@ -27,30 +27,30 @@
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card" style="padding: 16px;">
             <div class="card-body">
-                <h4 class="card-title">เพิ่มข้อมูลโครงการวิจัย</h4>
-                <p class="card-description">กรอกข้อมูลรายละเอียดโครงการวิจัย</p>
+                <h4 class="card-title">{{ trans('message.add_project') }}</h4>
+                <p class="card-description">{{ trans('message.fill_in_project') }}</p>
                 <form action="{{ route('researchProjects.store') }}" method="POST">
                     @csrf
                     <div class="form-group row mt-5">
-                        <label for="exampleInputfund_name" class="col-sm-2 ">ชื่อโครงการวิจัย</label>
+                        <label for="exampleInputfund_name" class="col-sm-2 ">{{ trans('message.project_name') }}</label>
                         <div class="col-sm-8">
                             <input type="text" name="project_name" class="form-control" placeholder="ชื่อโครงการวิจัย" value="{{ old('project_name') }}">
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_name" class="col-sm-2 ">วันที่เริ่มต้น</label>
+                        <label for="exampleInputfund_name" class="col-sm-2 ">{{ trans('message.start_date') }}</label>
                         <div class="col-sm-4">
                             <input type="date" name="project_start" id="Project_start" class="form-control" value="{{ old('project_start') }}">
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_name" class="col-sm-2 ">วันที่สิ้นสุด</label>
+                        <label for="exampleInputfund_name" class="col-sm-2 ">{{ trans('message.end_date') }}</label>
                         <div class="col-sm-4">
                             <input type="date" name="project_end" id="Project_end" class="form-control" value="{{ old('project_end') }}">
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_details" class="col-sm-2 ">เลือกทุน</label>
+                        <label for="exampleInputfund_details" class="col-sm-2 ">{{ trans('message.choose_funding') }}</label>
                         <div class="col-sm-4">
                             <select id='fund' style='width: 200px;' class="custom-select my-select" name="fund">
                                 <option value='' disabled selected>เลือกทุนวิจัย</option>@foreach($funds as $fund)<option value="{{ $fund->id }}">{{ $fund->fund_name }}</option>@endforeach
@@ -58,19 +58,19 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputproject_year" class="col-sm-2 ">ปีที่ยื่น (ค.ศ.)</label>
+                        <label for="exampleInputproject_year" class="col-sm-2 ">{{ trans('message.requested_year') }}</label>
                         <div class="col-sm-4">
                             <input type="year" name="project_year" class="form-control" placeholder="year">
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_name" class="col-sm-2 ">งบประมาณ</label>
+                        <label for="exampleInputfund_name" class="col-sm-2 ">{{ trans('message.budget') }}</label>
                         <div class="col-sm-4">
                             <input type="int" name="budget" class="form-control" placeholder="หน่วยบาท" value="{{ old('budget') }}">
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputresponsible_department" class="col-sm-2 ">หน่วยงานที่รับผิดชอบ</label>
+                        <label for="exampleInputresponsible_department" class="col-sm-2 ">{{ trans('message.funding_support') }}</label>
                         <div class="col-sm-9">
                             <select id='dep' style='width: 200px;' class="custom-select my-select" name="responsible_department">
                                 <option value='' disabled selected>เลือกสาขาวิชา</option>@foreach($deps as $dep)<option value="{{ $dep->department_name_th }}">{{ $dep->department_name_th }}</option>@endforeach
@@ -78,13 +78,13 @@
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_details" class="col-sm-2 ">รายละเอียดโครงการ</label>
+                        <label for="exampleInputfund_details" class="col-sm-2 ">{{ trans('message.project_detail') }}</label>
                         <div class="col-sm-9">
                             <textarea type="text" name="note" class="form-control form-control-lg" style="height:150px" placeholder="Note" value="{{ old('note') }}"></textarea>
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputstatus" class="col-sm-2 ">สถานะ</label>
+                        <label for="exampleInputstatus" class="col-sm-2 ">{{ trans('message.status') }}</label>
                         <div class="col-sm-3">
                             <select id='status' class="custom-select my-select" name="status">
                                 <option value="" disabled selected>โปรดระบุสถานะดำเนินงาน</option>
@@ -106,7 +106,7 @@
                     </div> -->
 
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_details" class="col-sm-2 ">ผู้รับผิดชอบโครงการ</label>
+                        <label for="exampleInputfund_details" class="col-sm-2 ">{{ trans('message.project_leader') }}</label>
                         <div class="col-sm-9">
                             <select id='head0' style='width: 200px;' name="head">
                                 <option value=''>Select User</option>@foreach($users as $user)<option value="{{ $user->id }}">{{ $user->fname_th }} {{ $user->lname_th }}</option>
@@ -115,7 +115,11 @@
                         </div>
                     </div>
                     <div class="form-group row mt-2">
-                        <label for="exampleInputfund_details" class="col-sm-2 ">ผู้รับผิดชอบโครงการ (ร่วม) ภายใน</label>
+                        @if(app()->getLocale() == 'th')
+                            <label for="exampleInputfund_details" class="col-sm-2 ">ผู้รับผิดชอบโครงการ (ร่วม) ภายใน</label>
+                        @else
+                            <label for="exampleInputfund_details" class="col-sm-2 ">Co-Project Leader (Internal)</label>
+                        @endif
                         <div class="col-sm-9">
                             <table class="table" id="dynamicAddRemove">
                                 <tr>
@@ -152,14 +156,18 @@
                         </div>
                     </div> -->
                     <div class="form-group row mt-2">
-                        <label for="exampleInputpaper_doi" class="col-sm-2 ">ผู้รับผิดชอบโครงการ (ร่วม) ภายนอก</label>
+                        @if(app()->getLocale() == 'th')
+                            <label for="exampleInputpaper_doi" class="col-sm-2 ">ผู้รับผิดชอบโครงการ (ร่วม) ภายนอก</label>
+                        @else
+                            <label for="exampleInputpaper_doi" class="col-sm-2 ">Co-Project Leader (External)</label>
+                        @endif
                         <div class="col-sm-9">
                             <div class="table-responsive">
                                 <table class="table table-hover small-text" id="tb">
                                     <tr class="tr-header">
-                                        <th>ตำแหน่งหรือคำนำหน้า</th>
-                                        <th>ชื่อ</th>
-                                        <th>นามสกุล</th>
+                                        <th>{{ trans('message.position') }} {{ trans('message.or') }} {{ trans('message.prefix') }}</th>
+                                        <th>{{ trans('message.name') }}</th>
+                                        <th>{{ trans('message.last_name') }}</th>
                                         <!-- <th>Email Id</th> -->
                                             <!-- <button type="button" name="add" id="add" class="btn btn-success btn-sm"><i class="mdi mdi-plus"></i></button> -->
                                         <th><a href="javascript:void(0);" style="font-size:18px;" id="addMore2" title="Add More Person"><i class="mdi mdi-plus"></i></span></a></th>

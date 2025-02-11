@@ -99,9 +99,9 @@
     @endif
     <div class="card" style="padding: 16px;">
         <div class="card-body">
-            <h4 class="card-title">Users</h4>
-            <a class="btn btn-primary btn-icon-text btn-sm" href="{{ route('users.create')}}"><i class="ti-plus btn-icon-prepend icon-sm"></i>New User</a>
-            <a class="btn btn-primary btn-icon-text btn-sm" href="{{ route('importfiles')}}"><i class="ti-download btn-icon-prepend icon-sm"></i>Import New User</a>
+            <h4 class="card-title">{{ trans('message.user') }}</h4>
+            <a class="btn btn-primary btn-icon-text btn-sm" href="{{ route('users.create')}}"><i class="ti-plus btn-icon-prepend icon-sm"></i>{{ trans('message.add_user') }}</a>
+            <a class="btn btn-primary btn-icon-text btn-sm" href="{{ route('importfiles')}}"><i class="ti-download btn-icon-prepend icon-sm"></i>{{ trans('message.import_user') }}</a>
             <!-- <div class="search-box">
                 <div class="input-group">
                     <input type="text" id="search" class="form-control" placeholder="Search by Name">
@@ -113,12 +113,12 @@
                 <table id="example1" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Department</th>
+                            <th>{{ trans('message.number_data') }}</th>
+                            <th>{{ trans('message.name') }}</th>
+                            <th>{{ trans('message.department') }}</th>
                             <th>Email</th>
-                            <th>Roles</th>
-                            <th width="280px">Action</th>
+                            <th>{{ trans('message.role') }}</th>
+                            <th width="280px">{{ trans('message.action') }}</th>
                         </tr>
                     </thead>
 

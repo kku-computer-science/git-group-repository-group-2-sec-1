@@ -21,7 +21,7 @@
             </div>
         @endif
         <div class="card">
-            <div class="card-header">Create department
+            <div class="card-header">Edit department
                 <span class="float-right">
                     <a class="btn btn-primary" href="{{ route('departments.index') }}">departments</a>
                 </span>
@@ -29,11 +29,11 @@
             <div class="card-body">
                 {!! Form::model($department, ['route' => ['departments.update', $department->id], 'method'=>'PATCH']) !!}
                     <div class="form-group">
-                        <strong>Department Name TH:</strong>
+                        <strong>ชื่อสาขาวิชา (TH) :</strong>
                         {!! Form::text('department_name_th', null, array('placeholder' => 'Department Name TH','class' => 'form-control')) !!}
                     </div>
                     <div class="form-group">
-                        <strong>Department Name EN:</strong>
+                        <strong>Department Name (EN) :</strong>
                         {!! Form::text('department_name_en', null, array('placeholder' => 'Department Name EN','class' => 'form-control')) !!}
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
