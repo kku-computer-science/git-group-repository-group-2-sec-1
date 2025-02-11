@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ScopuscallController extends Controller
 {
@@ -22,6 +23,7 @@ class ScopuscallController extends Controller
      */
     public function create($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Call Paper', 'User searched for papers on Scopus'));
         //$data = User::all();
         //$data = User::find(46);
         //return $id;

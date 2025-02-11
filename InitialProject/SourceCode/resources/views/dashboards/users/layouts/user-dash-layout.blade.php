@@ -41,9 +41,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
         <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -137,7 +139,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a> -->
                     <li class="nav-item d-none d-sm-inline-block">
                         <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); 
-                        document.getElementById ('logout-form').submit();"> {{ __('Logout') }} <i class="mdi mdi-logout"></i></a>
+                        document.getElementById ('logout-form').submit();"> {{ __('Logout') }} <i
+                                class="mdi mdi-logout"></i></a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
@@ -165,6 +168,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <span class="menu-title">{{ trans('message.dashboard') }}</span>
                         </a>
                     </li>
+
                     <li class="nav-item nav-category">Profile</li>
                     <li class="nav-item">
                         <a class="nav-link {{ (request()->is('admin/profile*')) ? 'active' : '' }}"
@@ -184,33 +188,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </li> -->
                     <li class="nav-item nav-category">Option</li>
                     @can('funds-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('funds.index')}}">
                             <i class="menu-icon mdi mdi-file-document-box-outline"></i>
                             <span class="menu-title">{{ trans('message.manege_fund') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
+
                     @can('projects-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('researchProjects.index')}}">
                             <i class="menu-icon mdi mdi-book-outline"></i>
                             <span class="menu-title">{{ trans('message.ResearchProj') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
                     @can('groups-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('researchGroups.index')}}">
                             <i class="menu-icon mdi mdi-view-dashboard-outline"></i>
                             <span class="menu-title">{{ trans('message.ResearchGroup') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
                     @can('papers-list')
+
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#ManagePublications" aria-expanded="false" aria-controls="ManagePublications">
                             <i class="menu-icon mdi mdi-book-open-page-variant"></i>
@@ -241,60 +253,76 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <i class="menu-icon mdi mdi-account-multiple-outline"></i>
                             <span class="menu-title">{{ trans('message.user') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
+
+                    
                     @can('role-list')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index')}}">
                                 <i class="menu-icon mdi mdi-chart-gantt"></i>
+
                                 <span class="menu-title">{{ trans('message.role') }}</span>
+
 
                             </a>
                         </li>
                         <li class="nav-item">
+
                             <a class="nav-link">
                                 <i class="menu-icon mdi mdi-file-document"></i>
                                 <span class="menu-title">{{ trans('message.log') }}</span>
+
                             </a>
                         </li>
                     @endcan
+
                     @can('permission-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('permissions.index')}}">
                             <i class="menu-icon mdi mdi-checkbox-marked-circle-outline"></i>
                             <span class="menu-title">{{ trans('message.permission') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
                     @can('departments-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('departments.index')}}">
                             <i class="menu-icon mdi mdi-animation-outline"></i>
                             <span class="menu-title">{{ trans('message.department') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
 
                     @can('programs-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('programs.index')}}">
                             <i class="menu-icon mdi mdi-format-list-bulleted"></i>
                             <span class="menu-title">{{ trans('message.manege_program') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
                     @can('expertises-list')
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('experts.index')}}">
                             <i class="menu-icon mdi mdi-buffer"></i>
                             <span class="menu-title">{{ trans('message.manege_expertise') }}</span>
 
-                        </a>
-                    </li>
+
+                            </a>
+                        </li>
                     @endcan
                 </ul>
             </nav>

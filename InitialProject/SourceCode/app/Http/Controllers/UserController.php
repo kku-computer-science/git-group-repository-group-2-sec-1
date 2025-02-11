@@ -74,6 +74,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'lname_en' => 'required',
@@ -135,6 +136,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Edit', 'Edit User'));
         $user = User::find($id);
         $departments = Department::all();
         $id = $user->program->department_id;
@@ -157,7 +159,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'fname_th' => 'required',
@@ -172,6 +175,7 @@ class UserController extends Controller
         
         if(!empty($input['password'])) { 
             $input['password'] = Hash::make($input['password']);
+            event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Password'));
         } else {
             $input = Arr::except($input, array('password'));    
         }
@@ -200,7 +204,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete User'));
         User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');
