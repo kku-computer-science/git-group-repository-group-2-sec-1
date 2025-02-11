@@ -27,6 +27,8 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3">System Logs</h1>
+            <a href="{{ route('admin.downloadLog') }}" class="btn btn-primary">Download Log</a>
+
       
         </div>
 
@@ -42,12 +44,12 @@
                         <label class="form-label">Activity Type</label>
                         <select class="form-select" name="activity_type">
                             <option value="">All Activities</option>
-                            <option value="login" {{ request('activity_type') == 'login' ? 'selected' : '' }}>Login</option>
-                            <option value="logout" {{ request('activity_type') == 'logout' ? 'selected' : '' }}>Logout</option>
-                            <option value="error" {{ request('activity_type') == 'error' ? 'selected' : '' }}>Error</option>
-                            <option value="add" {{ request('activity_type') == 'add' ? 'selected' : '' }}>Add Data</option>
-                            <option value="update" {{ request('activity_type') == 'update' ? 'selected' : '' }}>Update Data</option>
-                            <option value="delete" {{ request('activity_type') == 'delete' ? 'selected' : '' }}>Delete Data</option>
+                            <option value="login" {{ request('activity_type') == 'Login' ? 'selected' : '' }}>Login</option>
+                            <option value="logout" {{ request('activity_type') == 'Logout' ? 'selected' : '' }}>Logout</option>
+                            <option value="error" {{ request('activity_type') == 'Error' ? 'selected' : '' }}>Error</option>
+                            <option value="add" {{ request('activity_type') == 'Create' ? 'selected' : '' }}>Create Data</option>
+                            <option value="update" {{ request('activity_type') == 'Update' ? 'selected' : '' }}>Update Data</option>
+                            <option value="delete" {{ request('activity_type') == 'Delete' ? 'selected' : '' }}>Delete Data</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -72,7 +74,7 @@
                                 <th class="cursor-pointer">Date <i class="fas fa-sort ms-1"></i></th>
                                 <th>Email</th>
                                 <th>Activity</th>
-                                <th>role</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,16 +84,30 @@
                                     <td>{{ \Carbon\Carbon::parse($log->created_at)->timezone('Asia/Bangkok')->format('Y-m-d H:i:s') }}</td>
                                     <td>{{ $log->email }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $log->activity_type === 'login' ? 'success' :
-                                            ($log->activity_type === 'delete' ? 'danger' :
-                                                ($log->activity_type === 'update' ? 'warning' : 'primary')) }}">
+                                        <span class="badge bg-{{ $log->activity_type === 'Login' ? 'success' :
+                                            ($log->activity_type === 'Delete' ? 'danger' :
+                                                ($log->activity_type === 'Update' ? 'warning' : 'primary')) }}">
                                             {{ $log->activity_type }}
                                         </span>
                                     </td>
-                                    <td>{{ $log->role ?? 'N/A' }}</td>
+                                    <td>{{ $log->details }}</td>
+                                </tr>
+                                <!-- เพิ่มการแสดงรายละเอียดเมื่อคลิก -->
+                                <tr id="details-{{ $log->id }}" class="collapse">
+                                    <td colspan="4">
+                                        <div class="log-details">
+                                            <strong>Email:</strong> {{ $log->email }}<br>
+                                            <strong>IP Address:</strong> {{ $log->ip_address }}<br>
+                                            <strong>Browser:</strong> {{ $log->browser }}<br>
+                                            <strong>Device:</strong> {{ $log->device }}<br>
+                                            <strong>Activity Type:</strong> {{ $log->activity_type }}<br>
+                                            <strong>Details:</strong> {{ $log->details }}<br>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
                 </div>
             </div>

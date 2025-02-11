@@ -59,6 +59,7 @@ class FundController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Fund'));
         $request->validate([
             'fund_name' => 'required',
             'fund_type' => 'required',
@@ -122,6 +123,7 @@ class FundController extends Controller
      */
     public function update(Request $request, Fund $fund)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Fund'));
         // $request->validate([
         //     'name' => 'required',
         //     'detail' => 'required',
@@ -144,6 +146,7 @@ class FundController extends Controller
      */
     public function destroy(Fund $fund)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Fund'));
         $fund->delete();
     
         return redirect()->route('funds.index')

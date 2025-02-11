@@ -6,6 +6,8 @@ use Jenssegers\Agent\Agent;
 use App\Models\Logs;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 class LogController extends Controller
 {
     public function index(Request $request)
@@ -44,17 +46,17 @@ class LogController extends Controller
             'activity_type' => 'required|string',
             'details' => 'nullable|string',
         ]);
-        
+
         // Create Agent instance
         $agent = new \Jenssegers\Agent\Agent();
-        
+
         // Get Browser and Device from User-Agent
         $browser = $agent->browser();   // Gets browser name
         $device = $agent->device();     // Gets device (e.g., Desktop, Mobile)
-        
+
         // If request is coming from a real HTTP request (e.g., browser), then get the IP address
         $ipAddress = $request->ip();    // Gets IP address from the request
-        
+
         // Save the log data to the database
         $log = Logs::create([
             'email' => $request->email,
@@ -68,14 +70,33 @@ class LogController extends Controller
             'activity_type' => $request->activity_type,
             'details' => $request->details,
         ]);
-        
+
         return response()->json([
             'message' => 'Log created successfully',
             'log' => $log
         ], 201);
     }
-    
-    
+
+    // ใน Controller หรือ Middleware ที่ตอบสนองไฟล์
+    public function downloadLog()
+    {
+        $logFile = storage_path('logs/laravel.log');
+
+        // ตรวจสอบว่าไฟล์มีอยู่
+        if (!file_exists($logFile)) {
+            return redirect()->back()->with('error', 'Log file not found.');
+        }
+        $headers = [
+            'Content-Type' => 'application/text',
+        ];
+
+        // ตั้ง headers สำหรับไฟล์ที่ดาวน์โหลด
+        return response()->download($logFile, 'logFile.txt', $headers);
+    }
+
+
+
+
 
 }
 

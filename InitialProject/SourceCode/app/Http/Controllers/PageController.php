@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Stroage;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\ResearchGroup;
 
@@ -32,7 +33,7 @@ class PageController extends Controller
 
     public function store(Request $request)
     {
-        
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Product'));
         $researchGroup=ResearchGroup::find($request->group_id);
         
         $products = Product::with('group')->where('id', '=', $request->group_id);
@@ -70,6 +71,7 @@ class PageController extends Controller
     }
 
     public function delete(Request $request) {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Product'));
 
         $file = product::find($request->id);
         //$researchGroup=ResearchGroup::find($request->group_id);
@@ -94,6 +96,7 @@ class PageController extends Controller
     
     public function uploadFile(Request $request, $id) {
         dd($request);
+        event(new \App\Events\UserAction(Auth::user(), 'Upload', 'Upload File'));
         $data = Product::find($id);
         $file = $request->file;
         $filename = time() . '.' . $file->getClientOriginalExtension();

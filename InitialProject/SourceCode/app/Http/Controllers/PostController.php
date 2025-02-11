@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     /**
@@ -49,7 +49,8 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Post'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
@@ -97,6 +98,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Post'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
@@ -118,6 +120,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Post'));
         Post::find($id)->delete();
     
         return redirect()->route('posts.index')

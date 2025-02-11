@@ -17,7 +17,7 @@
                 <h4 class="card-title">Edit role</h4>
                 {!! Form::model($role, ['route' => ['roles.update', $role->id],'method' => 'PATCH']) !!}
                 <div class="form-group row">
-                    <p class="col-sm-3">Name:</p>
+                    <p class="col-sm-3">Role Name:</p>
                     <div class="col-sm-8">
                         {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                     </div>

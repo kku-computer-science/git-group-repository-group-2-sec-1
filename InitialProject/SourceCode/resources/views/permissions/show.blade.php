@@ -17,7 +17,7 @@
             </div>
             <div class="card-body">
                 <div class="lead">
-                    <strong>Name:</strong>
+                    <strong>Premission Name:</strong>
                     {{ $permission->name }}
                 </div>
             </div>

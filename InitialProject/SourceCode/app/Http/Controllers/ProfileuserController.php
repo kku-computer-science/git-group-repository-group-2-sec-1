@@ -37,6 +37,7 @@ class ProfileuserController extends Controller
 
     function updateInfo(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Profile'));
 
 
         $validator = Validator::make($request->all(), [
@@ -132,6 +133,7 @@ class ProfileuserController extends Controller
 
     function updatePicture(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Profile Picture'));
         $path = 'images/imag_user/';
         //return 'aaaaaa';
         $file = $request->file('admin_image');
@@ -170,6 +172,7 @@ class ProfileuserController extends Controller
 
     function changePassword(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Change Password'));
         //Validate form
         $validator = \Validator::make($request->all(), [
             'oldpassword' => [

@@ -61,10 +61,10 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $user = Auth::user(); // เก็บ email ไว้ก่อน Session จะถูกล้าง
-        LogHelper::writeLog('logout', $user ? $user->email . ' logged out' : 'Guest logged out');
 
-        Auth::logout();
+        $user = Auth::user();
+        event(new \App\Events\Logout($user));
+
         $request->session()->flush();
         $request->session()->regenerate();
 

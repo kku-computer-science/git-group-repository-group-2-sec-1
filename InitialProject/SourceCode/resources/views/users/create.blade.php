@@ -16,8 +16,8 @@
         <div class="col-md-8 grid-margin stretch-card">
             <div class="card" style="padding: 16px;">
                 <div class="card-body">
-                    <h4 class="card-title mb-5">เพิ่มผู้ใช้งาน</h4>
-                    <p class="card-description">กรอกข้อมูลแก้ไขรายละเอียดผู้ใช้งาน</p>
+                    <h4 class="card-title mb-5">{{ trans('message.add_user') }}</h4>
+                    <p class="card-description">{{ trans('message.fill_in_user') }}</p>
                     {!! Form::open(array('route' => 'users.store','method'=>'POST')) !!}
                     <div class="form-group row">
                         <div class="col-sm-6">
@@ -33,12 +33,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6">
-                            <p><b>ชื่อ (English)</b></p>
+                            <p><b>First Name (English)</b></p>
                             {!! Form::text('fname_en', null, array('placeholder' => 'ชื่อภาษาอังกฤษ','class' =>
                             'form-control')) !!}
                         </div>
                         <div class="col-sm-6">
-                            <p><b>นามสกุล (English)</b></p>
+                            <p><b>Last Name (English)</b></p>
                             {!! Form::text('lname_en', null, array('placeholder' => 'นามสกุลภาษาอังกฤษ','class' =>
                             'form-control')) !!}
                         </div>

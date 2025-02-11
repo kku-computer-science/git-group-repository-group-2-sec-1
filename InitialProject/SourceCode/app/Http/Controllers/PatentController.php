@@ -60,6 +60,7 @@ class PatentController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(auth()->user(), 'Create', 'Create Patent'));
         $this->validate($request, [
             'ac_name' => 'required',
             'ac_type' => 'required',
@@ -172,6 +173,7 @@ class PatentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        event(new \App\Events\UserAction(auth()->user(), 'Update', 'Update Patent'));
         $patent = Academicwork::find($id);
         //return $book;
         $input = $request->except(['_token']);
@@ -262,6 +264,7 @@ class PatentController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(auth()->user(), 'Delete', 'Delete Patent'));
         $patent = Academicwork::find($id);
         $this->authorize('delete', $patent);
         $patent->delete();

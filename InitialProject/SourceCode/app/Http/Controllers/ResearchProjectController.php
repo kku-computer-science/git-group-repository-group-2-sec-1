@@ -10,9 +10,7 @@ use SebastianBergmann\Environment\Console;
 use Illuminate\Support\Facades\Log;
 use App\Models\Fund;
 use App\Models\Outsider;
-use App\Helpers\LogHelper;
-use App\Models\Research;
-use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
 
 class ResearchProjectController extends Controller
@@ -66,6 +64,7 @@ class ResearchProjectController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Project'));
         $request->validate(
             [
                 'project_name' => 'required',
@@ -189,7 +188,7 @@ class ResearchProjectController extends Controller
      */
     public function update(Request $request, ResearchProject $researchProject)
     {
-
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Project'));
         $request->validate(
             [
                 //'project_name' => 'required|max:200',
@@ -274,7 +273,7 @@ class ResearchProjectController extends Controller
      */
     public function destroy(ResearchProject $researchProject)
     {
-
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Project'));
         $this->authorize('delete', $researchProject);
         $researchProject->delete();
         return redirect()->route('researchProjects.index')

@@ -10,9 +10,9 @@
         <div class="card col-8" style="padding: 16px;">
             <div class="card-body">
                 <h4 class="card-title">Roles</h4>
-                <p class="card-description">ข้อมูลรายละเอียด</p>
+                <p class="card-description">Information Details</p>
                 <div class="row">
-                    <p class="card-text col-sm-3"><b>ชื่อ </b></p>
+                    <p class="card-text col-sm-3"><b>Role Name </b></p>
                     <p class="card-text col-sm-9">{{ $role->name }}</p>
                 </div>
                 <div class="row mt-3">

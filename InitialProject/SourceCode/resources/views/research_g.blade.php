@@ -1,25 +1,34 @@
 @extends('layouts.layout')
 @section('content')
 <div class="container card-3 ">
-    <p>Research Group</p>
+    <p>{{ trans('message.research_group') }}</p>
+
+    {{ $Locale = ''; }}
+    @if(app()->getLocale() == 'ch')
+        {{ app()->setLocale('en'); }}
+        @php
+           $Locale = 'ch'; 
+        @endphp
+    @endif
+    
     @foreach ($resg as $rg)
     <div class="card mb-4">
         <div class="row g-0">
             <div class="col-md-4">
                 <div class="card-body">
                     <img src="{{asset('img/'.$rg->group_image)}}" alt="...">
-                    <h2 class="card-text-1"> Laboratory Supervisor </h2>
+                    <h2 class="card-text-1">{{ trans('message.laboratory_supervisor') }} </h2>
                     
                     <h2 class="card-text-2">
                         @foreach ($rg->user as $r)
                         @if($r->hasRole('teacher'))
-                        @if(app()->getLocale() == 'en' and $r->academic_ranks_en == 'Lecturer' and $r->doctoral_degree == 'Ph.D.')
+                        @if((app()->getLocale() == 'en') and $r->academic_ranks_en == 'Lecturer' and $r->doctoral_degree == 'Ph.D.')
                              {{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}, Ph.D.
                             <br>
-                            @elseif(app()->getLocale() == 'en' and $r->academic_ranks_en == 'Lecturer')
+                            @elseif((app()->getLocale() == 'en') and $r->academic_ranks_en == 'Lecturer')
                             {{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}
                             <br>
-                            @elseif(app()->getLocale() == 'en' and $r->doctoral_degree == 'Ph.D.')
+                            @elseif((app()->getLocale() == 'en') and $r->doctoral_degree == 'Ph.D.')
                             {{ str_replace('Dr.', ' ', $r->{'position_'.app()->getLocale()}) }} {{ $r->{'fname_'.app()->getLocale()} }} {{ $r->{'lname_'.app()->getLocale()} }}, Ph.D.
                             <br>
                             @else                            
@@ -46,6 +55,11 @@
         </div>
     </div>
     @endforeach
+
+    @if($Locale == 'ch')
+        {{ app()->setLocale('ch'); }}
+    @endif
+
 </div>
 
 @stop
