@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -74,6 +75,7 @@ Route::middleware(['middleware' => 'PreventBackHistory'])->group(function () {
 // Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 //Route::get('/researchers',[ResearcherController::class,'index'])->name('researchers');
 Route::get('researchers/{id}', [ResearcherController::class, 'request'])->name('researchers');
 Route::get('researchers/{id}/search', [ResearcherController::class, 'search'])->name('searchresearchers');
@@ -98,21 +100,30 @@ Route::get('bib/{id}', [BibtexController::class, 'getbib'])->name('bibtex');
 Route::get('/callscopus/{id}', [App\Http\Controllers\ScopuscallController::class, 'create'])->name('callscopus');
 Route::get('/showscopus', [App\Http\Controllers\ScopuscallController::class, 'index'])->name('showscopus');
 
+
 Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], function () {
     //Route::post('change-profile-picture',[ProfileuserController::class,'updatePicture'])->name('adminPictureUpdate');
 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
-    Route::resource('logs',LogController::class);
-    
+    Route::resource('logs', LogController::class);
+    Route::resource('logDashboard', DashboardController::class);
+    // Route::get('logs', [LogController::class, 'index'])->name('logs.index');
+
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('importfiles', [ImportExportController::class, 'index'])->name('importfiles');
     Route::post('import', [ImportExportController::class, 'import']);
     // Route::get('export', [ImportExportController::class, 'export']);
 
+
+
 });
-Route::group(['middleware' => ['isAdmin']],function () {
+Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/download-log', [LogController::class, 'downloadLog'])->name('admin.downloadLog');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('role:admin');
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 });
 
 
