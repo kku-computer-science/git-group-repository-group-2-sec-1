@@ -270,8 +270,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-
-                            <a class="nav-link">
+                            <a class="nav-link" href="{{ route('logs.index')}}">
                                 <i class="menu-icon mdi mdi-file-document"></i>
                                 <span class="menu-title">{{ trans('message.log') }}</span>
 
