@@ -15,6 +15,7 @@ class ProfileuserController extends Controller
         $this->middleware('auth');
     }
 
+
     function index()
     {
 
@@ -23,7 +24,8 @@ class ProfileuserController extends Controller
         $user = auth()->user();
         //$user->givePermissionTo('readpaper');
         //return view('home');
-        return view('dashboards.users.index', compact('users'));
+        $hello = "Hello, world!";
+        return view('dashboards.users.index', compact('users','hello'));
     }
 
     function profile()
@@ -68,7 +70,7 @@ class ProfileuserController extends Controller
             // $doctoral = '';
             $pos_eng = '';
             $pos_thai = '';
-            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student') ) {
+            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student')) {
                 $request->academic_ranks_en = null;
                 $request->academic_ranks_th = null;
                 $pos_eng = null;
@@ -176,7 +178,8 @@ class ProfileuserController extends Controller
         //Validate form
         $validator = \Validator::make($request->all(), [
             'oldpassword' => [
-                'required', function ($attribute, $value, $fail) {
+                'required',
+                function ($attribute, $value, $fail) {
                     if (!\Hash::check($value, Auth::user()->password)) {
                         return $fail(__('The current password is incorrect'));
                     }

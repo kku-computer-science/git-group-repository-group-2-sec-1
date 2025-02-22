@@ -72,7 +72,6 @@ Route::middleware(['middleware' => 'PreventBackHistory'])->group(function () {
 });
 
 
-// Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -108,22 +107,14 @@ Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], functi
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('logs', LogController::class);
-    Route::resource('logDashboard', DashboardController::class);
-    // Route::get('logs', [LogController::class, 'index'])->name('logs.index');
+    // Route::resource('dashboard',DashboardController::class);
 
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('importfiles', [ImportExportController::class, 'index'])->name('importfiles');
-    Route::post('import', [ImportExportController::class, 'import']);
-    // Route::get('export', [ImportExportController::class, 'export']);
-
-
 
 });
 Route::group(['middleware' => ['isAdmin']], function () {
+    // Route::get('/dashboard', [ProfileuserController::class, 'dashboardIndex'])->name('dashboard');
     Route::get('/download-log', [LogController::class, 'downloadLog'])->name('admin.downloadLog');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('role:admin');
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
 });
 
 
@@ -156,6 +147,7 @@ Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
     Route::get('/ajax-get-subcat', [UserController::class, 'getCategory']);
     Route::get('tests', [TestController::class, 'index']); //call department
     Route::get('tests/{id}', [TestController::class, 'getCategory'])->name('tests'); //call program
+    Route::resource('dashboardLog', DashboardController::class);
 
 
 });
