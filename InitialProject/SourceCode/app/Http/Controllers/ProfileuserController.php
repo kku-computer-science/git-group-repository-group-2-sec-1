@@ -39,8 +39,30 @@ class ProfileuserController extends Controller
             'totalError' => $logs->where('activity_type', 'Error'),
         ];
 
+        $criticalEvents = [
+            [
+                'type' => 'Login',
+                'title' => 'การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง',
+                'email' => "example@gmail.com",
+                'description' => 'IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที',
+                'timeAgo' => '5 นาทีที่แล้ว',
+                'date' => '2025-02-23'
+            ],
+            [
+                'type' => 'Call Paper',
+                'title' => 'API ถูกเรียกเกินจำนวนที่กำหนด',
+                'email' => "example@gmail.com",
+                'description' => 'API: Call Paper - ถูกเรียก 15 ครั้งใน 1 นาที',
+                'timeAgo' => '2 นาทีที่แล้ว',
+                'date' => '2025-02-22'
+            ]
+        ];
+
+        // ส่งวันที่ที่เลือกไปให้ blade
+        session(['selectedDate' => $date]);
+
         // dd($logs);
-        return view('dashboards.users.index', compact('summary'));
+        return view('dashboards.users.index', compact('summary', 'criticalEvents'));
     }
 
     function profile()

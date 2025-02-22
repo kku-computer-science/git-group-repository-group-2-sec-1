@@ -1,18 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
     const errorCountElement = document.getElementById("error-count");
-    const errorDataJsonElement = document.getElementById("errorDataJson");
     const ctx = document.getElementById("errorChart").getContext("2d");
+
     const datePicker = document.getElementById("datePicker");
+    const selectedDate =
+        "{{ session('selectedDate', now()->format('Y-m-d')) }}";
+    datePicker.value = selectedDate;
 
-    // console.log(totalError);
+    // โหลดค่าจาก localStorage ถ้ามี
+    const savedDate = localStorage.getItem("selectedDate");
+    if (savedDate) {
+        datePicker.value = savedDate;
+    } else {
+        datePicker.value = new Date().toISOString().split("T")[0]; // ใช้วันที่ปัจจุบันถ้าไม่มีใน localStorage
+    }
 
-    const errorCount = {}
+    const errorCount = {};
 
-    Object.keys(totalError).forEach(key => {
-        errorType = JSON.parse(totalError[key]['details']).status;
+    Object.keys(totalError).forEach((key) => {
+        errorType = JSON.parse(totalError[key]["details"]).status;
         // console.log(errorType);
 
-        if(!errorCount[errorType]) {
+        if (!errorCount[errorType]) {
             errorCount[errorType] = 0;
         }
 
@@ -20,20 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function updateChart(errorCount) {
-        // const groupedData = {};
-        // filteredData.forEach(item => {
-        //     if (!groupedData[item.type]) {
-        //         groupedData[item.type] = 0;
-        //     }
-        //     groupedData[item.type] += item.count;
-        // });
 
         const labels = Object.keys(errorCount);
         const values = Object.values(errorCount);
         // const totalErrors = values.reduce((sum, val) => sum + val, 0);
 
         if (errorCountElement) {
-            errorCountElement.textContent = Object.keys(totalError).length + " errors";
+            errorCountElement.textContent =
+                Object.keys(totalError).length + " errors";
         }
 
         errorChart.data.labels = labels;
@@ -104,18 +107,41 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
 
+    datePicker.addEventListener("change", filterDataByDate);
+
     function filterDataByDate() {
-        // const selectedDate = datePicker.value;
+        const selectedDate = datePicker.value;
+        if (!selectedDate) {
+            alert("กรุณาเลือกวันที่");
+            return;
+        }
 
-        // if (!selectedDate) {
-        //     alert("กรุณาเลือกวันที่");
-        //     return;
-        // }
+        // บันทึกค่า datePicker ลงใน localStorage
+        localStorage.setItem("selectedDate", selectedDate);
 
-        // const filteredData = errorLogs.filter((log) => log.date === selectedDate);
         updateChart(errorCount);
     }
 
+
+
+    window.redirectToLogs = function (event, baseUrl, activityType) {
+        event.preventDefault();
+
+        const selectedDate = document.getElementById("datePicker").value;
+
+        if (!baseUrl) {
+            console.error("Base URL is missing.");
+            return;
+        }
+
+        const url = new URL(baseUrl);
+        url.searchParams.set("start_date", selectedDate);
+        url.searchParams.set("end_date", selectedDate);
+        url.searchParams.set("search", "");
+        url.searchParams.append("activity_type[]", activityType);
+
+        window.location.href = url.toString();
+    };
     filterDataByDate();
 
     datePicker.addEventListener("change", filterDataByDate);

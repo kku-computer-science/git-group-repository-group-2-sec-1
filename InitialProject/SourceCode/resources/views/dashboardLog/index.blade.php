@@ -1,5 +1,11 @@
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
+<script>
+    const criticalEventsData = @json($criticalEvents);
+    var totalError = @json($summary['totalError']);
+    var selectedDate = @json(session('selectedDate', date('Y-m-d')));
 
+
+</script>
 
 @section('title', 'Dashboard')
 
@@ -14,6 +20,7 @@
                 <div class="text-muted">
                     <!-- Date Picker -->
                     <input type="date" class="form-control" id="datePicker" value="{{ date('Y-m-d') }}">
+
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -81,7 +88,9 @@
 
             <!-- Total Logins Card -->
             <div class="col-xl-3 col-md-6">
-                <a href="{{ url('/logs') }}" class="text-decoration-none">
+                <a href="#" onclick="redirectToLogs(event, this.dataset.url, 'Login')" data-url="{{ route('logs.index') }}"
+                    class="text-decoration-none">
+
                     <div class="card h-100 border-0 shadow-sm hover-card">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
@@ -91,8 +100,7 @@
                                 <h6 class="card-title text-muted mb-0">จำนวนผู้เข้าสู่ระบบในวันนี้</h6>
                             </div>
                             <h2 class="mb-0 text-info">{{ $summary['totalLogin'] ?? '0' }} <small
-                                    class="text-muted">คน</small>
-                            </h2>
+                                    class="text-muted">คน</small></h2>
                         </div>
                     </div>
                 </a>
@@ -100,7 +108,9 @@
 
             <!-- API Calls Card -->
             <div class="col-xl-3 col-md-6">
-                <a href="{{ url('/logs') }}" class="text-decoration-none">
+                <a href="#" onclick="redirectToLogs(event, this.dataset.url, 'Call Paper')"
+                    data-url="{{ route('logs.index') }}" class="text-decoration-none">
+
                     <div class="card h-100 border-0 shadow-sm hover-card">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
@@ -117,46 +127,59 @@
             </div>
         </div>
 
-        <!-- Active Users Status Section
-                                        <div class="d-flex justify-content-end mt-2">
-                                            <div class="d-inline-flex align-items-center bg-opacity-10 bg-success px-3 py-2 rounded-pill">
-                                                <div class="pulse-dot bg-success me-2"></div>
-                                                <span class="text-success me-2">ผู้ใช้ที่กำลังใช้งาน:</span>
-                                                <span class="fw-bold text-success">{{ $activeUsers ?? '12' }}</span>
-                                                <span class="text-success ms-1">คน</span>
-                                            </div>
-                                        </div> -->
 
-
-        <!-- Critical Events Section -->
+        Critical Section
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
+                        <!-- Header Section -->
                         <div class="d-flex align-items-center mb-4">
-                            <div class="icon-wrapper bg-danger-soft rounded-circle me-3">
+                            <div class="icon-wrapper bg-danger-soft rounded-circle me-3 p-3">
                                 <i class="fas fa-exclamation-triangle text-danger fa-2x"></i>
                             </div>
-                            <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
+                            <h5 class="card-title mb-0 fw-bold">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
                         </div>
-                        <div class="list-group">
-                            <div class="list-group-item border-0 bg-light rounded mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="text-danger me-3">
-                                        <i class="fas fa-exclamation-triangle fa-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
-                                        <p class="mb-1">IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที</p>
-                                        <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
-                                    </div>
+
+                        <!-- Events List Container with Fixed Height -->
+                        <div class="events-container" style="max-height: 400px; overflow-y: auto;">
+                            @if (!empty($criticalEvents) && count($criticalEvents) > 0)
+                                <div class="list-group">
+                                    @foreach ($criticalEvents as $event)
+                                        @if ($event['date'] === session('selectedDate', date('Y-m-d')))
+                                            <a href="#" onclick="redirectToLogs(event, this.dataset.url, '{{ $event['type'] }}')"
+                                                data-url="{{ route('logs.index') }}" data-date="{{ $event['date'] }}"
+                                                class="list-group-item border-0 rounded mb-3 text-decoration-none p-3 d-flex align-items-center hover-shadow transition">
+                                                <div class="text-danger me-3">
+                                                    <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                                </div>
+                                                <div class="w-100">
+                                                    <h6 class="mb-2 text-danger fw-bold">{{ $event['title'] }}</h6>
+                                                    <div class="d-flex flex-column flex-md-row gap-2">
+                                                        <p class="mb-1 text-primary fw-semibold">{{ $event['email'] }}</p>
+                                                        <p class="mb-1 text-dark">{{ $event['description'] }}</p>
+                                                    </div>
+                                                    <small class="text-muted d-block mt-2">
+                                                        <i class="far fa-clock me-1"></i>{{ $event['timeAgo'] }}
+                                                    </small>
+                                                </div>
+                                            </a>
+                                        @endif
+                                    @endforeach
                                 </div>
-                            </div>
+                            @else
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                    <p class="text-muted mb-0">ไม่มีเหตุการณ์สำคัญในขณะนี้</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
 
         <!-- Error Status -->
         <div class="row mt-4">
@@ -262,6 +285,43 @@
             transform: translateY(-2px);
         }
 
+        .bg-danger-soft {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+
+        .hover-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background-color: #f8f9fa;
+        }
+
+        .transition {
+            transition: all 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        .events-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .events-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .events-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .events-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .card-body {
@@ -286,4 +346,9 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{{ asset('js/dashboardlog.js') }}"></script>
     @endcan
+    <script>
+        // ส่งข้อมูล criticalEvents ไปยัง JavaScript
+        const criticalEventsData = @json($criticalEvents);
+
+    </script>
 @endsection
