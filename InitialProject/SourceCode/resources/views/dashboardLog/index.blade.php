@@ -4,21 +4,33 @@
 @section('title', 'Dashboard')
 
 @section('content')
-้<h1>{{ $hello }}</h1>
 
     <!-- Welcome Section -->
     <div class="container-fluid px-4">
-            <!-- Admin Dashboard Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="d-flex align-items-center gap-2">
-                    <h1 class="display-6 fw-bold text-gradient">Dashboard</h1>
-                    <div class="text-muted">
-                        <!-- Date Picker -->
-                        <input type="date" class="form-control" id="datePicker" value="{{ date('Y-m-d') }}">
-                    </div>
+        <!-- Admin Dashboard Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <h1 class="display-6 fw-bold text-gradient">Dashboard</h1>
+                <div class="text-muted">
+                    <!-- Date Picker -->
+                    <input type="date" class="form-control" id="datePicker" value="{{ date('Y-m-d') }}">
                 </div>
-                <div>
-                    <button class="btn btn-primary me-2 btn-modern" onclick="window.location.reload();">
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <!-- Active Users Indicator -->
+                <div class="d-inline-flex align-items-center me-2">
+                    <div class="pulse-dot bg-success me-2"></div>
+                    <span class="badge bg-light text-success border border-success px-3 py-2">
+                        <i class="fas fa-users me-2"></i>{{ $activeUsers ?? '12' }} users อยู่ในระบบ
+                    </span>
+                </div>
+
+                <!-- Divider -->
+                <div class="vr text-muted opacity-25"></div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3">
+                    <button class="btn btn-primary btn-modern" onclick="window.location.reload();">
                         <i class="fas fa-sync-alt me-2"></i>Reload Page
                     </button>
                     <button class="btn btn-dark btn-modern" onclick="window.location.href='{{ route('logs.index') }}'">
@@ -26,156 +38,152 @@
                     </button>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Stats Cards Row -->
-            <div class="row g-4">
-                <!-- Total Users Card -->
-                <div class="col-xl-2 col-md-4">
-                    <a href="{{ url('/users') }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm hover-card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-wrapper bg-primary-soft rounded-circle me-3">
-                                        <i class="fas fa-users text-primary fa-2x"></i>
-                                    </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนผู้ใช้ทั้งหมด</h6>
-                                </div>
-                                <h2 class="mb-0 text-primary">{{ $totalUsers ?? '100' }} <small class="text-muted">คน</small>
-                                </h2>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
-                <!-- Total Research Card -->
-                <div class="col-xl-2 col-md-4">
-                    <a href="{{ url('/papers') }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm hover-card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-wrapper bg-success-soft rounded-circle me-3">
-                                        <i class="fas fa-book text-success fa-2x"></i>
-                                    </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนงานวิจัยทั้งหมด</h6>
-                                </div>
-                                <h2 class="mb-0 text-success">{{ $totalResearch ?? '1000' }} <small
-                                        class="text-muted">งาน</small></h2>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Total Logins Card -->
-                <div class="col-xl-2 col-md-4">
-                    <a href="{{ url('/logs') }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm hover-card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-wrapper bg-info-soft rounded-circle me-3">
-                                        <i class="fas fa-sign-in-alt text-info fa-2x"></i>
-                                    </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนผู้เข้าสู่ระบบ</h6>
-                                </div>
-                                <h2 class="mb-0 text-info">{{ $totalLogins ?? '30' }} <small class="text-muted">คน</small></h2>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- API Calls Card -->
-                <div class="col-xl-2 col-md-4">
-                    <a href="{{ url('/logs') }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm hover-card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-wrapper bg-warning-soft rounded-circle me-3">
-                                        <i class="fas fa-code text-warning fa-2x"></i>
-                                    </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนการเรียก API</h6>
-                                </div>
-                                <h2 class="mb-0 text-warning">{{ $totalApiCalls ?? '35' }} <small
-                                        class="text-muted">ครั้ง</small></h2>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Active Users Card -->
-                <div class="col-xl-2 col-md-4">
-                    <a href="{{ url('/logs') }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm hover-card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-wrapper bg-success-soft rounded-circle me-3">
-                                        <i class="fas fa-user-check text-success fa-2x"></i>
-                                    </div>
-                                    <h6 class="card-title text-muted mb-0">ยังอยู่ในระบบจำนวน</h6>
-                                </div>
-                                <h2 class="mb-0 text-success">{{ $activeUsers ?? '12' }} <small class="text-muted">คน</small>
-                                </h2>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Critical Events Section -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm">
+        <div class="row g-4 mb-4">
+            <!-- Total Users Card -->
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ url('/users') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="icon-wrapper bg-danger-soft rounded-circle me-3">
-                                    <i class="fas fa-exclamation-triangle text-danger fa-2x"></i>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-primary-soft rounded-circle me-3">
+                                    <i class="fas fa-users text-primary fa-2x"></i>
                                 </div>
-                                <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
+                                <h6 class="card-title text-muted mb-0">จำนวนผู้ใช้ทั้งหมด</h6>
                             </div>
-                            <div class="list-group">
-                                <div class="list-group-item border-0 bg-light rounded mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="text-danger me-3">
-                                            <i class="fas fa-exclamation-triangle fa-lg"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
-                                            <p class="mb-1">IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที</p>
-                                            <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <h2 class="mb-0 text-primary">{{ $summary['totalUsers'] ?? '0' }} <small
+                                    class="text-muted">คน</small></h2>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
-            <!-- Error Status -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm">
+            <!-- Total Research Card -->
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ url('/papers') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-success-soft rounded-circle me-3">
+                                    <i class="fas fa-book text-success fa-2x"></i>
+                                </div>
+                                <h6 class="card-title text-muted mb-0">จำนวนงานวิจัยทั้งหมด</h6>
+                            </div>
+                            <h2 class="mb-0 text-success">{{ $summary['totalResearch'] ?? '0' }} <small
+                                    class="text-muted">งาน</small></h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Total Logins Card -->
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ url('/logs') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-info-soft rounded-circle me-3">
+                                    <i class="fas fa-sign-in-alt text-info fa-2x"></i>
+                                </div>
+                                <h6 class="card-title text-muted mb-0">จำนวนผู้เข้าสู่ระบบในวันนี้</h6>
+                            </div>
+                            <h2 class="mb-0 text-info">{{ $summary['totalLogin'] ?? '0' }} <small
+                                    class="text-muted">คน</small>
+                            </h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- API Calls Card -->
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ url('/logs') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-warning-soft rounded-circle me-3">
+                                    <i class="fas fa-code text-warning fa-2x"></i>
+                                </div>
+                                <h6 class="card-title text-muted mb-0">จำนวนการเรียก API ในวันนี้</h6>
+                            </div>
+                            <h2 class="mb-0 text-warning">{{ $summary['totalApiCall'] ?? '0' }} <small
+                                    class="text-muted">ครั้ง</small></h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Active Users Status Section
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <div class="d-inline-flex align-items-center bg-opacity-10 bg-success px-3 py-2 rounded-pill">
+                                                <div class="pulse-dot bg-success me-2"></div>
+                                                <span class="text-success me-2">ผู้ใช้ที่กำลังใช้งาน:</span>
+                                                <span class="fw-bold text-success">{{ $activeUsers ?? '12' }}</span>
+                                                <span class="text-success ms-1">คน</span>
+                                            </div>
+                                        </div> -->
+
+
+        <!-- Critical Events Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-wrapper bg-danger-soft rounded-circle me-3">
+                                <i class="fas fa-exclamation-triangle text-danger fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item border-0 bg-light rounded mb-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="icon-wrapper bg-danger-soft rounded-circle me-3">
-                                        <i class="fas fa-exclamation-circle text-danger fa-2x"></i>
+                                    <div class="text-danger me-3">
+                                        <i class="fas fa-exclamation-triangle fa-lg"></i>
                                     </div>
-                                    <h5 class="card-title mb-0">Error Status: <span id="error-count" class="text-danger"></span>
-                                    </h5>
+                                    <div>
+                                        <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
+                                        <p class="mb-1">IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที</p>
+                                        <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
+                                    </div>
                                 </div>
-                                <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status" target="_blank"
-                                    class="btn btn-outline-info btn-sm d-flex align-items-center gap-2">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>HTTP Error Docs</span>
-                                </a>
-                            </div>
-                            <div style="height: 300px;">
-                                <canvas id="errorChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Error Status -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-danger-soft rounded-circle me-3">
+                                    <i class="fas fa-exclamation-circle text-danger fa-2x"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Error Status: <span id="error-count" class="text-danger"></span>
+                                </h5>
+                            </div>
+                            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status" target="_blank"
+                                class="btn btn-outline-info btn-sm d-flex align-items-center gap-2">
+                                <i class="fas fa-info-circle"></i>
+                                <span>HTTP Error Docs</span>
+                            </a>
+                        </div>
+                        <div style="height: 300px;">
+                            <canvas id="errorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <style>
@@ -184,6 +192,7 @@
             --primary-gradient: linear-gradient(120deg, #4e73df 0%, #224abe 100%);
             --transition-speed: 0.3s;
         }
+
 
         /* Modern Cards */
         .hover-card {
