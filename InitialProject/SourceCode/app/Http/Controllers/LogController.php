@@ -8,34 +8,101 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Concerns\ToArray;
+use Illuminate\Support\Facades\Validator;
+
 class LogController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $activityType = $request->input('activity_type');
-        $date = $request->input('date', Carbon::today()->format('Y-m-d'));
-        $sortBy = $request->input('sort_by', 'created_at');
-        $sortOrder = $request->input('sort_order', 'desc');
+        // รายการประเภทของกิจกรรมที่ใช้ในการค้นหา
+        $activityTypesSelection = ["Login", "Login Failed", "Logout", "Create", "Update", "Delete", "Error", "Call Paper"];
 
-        $logs = Logs::when($search, function ($query) use ($search) {
-            return $query->where('first_name', 'like', "%$search%")
-                ->orWhere('last_name', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('activity_type', 'like', "%$search%");
-        })
-            ->when($activityType, function ($query) use ($activityType) {
-                return $query->where('activity_type', $activityType);
+        // รับค่าจาก Query String หรือ Form แบบ GET
+        $search = trim($request->input('search', old('search')));
+        $activityTypes = $request->input('activity_type', old('activity_type', []));
+        $startDate = $request->input('start_date', old('start_date', Carbon::today()->format('Y-m-d')));
+        $endDate = $request->input('end_date', old('end_date', Carbon::today()->format('Y-m-d')));
+        $sortBy = $request->input('sort_by', old('sort_by', 'created_at'));
+        $sortOrder = $request->input('sort_order', old('sort_order', 'desc'));
+
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'start_date' => [
+                'nullable',
+                'date',
+                'before_or_equal:' . Carbon::today()->format('Y-m-d'),
+                'after_or_equal:' . Carbon::today()->subDays(90)->format('Y-m-d'),
+            ],
+            'end_date' => [
+                'nullable',
+                'date',
+                'before_or_equal:' . Carbon::today()->format('Y-m-d'),
+                'after_or_equal:' . $startDate,
+            ],
+        ]);
+
+        // ถ้า Validation ไม่ผ่าน ให้ Redirect กลับไปที่หน้าเดิมพร้อมกับข้อผิดพลาด
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // ดึงข้อมูล Logs จากฐานข้อมูล
+        $logs = Logs::query()
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%$search%")
+                        ->orWhere('last_name', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%")
+                        ->orWhere('activity_type', 'like', "%$search%");
+                });
             })
-            ->when($date, function ($query) use ($date) {
-                return $query->whereDate('created_at', $date);
+            ->when(!empty($activityTypes), function ($query) use ($activityTypes) {
+                return $query->whereIn('activity_type', $activityTypes);
+            })
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [
+                    Carbon::parse($startDate)->startOfDay(),
+                    Carbon::parse($endDate)->endOfDay()
+                ]);
             })
             ->orderBy($sortBy, $sortOrder)
-            ->paginate(10); // ใช้ pagination แทนการดึงข้อมูลทั้งหมด
+            ->paginate(10);
+
+        // เพิ่ม Query String ให้กับ Pagination Links
+        $logs->appends([
+            'search' => $search,
+            'activity_type' => $activityTypes,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'sort_by' => $sortBy,
+            'sort_order' => $sortOrder,
+        ]);
 
         // ส่งข้อมูลไปยัง View
-        return view('logs.index', compact('logs', 'search', 'activityType', 'date', 'sortBy', 'sortOrder'));
+        return view('logs.index', compact(
+            'logs',
+            'search',
+            'activityTypes',
+            'activityTypesSelection',
+            'startDate',
+            'endDate',
+            'sortBy',
+            'sortOrder'
+        ));
     }
+    public function getLogs(Request $request)
+    {
+        // ดึงข้อมูล Logs ล่าสุด
+        $logs = Logs::latest()->take(10)->get();  // หรือดัดแปลงตามที่ต้องการ
+
+        // ส่งข้อมูล JSON กลับไปยัง client
+        return response()->json($logs);
+    }
+
+
 
     // ฟังก์ชันบันทึก Log ใหม่
     public function store(Request $request)

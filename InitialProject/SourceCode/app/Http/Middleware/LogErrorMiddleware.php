@@ -37,8 +37,7 @@ class LogErrorMiddleware
                     'status' => $response->getStatusCode(),
                 ]),
             ];
-            $log = Logs::create($logData);
-            LaravelLog::info('Middleware Terminated', $logData);
+            Logs::create($logData);
         }
     }
     protected function getDeviceType(string $userAgent): string

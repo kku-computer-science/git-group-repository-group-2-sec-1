@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Models\Logs;
 use App\Events\UserAction;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -16,6 +17,10 @@ class LogUserActivity
     public function login(Login $event)
     {
         $this->logActivity($event->user, 'Login', 'User logged in');
+    }
+    public function loginFailed(Failed $event)
+    {
+        $this->logActivity(null, 'Login Failed', 'User login failed');
     }
 
     /**
@@ -54,7 +59,8 @@ class LogUserActivity
             'activity_type' => $activityType,
             'details' => $details,
         ]);
-        Log::info("User {$user->email} performed action: {$activityType} ({$details}) from IP: {$ip}");
+        Log::info("User " . ($user->email ?? 'Guest') . " performed action: {$activityType} ({$details}) from IP: {$ip}");
+        
     }
 
     /**

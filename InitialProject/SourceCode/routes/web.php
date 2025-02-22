@@ -105,9 +105,7 @@ Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], functi
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('logs',LogController::class);
-    // Route::get('logs', [LogController::class, 'index'])->name('logs.index');
-
-
+    
     Route::get('importfiles', [ImportExportController::class, 'index'])->name('importfiles');
     Route::post('import', [ImportExportController::class, 'import']);
     // Route::get('export', [ImportExportController::class, 'export']);
