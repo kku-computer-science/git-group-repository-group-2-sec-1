@@ -1,4 +1,7 @@
 @extends('dashboards.users.layouts.user-dash-layout')
+<script>
+    var totalError = @json($summary['totalError']);
+</script>
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
 
 @section('title', 'Dashboard')
@@ -49,7 +52,7 @@
                                     </div>
                                     <h6 class="card-title text-muted mb-0">จำนวนผู้ใช้ทั้งหมด</h6>
                                 </div>
-                                <h2 class="mb-0 text-primary">{{ $totalUsers ?? '100' }} <small class="text-muted">คน</small>
+                                <h2 class="mb-0 text-primary">{{ $summary['totalUsers'] ?? '0'}} <small class="text-muted">คน</small>
                                 </h2>
                             </div>
                         </div>
@@ -67,8 +70,8 @@
                                     </div>
                                     <h6 class="card-title text-muted mb-0">จำนวนงานวิจัยทั้งหมด</h6>
                                 </div>
-                                <h2 class="mb-0 text-success">{{ $totalResearch ?? '1000' }} <small
-                                        class="text-muted">งาน</small></h2>
+                                <h2 class="mb-0 text-success">{{ $summary['totalResearch'] ?? '0' }} <small
+                                    class="text-muted">งาน</small></h2>
                             </div>
                         </div>
                     </a>
@@ -83,9 +86,9 @@
                                     <div class="icon-wrapper bg-info-soft rounded-circle me-3">
                                         <i class="fas fa-sign-in-alt text-info fa-2x"></i>
                                     </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนผู้เข้าสู่ระบบ</h6>
+                                    <h6 class="card-title text-muted mb-0">จำนวนผู้เข้าสู่ระบบในวันนี้</h6>
                                 </div>
-                                <h2 class="mb-0 text-info">{{ $totalLogins ?? '30' }} <small class="text-muted">คน</small></h2>
+                                <h2 class="mb-0 text-info">{{ $summary['totalLogin'] ?? '0' }} <small class="text-muted">คน</small></h2>
                             </div>
                         </div>
                     </a>
@@ -100,9 +103,9 @@
                                     <div class="icon-wrapper bg-warning-soft rounded-circle me-3">
                                         <i class="fas fa-code text-warning fa-2x"></i>
                                     </div>
-                                    <h6 class="card-title text-muted mb-0">จำนวนการเรียก API</h6>
+                                    <h6 class="card-title text-muted mb-0">จำนวนการเรียก API ในวันนี้</h6>
                                 </div>
-                                <h2 class="mb-0 text-warning">{{ $totalApiCalls ?? '35' }} <small
+                                <h2 class="mb-0 text-warning">{{ $summary['totalApiCall'] ?? '0' }} <small
                                         class="text-muted">ครั้ง</small></h2>
                             </div>
                         </div>

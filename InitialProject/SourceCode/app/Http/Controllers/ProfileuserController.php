@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Paper;
+use App\Models\Logs;
+use Carbon\Carbon;
 
 class ProfileuserController extends Controller
 {
@@ -15,7 +18,7 @@ class ProfileuserController extends Controller
         $this->middleware('auth');
     }
 
-    function index()
+    function index(Request $request)
     {
 
         //return view('dashboards.admins.index');
@@ -23,7 +26,21 @@ class ProfileuserController extends Controller
         $user = auth()->user();
         //$user->givePermissionTo('readpaper');
         //return view('home');
-        return view('dashboards.users.index', compact('users'));
+
+        $date = $request->input('date', Carbon::today()->format('Y-m-d'));
+
+        $logs = Logs::whereDate('created_at', $date)->get();
+
+        $summary = [
+            'totalUsers' => User::count(),
+            'totalResearch' => Paper::count(),
+            'totalLogin' => $logs->where('activity_type', 'Login')->count(),
+            'totalApiCall' => $logs->where('activity_type', 'Call API')->count(),
+            'totalError' => $logs->where('activity_type', 'Error'),
+        ];
+
+        // dd($logs);
+        return view('dashboards.users.index', compact('summary'));
     }
 
     function profile()

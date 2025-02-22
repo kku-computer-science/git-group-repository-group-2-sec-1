@@ -4,33 +4,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const ctx = document.getElementById("errorChart").getContext("2d");
     const datePicker = document.getElementById("datePicker");
 
-    let errorLogs = [
-        { type: "Error 400 (Bad Request)", count: 15, date: "2025-02-20" },
-        { type: "Error 401 (Unauthorized)", count: 8, date: "2025-02-21" },
-        { type: "Error 401 (Unauthorized)", count: 4, date: "2025-02-22" },
-        { type: "Error 403 (Forbidden)", count: 12, date: "2025-02-22" },
-        { type: "Error 404 (Not Found)", count: 25, date: "2025-02-22" },
-        { type: "Error 404 (Not Found)", count: 25, date: "2025-02-23" },
-        { type: "Error 418 (I'm a teapot)", count: 1, date: "2025-02-24" },
-        { type: "Error 500 (Server Error)", count: 10, date: "2025-02-25" },
-        { type: "Error 503 (Service Unavailable)", count: 5, date: "2025-02-26" }
-    ];
+    // console.log(totalError);
 
-    function updateChart(filteredData) {
-        const groupedData = {};
-        filteredData.forEach(item => {
-            if (!groupedData[item.type]) {
-                groupedData[item.type] = 0;
-            }
-            groupedData[item.type] += item.count;
-        });
+    const errorCount = {}
 
-        const labels = Object.keys(groupedData);
-        const values = Object.values(groupedData);
-        const totalErrors = values.reduce((sum, val) => sum + val, 0);
+    Object.keys(totalError).forEach(key => {
+        errorType = JSON.parse(totalError[key]['details']).status;
+        // console.log(errorType);
+
+        if(!errorCount[errorType]) {
+            errorCount[errorType] = 0;
+        }
+
+        errorCount[errorType]++;
+    });
+
+    function updateChart(errorCount) {
+        // const groupedData = {};
+        // filteredData.forEach(item => {
+        //     if (!groupedData[item.type]) {
+        //         groupedData[item.type] = 0;
+        //     }
+        //     groupedData[item.type] += item.count;
+        // });
+
+        const labels = Object.keys(errorCount);
+        const values = Object.values(errorCount);
+        // const totalErrors = values.reduce((sum, val) => sum + val, 0);
 
         if (errorCountElement) {
-            errorCountElement.textContent = totalErrors + " errors";
+            errorCountElement.textContent = Object.keys(totalError).length + " errors";
         }
 
         errorChart.data.labels = labels;
@@ -102,15 +105,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function filterDataByDate() {
-        const selectedDate = datePicker.value;
+        // const selectedDate = datePicker.value;
 
-        if (!selectedDate) {
-            alert("กรุณาเลือกวันที่");
-            return;
-        }
+        // if (!selectedDate) {
+        //     alert("กรุณาเลือกวันที่");
+        //     return;
+        // }
 
-        const filteredData = errorLogs.filter((log) => log.date === selectedDate);
-        updateChart(filteredData);
+        // const filteredData = errorLogs.filter((log) => log.date === selectedDate);
+        updateChart(errorCount);
     }
 
     filterDataByDate();
