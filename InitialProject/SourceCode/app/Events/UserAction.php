@@ -24,7 +24,7 @@ class UserAction
     public string $activity_type;
     public string $details;
 
-    public function __construct(User $user, string $activity_type, string $details)
+    public function __construct(?User $user, string $activity_type, string $details)
     {
         $this->user = $user;
         $this->activity_type = $activity_type;
