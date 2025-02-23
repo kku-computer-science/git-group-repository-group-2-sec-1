@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Degree;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class CourseController extends Controller
 {
     /**
@@ -38,6 +38,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Course'));
         $r = $request->validate([
             'course_code' => 'required',
             'course_name' => 'required',
@@ -103,6 +104,7 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Course'));
         $course = Course::where('id', $id)->delete();
         return response()->json($course);
     }

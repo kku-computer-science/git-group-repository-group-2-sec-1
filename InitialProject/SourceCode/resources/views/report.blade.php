@@ -42,7 +42,7 @@
 <div class="container card-cart d-sm-flex  justify-content-center mt-5">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title" style="padding: 16px;">สถิติจำนวนบทความทั้งหมด 5 ปี</h4>
+            <h5 class="card-title" style="padding: 16px;">{{ trans('message.statistics_for_5_year') }}</h4>
                 <div class="row">
                     <div class="col-md-6 p-5">
                         <div style="width:520px;height:250px">
@@ -70,7 +70,7 @@
 <div class="container card-cart d-sm-flex  justify-content-center mt-5">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title"  style="padding: 16px;">สถิติจำนวนบทความที่ได้รับการอ้างอิง</h4>
+            <h5 class="card-title"  style="padding: 16px;">{{ trans('message.statistics_of_cited') }}</h4>
                 <div class="row">
                     <div class="col-md-6 p-5">
                         <div style="width:520px;height:250px">
@@ -107,12 +107,12 @@ var paper_tci_cit = <?php echo $paper_tci_cit; ?>;
 var paper_scopus_cit = <?php echo $paper_scopus_cit; ?>;
 var paper_wos_cit = <?php echo $paper_wos_cit; ?>;
 
-year.unshift("source");
-paper_tci.unshift("tci");
+year.unshift('source');
+paper_tci.unshift("TCI");
 
 //console.log(paper_scopus_cit);
-paper_scopus.unshift("scopus");
-paper_wos.unshift("wos");
+paper_scopus.unshift("SCOPUS");
+paper_wos.unshift("WOS");
 
 let pro = year;
 let dat = [
@@ -142,10 +142,10 @@ console.log(res);
 
 //let props2 = year;
 
-paper_scopus_cit.unshift("scopus");
+paper_scopus_cit.unshift("SCOPUS");
 //console.log(paper_scopus_cit);
-paper_tci_cit.unshift("tci");
-paper_wos_cit.unshift("wos");
+paper_tci_cit.unshift("TCI");
+paper_wos_cit.unshift("WOS");
 
 
 let dat2 = [

@@ -29,11 +29,11 @@
             <div class="card-body">
                 {!! Form::open(array('route' => 'departments.store', 'method'=>'department')) !!}
                     <div class="form-group">
-                        <strong>department_name_TH	:</strong>
+                        <strong>ชื่อสาขาวิชา (TH)	:</strong>
                         {!! Form::text('department_name_th', null, array('placeholder' => 'Department Name TH','class' => 'form-control')) !!}
                     </div>
                     <div class="form-group">
-                        <strong>department_name_EN	:</strong>
+                        <strong>Department Name (EN)	:</strong>
                         {!! Form::text('department_name_en', null, array('placeholder' => 'Department Name EN','class' => 'form-control')) !!}
                     </div>
                     

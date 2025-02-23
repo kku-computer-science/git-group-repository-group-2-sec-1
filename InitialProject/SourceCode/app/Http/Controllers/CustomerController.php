@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Redirect,Response;
+use Illuminate\Support\Facades\Auth;
 class CustomerController extends Controller
 {
 
@@ -38,6 +39,7 @@ class CustomerController extends Controller
 
 	public function store(Request $request)
 	{
+		event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Customer'));
 
 		$r=$request->validate([
 		'name' => 'required',
@@ -101,6 +103,7 @@ class CustomerController extends Controller
 
 	public function destroy($id)
 	{
+		event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Customer'));
 		$cust = Customer::where('id',$id)->delete();
 		return response()->json($cust);
 	}

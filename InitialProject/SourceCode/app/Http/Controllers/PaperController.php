@@ -67,6 +67,7 @@ class PaperController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Paper'));
         $this->validate($request, [
             'paper_name' => 'required|unique:papers,paper_name',
             'paper_type' => 'required',
@@ -212,6 +213,7 @@ class PaperController extends Controller
      */
     public function update(Request $request, Paper $paper)
     {
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Paper'));
         $this->validate($request, [
             //'paper_name' => 'required|unique:papers,paper_name',
             'paper_type' => 'required',

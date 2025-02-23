@@ -21,7 +21,7 @@
             <div class="card-body">
                 {!! Form::open(array('route' => 'permissions.store','method'=>'POST')) !!}
                     <div class="form-group">
-                        <strong>Name:</strong>
+                        <strong>Premission Name:</strong>
                         {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

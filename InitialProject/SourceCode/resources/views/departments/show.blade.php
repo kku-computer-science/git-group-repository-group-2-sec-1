@@ -25,11 +25,11 @@
             </div>
             <div class="card-body">
                 <div class="lead">
-                    <strong>Deapartment Name TH:</strong>
+                    <strong>ชื่อสาขาวิชา (TH) :</strong>
                     {{ $department->department_name_th }}
                 </div>
                 <div class="lead">
-                    <strong>Deapartment Name EN:</strong>
+                    <strong>Deapartment Name (EN) :</strong>
                     {{ $department->department_name_en }}
                 </div>
             </div>

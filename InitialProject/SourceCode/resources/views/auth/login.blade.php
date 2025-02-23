@@ -393,7 +393,7 @@
 					<!-- <div class="form-group validate-input" data-validate="Valid email is required: ex@abc.xyz"> -->
 					<div class="form-group validate-input">
 						<label for="email">Username</label>
-						<input id="username" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autofocus>
+						<input id="username" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" placeholder="username" required autofocus>
 						@error('username')
 						<span class="invalid-feedback" role="alert">
 							<strong>{{ $message }}</strong>
@@ -402,7 +402,7 @@
 					</div>
 					<div class="form-group validate-input" data-validate="Password is required">
 						<label for="password">Password</label>
-						<input id="password" class="input" type="password" name="password" required="required" />
+						<input id="password" class="input" type="password" name="password" required="required" placeholder="password"/>
 					</div>
 					<div class="form-group">
 						<label class="form-remember">

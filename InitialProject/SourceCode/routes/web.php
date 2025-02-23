@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
-
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -49,9 +51,6 @@ use App\Http\Controllers\TcicallController;
 |
 */
 
-
-
-
 /*Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
@@ -60,10 +59,12 @@ use App\Http\Controllers\TcicallController;
 });*/
 
 
-
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::get('/test-error', function () {
+    throw new Exception('Test Error Logging');
+});
 
 
 Route::middleware(['middleware' => 'PreventBackHistory'])->group(function () {
@@ -73,6 +74,7 @@ Route::middleware(['middleware' => 'PreventBackHistory'])->group(function () {
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 //Route::get('/researchers',[ResearcherController::class,'index'])->name('researchers');
 Route::get('researchers/{id}', [ResearcherController::class, 'request'])->name('researchers');
 Route::get('researchers/{id}/search', [ResearcherController::class, 'search'])->name('searchresearchers');
@@ -95,20 +97,27 @@ Route::get('bib/{id}', [BibtexController::class, 'getbib'])->name('bibtex');
 //Route::get('change/lang', [LocalizationController::class,'lang_change'])->name('LangChange');
 
 Route::get('/callscopus/{id}', [App\Http\Controllers\ScopuscallController::class, 'create'])->name('callscopus');
-//Route::get('/showscopus', [App\Http\Controllers\ScopuscallController::class, 'index'])->name('showscopus');
+Route::get('/showscopus', [App\Http\Controllers\ScopuscallController::class, 'index'])->name('showscopus');
+
 
 Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], function () {
     //Route::post('change-profile-picture',[ProfileuserController::class,'updatePicture'])->name('adminPictureUpdate');
-    
+
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::resource('logs', LogController::class);
+    // Route::resource('dashboard',DashboardController::class);
 
     Route::get('importfiles', [ImportExportController::class, 'index'])->name('importfiles');
-    Route::post('import', [ImportExportController::class, 'import']);
-    // Route::get('export', [ImportExportController::class, 'export']);
 
 });
+Route::group(['middleware' => ['isAdmin']], function () {
+    // Route::get('/dashboard', [ProfileuserController::class, 'dashboardIndex'])->name('dashboard');
+    Route::get('/download-log', [LogController::class, 'downloadLog'])->name('admin.downloadLog');
+});
+
+
 
 Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
     //Route::get('profile',[UserController::class,'profile'])->name('profile2');
@@ -138,7 +147,30 @@ Route::group(['middleware' => ['auth', 'PreventBackHistory']], function () {
     Route::get('/ajax-get-subcat', [UserController::class, 'getCategory']);
     Route::get('tests', [TestController::class, 'index']); //call department
     Route::get('tests/{id}', [TestController::class, 'getCategory'])->name('tests'); //call program
+    Route::resource('dashboardLog', DashboardController::class);
 
+
+});
+
+
+// clear cache
+Route::get('/clear-all', function () {
+    Artisan::call('cache:clear');     // Clear Cache facade
+    Artisan::call('route:clear');     // Clear Route cache 
+    Artisan::call('view:clear');      // Clear View cache
+    Artisan::call('config:clear');    // Clear Config cache
+
+    Artisan::call('optimize');        // Reoptimize class loader
+    Artisan::call('route:cache');     // Cache Routes
+    Artisan::call('config:cache');    // Cache Config
+
+    return response()->json([
+        'cache' => 'Cache facade cleared',
+        'route' => 'Routes cached',
+        'view' => 'View cache cleared',
+        'config' => 'Config cached',
+        'optimize' => 'Class loader optimized'
+    ], 200);
 });
 
 
@@ -163,3 +195,4 @@ Route::get('files/{file}', [FileUpload::class, 'download'])->name('download');*/
 //Route::post('programs', [DropdownController::class, 'getPrograms']);
 //Route::get('tests', [TestController::class, 'index'])->name('tests.index');
 //Route::get('users/create/{id}',[UserController::class, 'getCategory']);
+

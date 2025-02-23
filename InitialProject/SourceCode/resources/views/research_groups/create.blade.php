@@ -14,8 +14,8 @@
     @endif
     <div class="card" style="padding: 16px;">
         <div class="card-body">
-            <h4 class="card-title">สร้างกลุ่มวิจัย</h4>
-            <p class="card-description">กรอกข้อมูลแก้ไขรายละเอียดกลุ่มวิจัย</p>
+            <h4 class="card-title">{{ trans('message.create_project_group') }}</h4>
+            <p class="card-description">{{ trans('message.fill_in_project_group') }}</p>
             <form action="{{ route('researchGroups.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group row">
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3 "><b>ชื่อกลุ่มวิจัย (English)</b></p>
+                    <p class="col-sm-3 "><b>Project Group's Name (English)</b></p>
                     <div class="col-sm-8">
                         <input name="group_name_en" value="{{ old('group_name_en') }}" class="form-control"
                             placeholder="ชื่อกลุ่มวิจัย (English)">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3"><b>คำอธิบายกลุ่มวิจัย (English)</b></p>
+                    <p class="col-sm-3"><b>Project Group's Description (English)</b></p>
                     <div class="col-sm-8">
                         <textarea name="group_desc_en" value="{{ old('group_desc_en') }}" class="form-control"
                             style="height:90px"></textarea>
@@ -54,20 +54,20 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3"><b>รายละเอียดกลุ่มวิจัย (English)</b></p>
+                    <p class="col-sm-3"><b>Project Group's Detail (English)</b></p>
                     <div class="col-sm-8">
                         <textarea name="group_detail_en" value="{{ old('group_detail_en') }}" class="form-control"
                             style="height:90px"></textarea>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3"><b>image</b></p>
+                    <p class="col-sm-3"><b>{{ trans('message.image') }}</b></p>
                     <div class="col-sm-8">
                         <input type="file" name="group_image" class="form-control" value="{{ old('group_image') }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3"><b>หัวหน้ากลุ่มวิจัย</b></p>
+                    <p class="col-sm-3"><b>{{ trans('message.project_leader') }}</b></p>
                     <div class="col-sm-8">
                         <select id='head0' name="head">
                             @foreach($users as $user)
@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <p class="col-sm-3 pt-4"><b>สมาชิกกลุ่มวิจัย</b></p>
+                    <p class="col-sm-3 pt-4"><b>{{ trans('message.members') }}</b></p>
                     <div class="col-sm-8">
                         <table class="table" id="dynamicAddRemove">
                             <tr>

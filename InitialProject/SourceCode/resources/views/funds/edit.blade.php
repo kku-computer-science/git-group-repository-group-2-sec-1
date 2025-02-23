@@ -25,13 +25,13 @@
     <div class="col-md-8 grid-margin stretch-card">
         <div class="card" style="padding: 16px;">
             <div class="card-body">
-                <h4 class="card-title">Edit Fund</h4>
-                <p class="card-description">กรอกข้อมูลแก้ไขรายละเอียดทุนงานวิจัย</p>
+                <h4 class="card-title">{{ trans('message.edit_funding') }}</h4>
+                <p class="card-description">{{ trans('message.edit_in_funding') }}</p>
                 <form class="forms-sample" action="{{ route('funds.update',$fund->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="form-group row">
-                        <p class="col-sm-3 "><b>ประเภททุนวิจัย</b></p>
+                        <p class="col-sm-3 "><b>{{ trans('message.funding_type') }}</b></p>
                         <!-- <label for="exampleInputfund_type" class="col-sm-2 ">ประเภททุนวิจัย</label> -->
                         <div class="col-sm-4">
                             <select name="fund_type" class="custom-select my-select" id="fund_type" onchange='toggleDropdown(this);' required>
@@ -42,7 +42,7 @@
                     </div>
                     <div id="fund_code">
                         <div class="form-group row">
-                            <p class="col-sm-3"><b>ระดับทุน</b></p>
+                            <p class="col-sm-3"><b>{{ trans('message.capital_level') }}</b></p>
                             <div class="col-sm-4">
                                 <select name="fund_level" class="custom-select my-select">
                                     <option value=""{{ $fund->fund_level == '' ? 'selected' : '' }}>ไม่ระบุ</option>
@@ -54,13 +54,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <p class="col-sm-3 "><b>ชื่อทุน</b></p>
+                        <p class="col-sm-3 "><b>{{ trans('message.capital_name') }}</b></p>
                         <div class="col-sm-8">
                             <input type="text" name="fund_name" value="{{ $fund->fund_name }}" class="form-control" placeholder="fund_name">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <p class="col-sm-3 "><b>หน่วยงานที่สนับสนุน / โครงการวิจัย</b></p>
+                        <p class="col-sm-3 "><b>{{ trans('message.funding_support') }} / {{ trans('message.ResearchProj') }}</b></p>
                         <div class="col-sm-8">
                             <input type="text" name="support_resource" value="{{ $fund->support_resource }}" class="form-control" placeholder="Support Resource">
                         </div>
