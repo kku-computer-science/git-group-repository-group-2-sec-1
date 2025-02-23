@@ -123,7 +123,7 @@
                                     </div>
                                     <h6 class="card-title text-muted mb-0">ยังอยู่ในระบบจำนวน</h6>
                                 </div>
-                                <h2 class="mb-0 text-success">{{ $activeUsers ?? '12' }} <small class="text-muted">คน</small>
+                                <h2 class="mb-0 text-success">{{ count($activeUser) ?? '12' }} <small class="text-muted">คน</small>
                                 </h2>
                             </div>
                         </div>
@@ -143,18 +143,24 @@
                                 <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
                             </div>
                             <div class="list-group">
-                                <div class="list-group-item border-0 bg-light rounded mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="text-danger me-3">
-                                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                @if($loginFailed->isNotEmpty()) 
+                                    @foreach($loginFailed as $fail)
+                                        <div class="list-group-item border-0 bg-light rounded mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="text-danger me-3">
+                                                    <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
+                                                    <p class="mb-1">{{ $fail }} - พยายามเข้าระบบ  หลายครั้งใน 5 นาที</p>
+                                                    <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
-                                            <p class="mb-1">IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที</p>
-                                            <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
-                                        </div>
-                                    </div>
-                                </div>
+                                    @endforeach
+                                @else
+                                    <h6 class="mb-1">ยังไม่มีรายการแจ้งเตือนปรากฎ</h6>
+                                @endif
                             </div>
                         </div>
                     </div>

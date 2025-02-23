@@ -21,16 +21,13 @@ class ProfileuserController extends Controller
     function index(Request $request)
     {
 
-        //return view('dashboards.admins.index');
-        $users = User::get();
-        $user = auth()->user();
-        //$user->givePermissionTo('readpaper');
-        //return view('home');
-
+        // รับค่าวันที่มาจากหน้าเว็บ
         $date = $request->input('date', Carbon::today()->format('Y-m-d'));
 
+        // query ข้อมูลของ logs ตามวันที่ที่ได้รับมา
         $logs = Logs::whereDate('created_at', $date)->get();
 
+        // หาค่าผลรวมต่างๆ
         $summary = [
             'totalUsers' => User::count(),
             'totalResearch' => Paper::count(),
@@ -39,8 +36,33 @@ class ProfileuserController extends Controller
             'totalError' => $logs->where('activity_type', 'Error'),
         ];
 
-        // dd($logs);
-        return view('dashboards.users.index', compact('summary'));
+        // หาผู้ใช้ที่ยังอยู่ในระบบ
+        $activeUser = Logs::select('email')
+                            ->groupby('email')
+                            ->havingRaw("COUNT(CASE WHEN activity_type = 'Login' THEN 1 END) > 
+                                         COUNT(CASE WHEN activity_type = 'Logout' THEN 1 END)")
+                            ->pluck('email');
+
+        // เช็คการล็อกอินไม่สําเร็จ
+        $loginFailed = Logs::where('activity_type', 'Login Failed')
+                            ->whereBetween('created_at', [Carbon::now()->subMinutes(5), Carbon::now()])
+                            ->groupby('email')
+                            ->havingRaw('count(*) >= 5')
+                            ->pluck('email');
+
+        // เช็คการเรียก API ที่มากเกินไป
+        $apiCallWarning = Logs::where('activity_type', 'Call API')
+                            ->groupby('email')
+                            ->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::now()])
+                            ->havingRaw('count(*) >= 10')
+                            ->pluck('email');
+
+        $wanring = [
+            'loginFailed' => $loginFailed,
+            'apiCallWarning' => $apiCallWarning,
+        ];
+
+        return view('dashboards.users.index', compact('summary', 'warning'));
     }
 
     function profile()
