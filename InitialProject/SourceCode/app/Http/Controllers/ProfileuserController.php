@@ -22,7 +22,7 @@ class ProfileuserController extends Controller
     {
 
         // รับค่าวันที่มาจากหน้าเว็บ
-        $date = $request->input('date', Carbon::today()->format('Y-m-d'));
+        $date = $request->input('date', old('date', Carbon::today()->format('Y-m-d')));
 
         // query ข้อมูลของ logs ตามวันที่ที่ได้รับมา
         $logs = Logs::whereDate('created_at', $date)->get();
@@ -76,15 +76,17 @@ class ProfileuserController extends Controller
                             ->havingRaw('count(*) >= 10')
                             ->pluck('email');
 
-        $wanring = [
+        $warning = [
             'loginFailed' => $loginFailed,
             'apiCallWarning' => $apiCallWarning,
         ];
 
         // ส่งวันที่ที่เลือกไปให้ blade
         session(['selectedDate' => $date]);
+
+        // dump($date);
       
-        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents'));
+        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents', 'activeUser'));
     }
 
     function profile()

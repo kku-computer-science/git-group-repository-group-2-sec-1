@@ -17,18 +17,21 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center gap-2">
                 <h1 class="display-6 fw-bold text-gradient">Dashboard</h1>
-                <div class="text-muted">
-                    <!-- Date Picker -->
-                    <input type="date" class="form-control" id="datePicker" value="{{ date('Y-m-d') }}">
-
-                </div>
+                    <form action="{{ route('dashboard') }}" method="GET">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="datePicker" name="date" value="{{ old('date', date('Y-m-d')) }}" required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        </div>
+                    </form>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <!-- Active Users Indicator -->
                 <div class="d-inline-flex align-items-center me-2">
                     <div class="pulse-dot bg-success me-2"></div>
                     <span class="badge bg-light text-success border border-success px-3 py-2">
-                        <i class="fas fa-users me-2"></i>{{ $activeUsers ?? '12' }} users อยู่ในระบบ
+                        <i class="fas fa-users me-2"></i>{{ count($activeUser) ?? '12' }} users อยู่ในระบบ
                     </span>
                 </div>
 

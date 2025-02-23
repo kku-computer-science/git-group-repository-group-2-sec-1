@@ -146,8 +146,8 @@
                                 <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
                             </div>
                             <div class="list-group">
-                                @if($loginFailed->isNotEmpty()) 
-                                    @foreach($loginFailed as $fail)
+                                @if($warning['loginFailed']->isNotEmpty()) 
+                                    @foreach($warning['loginFailed'] as $fail)
                                         <div class="list-group-item border-0 bg-light rounded mb-3">
                                             <div class="d-flex align-items-center">
                                                 <div class="text-danger me-3">
