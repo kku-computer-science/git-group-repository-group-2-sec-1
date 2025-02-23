@@ -36,6 +36,25 @@ class ProfileuserController extends Controller
             'totalError' => $logs->where('activity_type', 'Error'),
         ];
 
+        $criticalEvents = [
+            [
+                'type' => 'Login',
+                'title' => 'การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง',
+                'email' => "example@gmail.com",
+                'description' => 'IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที',
+                'timeAgo' => '5 นาทีที่แล้ว',
+                'date' => '2025-02-23'
+            ],
+            [
+                'type' => 'Call Paper',
+                'title' => 'API ถูกเรียกเกินจำนวนที่กำหนด',
+                'email' => "example@gmail.com",
+                'description' => 'API: Call Paper - ถูกเรียก 15 ครั้งใน 1 นาที',
+                'timeAgo' => '2 นาทีที่แล้ว',
+                'date' => '2025-02-22'
+            ]
+        ];
+
         // หาผู้ใช้ที่ยังอยู่ในระบบ
         $activeUser = Logs::select('email')
                             ->groupby('email')
@@ -62,7 +81,10 @@ class ProfileuserController extends Controller
             'apiCallWarning' => $apiCallWarning,
         ];
 
-        return view('dashboards.users.index', compact('summary', 'warning'));
+        // ส่งวันที่ที่เลือกไปให้ blade
+        session(['selectedDate' => $date]);
+      
+        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents'));
     }
 
     function profile()
@@ -107,7 +129,7 @@ class ProfileuserController extends Controller
             // $doctoral = '';
             $pos_eng = '';
             $pos_thai = '';
-            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student') ) {
+            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student')) {
                 $request->academic_ranks_en = null;
                 $request->academic_ranks_th = null;
                 $pos_eng = null;
@@ -215,7 +237,8 @@ class ProfileuserController extends Controller
         //Validate form
         $validator = \Validator::make($request->all(), [
             'oldpassword' => [
-                'required', function ($attribute, $value, $fail) {
+                'required',
+                function ($attribute, $value, $fail) {
                     if (!\Hash::check($value, Auth::user()->password)) {
                         return $fail(__('The current password is incorrect'));
                     }
