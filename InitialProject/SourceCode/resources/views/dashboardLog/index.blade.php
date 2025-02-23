@@ -1,5 +1,7 @@
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
-<link rel="stylesheet" href={{ asset('css/dashboardLog.css') }}>
+<link rel="stylesheet" href="{{ asset('css/dashboardLog.css') }}">
+
+
 <script>
     const criticalEventsData = @json($criticalEvents);
     var totalError = @json($summary['totalError']);
@@ -14,11 +16,11 @@
     <div class="container-fluid px-4">
         <!-- Admin Dashboard Header -->
         <div class="d-flex justify-content-between align-items-center mb-4 py-3 bg-light border-bottom">
-            <div class="d-flex align-items-center gap-4 dashbord-for-align">
+            <div class="d-flex align-items-center gap-4 dashbord-for-align ">
                 <h1 class="display-6 fw-bold text-gradient mb-0">Dashboard</h1>
-                <form action="{{ route('dashboard') }}" method="GET" class="d-flex align-items-center dashbord-for-align">
-                    <div class="input-group dashboard-input-group  dashbord-for-align" style="max-width: 350px;">
-                        <label for="datePicker" class="input-group-text bg-light fw-medium">Select Date:</label>
+                <form action="{{ route('dashboard') }}" method="GET" class="d-flex align-items-center dashbord-for-align pt-3">
+                    <div class="input-group dashboard-input-group  d-flex align-items-center " style="max-width: 350px;">
+                        <!-- <label for="datePicker" class="input-group-text bg-light fw-medium">Select Date:</label> -->
                         <input type="date" class="form-control" id="datePicker" name="date"
                             value="{{ old('date', date('Y-m-d')) }}" required>
                         <button type="submit" class="btn btn-outline-primary btn-sm">
@@ -32,7 +34,7 @@
                 <!-- Active Users Indicator -->
                 <div class="d-inline-flex align-items-center me-2">
                     <span
-                        class="badge bg-light text-success border border-success d-flex align-items-center gap-2 px-3 py-2">
+                        class="badge bg-light text-success border border-success d-flex align-items-center gap-2 px-2 py-2">
                         <div class="pulse-dot bg-success"></div>
                         <i class="fas fa-users"></i>
                         <span>{{ count($activeUser) ?? '12' }} active</span>
@@ -44,7 +46,7 @@
                     <button class="btn btn-outline-primary py-2" onclick="window.location.reload();" title="Reload Page">
                         <i class="fas fa-sync-alt"></i>
                     </button>
-                    <button class="btn btn-dark btn-modern" onclick="window.location.href='{{ route('logs.index') }}'">
+                    <button class="btn btn-dark btn-modern py-2" onclick="window.location.href='{{ route('logs.index') }}'">
                         <i class="fas fa-list me-2"></i>View Full Log
                     </button>
                 </div>
@@ -57,7 +59,7 @@
             <!-- Total Users Card -->
             <div class="col-xl-3 col-md-6">
                 <a href="{{ url('/users') }}" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="icon-wrapper bg-primary-soft rounded-circle me-3">
@@ -75,7 +77,7 @@
             <!-- Total Research Card -->
             <div class="col-xl-3 col-md-6">
                 <a href="{{ url('/papers') }}" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="icon-wrapper bg-success-soft rounded-circle me-3">
@@ -95,7 +97,7 @@
                 <a href="#" onclick="redirectToLogs(event, this.dataset.url, 'Login')" data-url="{{ route('logs.index') }}"
                     class="text-decoration-none">
 
-                    <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="icon-wrapper bg-info-soft rounded-circle me-3">
@@ -115,7 +117,7 @@
                 <a href="#" onclick="redirectToLogs(event, this.dataset.url, 'Call Paper')"
                     data-url="{{ route('logs.index') }}" class="text-decoration-none">
 
-                    <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="icon-wrapper bg-warning-soft rounded-circle me-3">
@@ -132,7 +134,7 @@
         </div>
 
 
-        Critical Section
+        <!-- Critical Section -->
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
@@ -153,7 +155,7 @@
                                         @if ($event['date'] === session('selectedDate', date('Y-m-d')))
                                             <a href="#" onclick="redirectToLogs(event, this.dataset.url, '{{ $event['type'] }}')"
                                                 data-url="{{ route('logs.index') }}" data-date="{{ $event['date'] }}"
-                                                class="list-group-item border-0 rounded mb-3 text-decoration-none p-3 d-flex align-items-center hover-shadow transition">
+                                                class="list-group-item border-0 rounded mb-3 text-decoration-none p-3 d-flex align-items-center hover-shadow transition card-critical ">
                                                 <div class="text-danger me-3">
                                                     <i class="fas fa-exclamation-triangle fa-lg"></i>
                                                 </div>
@@ -214,6 +216,7 @@
     </div>
 
 @endsection
+
 
 @section('scripts')
     @can('role-list')
