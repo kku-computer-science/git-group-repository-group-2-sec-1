@@ -38,7 +38,7 @@ class ProfileuserController extends Controller
 
         $criticalEvents = [
             [
-                'type' => 'Login',
+                'type' => 'Login Failed',
                 'title' => 'การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง',
                 'email' => "example@gmail.com",
                 'description' => 'IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที',
