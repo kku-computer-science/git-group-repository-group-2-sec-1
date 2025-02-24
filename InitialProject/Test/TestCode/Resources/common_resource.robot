@@ -8,9 +8,10 @@ ${ADMIN_USER}  admin@gmail.com
 ${ADMIN_PASS}  12345678
 ${USER_EMAIL}  ngamnij@kku.ac.th
 ${USER_PASS}   123456789
-${DELAY}       0.2
+${DELAY}       0.3
 
 *** Keywords ***
+
 Open Website
     Open Browser  ${URL}  ${BROWSER}
     Maximize Browser Window
@@ -26,8 +27,12 @@ Go To Login Page
     Go To  ${URL}/login
     Wait Until Page Contains  Login
     
-Close Website
+Close Browser
     Close Browser
+
+Log Out
+    Click Element    xpath=/html/body/div/nav/div[2]/ul[2]/li[4]/a
+    Wait Until Page Contains  Login
 
 Login as Admin
     Input Text  id=username  ${ADMIN_USER}
