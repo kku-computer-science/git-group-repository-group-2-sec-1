@@ -12,7 +12,7 @@
 
 @section('content')
     {{-- <h5>
-        @foreach ($warning as $warn)
+        @foreach ($loginFailed as $fail)
             @foreach ($warn as $event)
                 @foreach ($event as $value)
                     {{ $value }}
@@ -205,7 +205,7 @@
                                                             <p class="mb-1 text-dark">{{ $event['description'] }}</p>
                                                         </div>
                                                         <small class="text-muted d-block mt-2">
-                                                            <i class="far fa-clock me-1"></i>{{ $event['last_call'] }}
+                                                            <i class="far fa-clock me-1"></i>{{ $event['last_call'] }}&nbsp; ผ่านไปแล้ว {{ $event['time_diff'] }} นาที
                                                         </small>
                                                     </div>
                                                 </a>
@@ -233,7 +233,7 @@
                                                             <p class="mb-1 text-dark">{{ $event['description'] }}</p>
                                                         </div>
                                                         <small class="text-muted d-block mt-2">
-                                                            <i class="far fa-clock me-1"></i>{{ $event['last_call'] }}
+                                                            <i class="far fa-clock me-1"></i>{{ $event['last_call'] }}&nbsp; ผ่านไปแล้ว {{ $event['time_diff'] }} นาที
                                                         </small>
                                                     </div>
                                                 </a>
