@@ -173,7 +173,7 @@
                             @else
                                 <div class="text-center py-5">
                                     <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
-                                    <p class="text-muted mb-0">ไม่มีเหตุการณ์สำคัญในขณะนี้</p>
+                                    <p class="text-muted mb-0">ไม่มีเหตุการณ์สำคัญปรากฎในขณะนี้</p>
                                 </div>
                             @endif
                         </div>
