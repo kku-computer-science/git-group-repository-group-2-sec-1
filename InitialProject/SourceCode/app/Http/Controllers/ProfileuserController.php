@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Paper;
 use App\Models\Logs;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class ProfileuserController extends Controller
 {
@@ -23,6 +25,7 @@ class ProfileuserController extends Controller
 
         // รับค่าวันที่มาจากหน้าเว็บ
         $date = $request->input('date', old('date', Carbon::today()->format('Y-m-d')));
+        $date_carbon = Carbon::parse($date);
 
         // query ข้อมูลของ logs ตามวันที่ที่ได้รับมา
         $logs = Logs::whereDate('created_at', $date)->get();
@@ -32,7 +35,7 @@ class ProfileuserController extends Controller
             'totalUsers' => User::count(),
             'totalResearch' => Paper::count(),
             'totalLogin' => $logs->where('activity_type', 'Login')->count(),
-            'totalApiCall' => $logs->where('activity_type', 'Call API')->count(),
+            'totalApiCall' => $logs->where('activity_type', 'Call Paper')->count(),
             'totalError' => $logs->where('activity_type', 'Error'),
         ];
 
@@ -62,31 +65,89 @@ class ProfileuserController extends Controller
                                          COUNT(CASE WHEN activity_type = 'Logout' THEN 1 END)")
                             ->pluck('email');
 
+
+        // เหตุการณ์สำคัญ (Critical event)
         // เช็คการล็อกอินไม่สําเร็จ
-        $loginFailed = Logs::where('activity_type', 'Login Failed')
-                            ->whereBetween('created_at', [Carbon::now()->subMinutes(5), Carbon::now()])
-                            ->groupby('email')
-                            ->havingRaw('count(*) >= 5')
-                            ->pluck('email');
+        $loginLastCalls = Logs::select('ip_address', DB::raw('MAX(created_at) as last_call'))
+                                ->where('activity_type', 'Login Failed')
+                                ->whereDate('created_at', $date)
+                                ->groupBy('ip_address')
+                                ->get();
+
+        $loginFailed = [];
+
+        foreach ($loginLastCalls as $record) {
+            $endTime = Carbon::parse($record->last_call)->toDateTimeString();
+            $startTime = Carbon::parse($record->last_call)->subMinute(2)->toDateTimeString();
+        
+            $loginAttempts = Logs::where('activity_type', 'Login Failed')
+                                 ->where('ip_address', $record->email)
+                                 ->whereBetween('created_at', [$startTime, $endTime])
+                                 ->whereDate('created_at', $date)
+                                 ->get();
+        
+            if ($loginAttempts->count() >= 5) {
+                $loginWarnings[] = [
+                    'type' => 'Login Failed',
+                    'title' => 'การล็อกอินผิดพลาดหลายครั้ง',
+                    'user_pointer' => $record->ip_address,
+                    'login_count' => $loginAttempts->count(),
+                    'date' => $date,
+                    'last_call' => $endTime,
+                    'description' => 'IP: ' . $record->ip_address . ' - พยายามเข้าระบบ ' . $loginAttempts->count() . ' ครั้งภายใน 2 นาที',
+                ];
+            }
+        }
+
+
 
         // เช็คการเรียก API ที่มากเกินไป
-        $apiCallWarning = Logs::where('activity_type', 'Call API')
-                            ->groupby('email')
-                            ->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::now()])
-                            ->havingRaw('count(*) >= 10')
-                            ->pluck('email');
+        $apiLastCall = Logs::select('email', DB::raw('MAX(created_at) as last_call'))
+                   ->where('activity_type', 'Call Paper')
+                   ->whereDate('created_at', $date)
+                   ->groupBy('email')
+                   ->get();
+
+        $apiCallWarning = [];
+
+        foreach ($apiLastCall as $record) {
+            $endTime = Carbon::parse($record->last_call)->toDateTimeString();
+            $startTime = Carbon::parse($record->last_call)->subMinute(5)->toDateTimeString();
+
+            // ตรวจสอบการเรียก API ในช่วงเวลา 1 นาที
+            $emailCall = Logs::select('email')
+                            ->where('activity_type', 'Call Paper')
+                            ->where('email', $record->email)
+                            ->whereBetween('created_at', [$startTime , $endTime])
+                            ->whereDate('created_at', $date)
+                            ->get();
+
+            // ถ้าเรียก API เกิน 10 ครั้งในช่วงเวลา 5 นาที
+            if ($emailCall->count() >= 10) {
+                $apiCallWarning[] = [
+                    'type' => 'Call Paper',
+                    'title' => 'API ถูกเรียกเกินจำนวนที่กำหนด',
+                    'user_pointer' => $record->email,
+                    'call_count' => $emailCall->count(),
+                    'date' => $date,
+                    'last_call' => $endTime,
+                    'description' => 'Email: ' . $record->email . ' - พยายามเรียก API ' . $emailCall->count() . ' ครั้งภายใน 5 นาที',
+                ];
+            }
+            // $apiCallWarning[] = $emailCall;
+        }
+
 
         $warning = [
             'loginFailed' => $loginFailed,
             'apiCallWarning' => $apiCallWarning,
         ];
-
         // ส่งวันที่ที่เลือกไปให้ blade
         session(['selectedDate' => $date]);
 
-        // dump($date);
+        // dump($apiCallWarning);
       
-        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents', 'activeUser'));
+        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents', 'activeUser', 'apiLastCall', 'apiCallWarning', 'loginFailed'));
     }
 
     function profile()
