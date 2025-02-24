@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 class DashboardController extends Controller
 {
+    // DashboardController.php
     public function index()
     {
-
-        return view("dashboards.users.index");
+        $hello = "Hello, world!";
+        return view('dashboardLog.index', compact('hello'));
     }
+
+
 }
+

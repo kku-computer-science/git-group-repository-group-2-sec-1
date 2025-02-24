@@ -3,6 +3,8 @@
     var totalError = @json($summary['totalError']);
 </script>
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dashboardLog.css') }}">
+
 
 @section('title', 'Dashboard')
 
@@ -19,6 +21,9 @@
         @endif
 
         @can('role-list')
+
+            @include('dashboardLog.index')
+
             <!-- Admin Dashboard Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="d-flex align-items-center gap-2">
@@ -123,7 +128,7 @@
                                     </div>
                                     <h6 class="card-title text-muted mb-0">ยังอยู่ในระบบจำนวน</h6>
                                 </div>
-                                <h2 class="mb-0 text-success">{{ $activeUsers ?? '12' }} <small class="text-muted">คน</small>
+                                <h2 class="mb-0 text-success">{{ count($activeUser) ?? '12' }} <small class="text-muted">คน</small>
                                 </h2>
                             </div>
                         </div>
@@ -143,18 +148,24 @@
                                 <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
                             </div>
                             <div class="list-group">
-                                <div class="list-group-item border-0 bg-light rounded mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="text-danger me-3">
-                                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                {{-- @if($warning['loginFailed']->isNotEmpty()) 
+                                    @foreach($warning['loginFailed'] as $fail)
+                                        <div class="list-group-item border-0 bg-light rounded mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="text-danger me-3">
+                                                    <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
+                                                    <p class="mb-1">{{ $fail }} - พยายามเข้าระบบ  หลายครั้งใน 5 นาที</p>
+                                                    <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-1 text-danger">การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง</h6>
-                                            <p class="mb-1">IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที</p>
-                                            <small class="text-muted"><i class="far fa-clock me-1"></i>5 นาทีที่แล้ว</small>
-                                        </div>
-                                    </div>
-                                </div>
+                                    @endforeach
+                                @else
+                                    <h6 class="mb-1">ยังไม่มีรายการแจ้งเตือนปรากฎ</h6>
+                                @endif --}}
                             </div>
                         </div>
                     </div>
@@ -190,103 +201,12 @@
         @endcan
     </div>
 
-    <style>
-        /* Enhanced Styles */
-        :root {
-            --primary-gradient: linear-gradient(120deg, #4e73df 0%, #224abe 100%);
-            --transition-speed: 0.3s;
-        }
-
-        /* Modern Cards */
-        .hover-card {
-            transition: all var(--transition-speed) ease-in-out;
-            border-radius: 1rem;
-        }
-
-        .hover-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-
-        /* Welcome Section */
-        .welcome-section {
-            background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 1rem;
-        }
-
-        /* Text Gradient */
-        .text-gradient {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Icon Wrappers */
-        .icon-wrapper {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-speed) ease;
-        }
-
-        /* Soft Background Colors */
-        .bg-primary-soft {
-            background-color: rgba(78, 115, 223, 0.1);
-        }
-
-        .bg-success-soft {
-            background-color: rgba(40, 167, 69, 0.1);
-        }
-
-        .bg-info-soft {
-            background-color: rgba(23, 162, 184, 0.1);
-        }
-
-        .bg-warning-soft {
-            background-color: rgba(255, 193, 7, 0.1);
-        }
-
-        .bg-danger-soft {
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-
-        /* Modern Buttons */
-        .btn-modern {
-            border-radius: 0.75rem;
-            padding: 0.6rem 1.2rem;
-            font-weight: 500;
-            transition: all var(--transition-speed) ease;
-        }
-
-        .btn-modern:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .card-body {
-                padding: 1rem;
-            }
-
-            .icon-wrapper {
-                width: 40px;
-                height: 40px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
 
 @endsection
 
 @section('scripts')
     @can('role-list')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="{{ asset('js/dashboardlog.js') }}"></script>
+        <script src="{{ asset('js/dashboardlog.js') }}" defer></script>
     @endcan
 @endsection
