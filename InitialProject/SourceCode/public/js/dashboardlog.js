@@ -28,32 +28,120 @@ document.addEventListener("DOMContentLoaded", function () {
         errorCount[errorType]++;
     });
 
-    function updateChart(errorCount) {
+    // function updateChart(errorCount) {
 
+    //     const labels = Object.keys(errorCount);
+    //     const values = Object.values(errorCount);
+    //     // const totalErrors = values.reduce((sum, val) => sum + val, 0);
+
+    //     if (errorCountElement) {
+    //         errorCountElement.textContent =
+    //             Object.keys(totalError).length + " errors";
+    //     }
+
+    //     errorChart.data.labels = labels;
+    //     errorChart.data.datasets[0].data = values;
+
+    //     const maxCount = Math.max(...values);
+    //     errorChart.options.scales.y.suggestedMax = maxCount + 10;
+
+    //     errorChart.options.scales.y.ticks = {
+    //         beginAtZero: true,
+    //         min: 0,
+    //         max: maxCount + 10,
+    //     };
+
+    //     errorChart.update();
+    // }
+
+    
+    
+
+    // const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    // gradient.addColorStop(0, "rgba(13, 110, 253, 0.8)");
+    // gradient.addColorStop(1, "rgba(13, 110, 253, 0.2)");
+
+    // let errorChart = new Chart(ctx, {
+    //     type: "bar",
+    //     data: {
+    //         labels: [],
+    //         datasets: [
+    //             {
+    //                 label: "จำนวน Error แต่ละประเภท",
+    //                 data: [],
+    //                 backgroundColor: gradient,
+    //                 borderColor: "#0d6efd",
+    //                 borderWidth: 1,
+    //                 borderRadius: 8,
+    //                 maxBarThickness: 50,
+    //             },
+    //         ],
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         plugins: {
+    //             legend: { display: false },
+    //             tooltip: {
+    //                 backgroundColor: "rgba(0, 0, 0, 0.8)",
+    //                 padding: 12,
+    //                 titleFont: { size: 14, weight: "bold" },
+    //                 bodyFont: { size: 13 },
+    //             },
+    //         },
+    //         scales: {
+    //             y: {
+    //                 beginAtZero: true,
+    //                 suggestedMin: 0, // ตั้งค่าขั้นต่ำที่แนะนำเป็น 0
+    //                 suggestedMax: 10, // ตั้งค่าขั้นสูงที่แนะนำเริ่มต้นเป็น 10
+    //                 grid: { drawBorder: false, color: "rgba(0, 0, 0, 0.1)" },
+    //                 ticks: {
+    //                     beginAtZero: true,
+    //                     min: 0,
+    //                     max: 10,
+    //                     font: { size: 12 },
+    //                 },
+    //             },
+    //             x: {
+    //                 grid: { display: false },
+    //                 ticks: { font: { size: 11 } },
+    //             },
+    //         },
+    //     },
+    // });
+
+    function updateChart(errorCount) {
         const labels = Object.keys(errorCount);
         const values = Object.values(errorCount);
-        // const totalErrors = values.reduce((sum, val) => sum + val, 0);
-
+    
         if (errorCountElement) {
             errorCountElement.textContent =
                 Object.keys(totalError).length + " errors";
         }
-
+    
         errorChart.data.labels = labels;
         errorChart.data.datasets[0].data = values;
-
-        const maxCount = Math.max(...values);
-        errorChart.options.scales.y.suggestedMax = maxCount + 10;
-
-        errorChart.options.scales.y.ticks = {
+    
+        const maxCount = Math.max(...values, 0); // ป้องกันกรณีไม่มี error
+    
+        errorChart.options.scales.y = {
             beginAtZero: true,
-            min: 0,
-            max: maxCount + 10,
+            suggestedMin: 0,
+            suggestedMax: maxCount + 10,
+            ticks: {
+                stepSize: 1, // เพิ่มให้มี step ทีละ 1
+                min: 0,
+                max: maxCount + 10,
+                callback: function (value) {
+                    return Number.isInteger(value) ? value : null;
+                },
+            },
         };
-
+    
         errorChart.update();
     }
-
+    
+    
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, "rgba(13, 110, 253, 0.8)");
     gradient.addColorStop(1, "rgba(13, 110, 253, 0.2)");
@@ -89,8 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
             scales: {
                 y: {
                     beginAtZero: true,
-                    suggestedMin: 0,
-                    suggestedMax: 10,
+                    suggestedMin: 0, // ตั้งค่าขั้นต่ำที่แนะนำเป็น 0
+                    suggestedMax: 10, // ตั้งค่าขั้นสูงที่แนะนำเริ่มต้นเป็น 10
                     grid: { drawBorder: false, color: "rgba(0, 0, 0, 0.1)" },
                     ticks: {
                         beginAtZero: true,
@@ -107,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
 
+    
     datePicker.addEventListener("change", filterDataByDate);
 
     function filterDataByDate() {

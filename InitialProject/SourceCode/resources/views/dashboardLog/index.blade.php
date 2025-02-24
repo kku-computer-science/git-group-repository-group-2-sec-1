@@ -72,8 +72,7 @@
                     <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <div
-                                    class="icon-wrapper bg-primary-soft rounded-circle d-flex align-items-center justify-content-center p-3">
+                                <div class="icon-wrapper d-flex align-items-center  justify-content-between bg-primary-soft rounded-circle me-3">
                                     <i class="fas fa-users text-primary fa-2x"></i>
                                 </div>
                                 <h6 class="card-title text-muted mb-0">จำนวนผู้ใช้ทั้งหมด</h6>
@@ -90,9 +89,8 @@
                 <a href="{{ url('/papers') }}" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <div
-                                    class="icon-wrapper bg-success-soft rounded-circle d-flex align-items-center justify-content-center p-3">
+                            <div class="d-flex align-items-center  mb-3">
+                                <div class="icon-wrapper  bg-success-soft rounded-circle me-3">
                                     <i class="fas fa-book text-success fa-2x"></i>
                                 </div>
                                 <h6 class="card-title text-muted mb-0">จำนวนงานวิจัยทั้งหมด</h6>
@@ -112,8 +110,7 @@
                     <div class="card h-100 border-0 shadow-sm hover-card rounded-2">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <div
-                                    class="icon-wrapper bg-info-soft rounded-circle d-flex align-items-center justify-content-center p-3">
+                                <div class="icon-wrapper d-flex align-items-center  justify-content-between bg-info-soft rounded-circle me-3">
                                     <i class="fas fa-sign-in-alt text-info fa-2x"></i>
                                 </div>
                                 <h6 class="card-title text-muted mb-0">จำนวนครั้งการเข้าสู่ระบบในวันนี้</h6>
