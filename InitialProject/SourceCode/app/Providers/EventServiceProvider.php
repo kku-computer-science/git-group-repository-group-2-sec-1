@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         \Illuminate\Auth\Events\Login::class => [
             LogUserActivity::class.'@login',
         ],
+        \Illuminate\Auth\Events\Failed::class => [
+            LogUserActivity::class.'@loginFailed',
+        ],
         \App\Events\Logout::class => [
             LogUserActivity::class.'@logout',
         ],
