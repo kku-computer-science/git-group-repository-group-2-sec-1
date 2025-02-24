@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Paper;
+use App\Models\Logs;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class ProfileuserController extends Controller
 {
@@ -15,15 +20,94 @@ class ProfileuserController extends Controller
         $this->middleware('auth');
     }
 
-    function index()
+    function index(Request $request)
     {
 
-        //return view('dashboards.admins.index');
-        $users = User::get();
-        $user = auth()->user();
-        //$user->givePermissionTo('readpaper');
-        //return view('home');
-        return view('dashboards.users.index', compact('users'));
+        // รับค่าวันที่มาจากหน้าเว็บ
+        $date = $request->input('date', old('date', Carbon::today()->format('Y-m-d')));
+        $date_carbon = Carbon::parse($date);
+
+        // query ข้อมูลของ logs ตามวันที่ที่ได้รับมา
+        $logs = Logs::whereDate('created_at', $date)->get();
+
+        // หาค่าผลรวมต่างๆ
+        $summary = [
+            'totalUsers' => User::count(),
+            'totalResearch' => Paper::count(),
+            'totalLogin' => $logs->where('activity_type', 'Login')->count(),
+            'totalApiCall' => $logs->where('activity_type', 'Call Paper')->count(),
+            'totalError' => $logs->where('activity_type', 'Error'),
+        ];
+
+        $criticalEvents = [
+            [
+                'type' => 'Login',
+                'title' => 'การพยายามเข้าสู่ระบบผิดพลาดหลายครั้ง',
+                'email' => "example@gmail.com",
+                'description' => 'IP: 192.168.1.100 - พยายามเข้าระบบ 12 ครั้งใน 5 นาที',
+                'timeAgo' => '5 นาทีที่แล้ว',
+                'date' => '2025-02-23'
+            ],
+            [
+                'type' => 'Call Paper',
+                'title' => 'API ถูกเรียกเกินจำนวนที่กำหนด',
+                'email' => "example@gmail.com",
+                'description' => 'API: Call Paper - ถูกเรียก 15 ครั้งใน 1 นาที',
+                'timeAgo' => '2 นาทีที่แล้ว',
+                'date' => '2025-02-22'
+            ]
+        ];
+
+        // หาผู้ใช้ที่ยังอยู่ในระบบ
+        $activeUser = Logs::select('email')
+                            ->groupby('email')
+                            ->havingRaw("COUNT(CASE WHEN activity_type = 'Login' THEN 1 END) > 
+                                         COUNT(CASE WHEN activity_type = 'Logout' THEN 1 END)")
+                            ->pluck('email');
+
+
+        // เหตุการณ์สำคัญ (Critical event)
+        // เช็คการล็อกอินไม่สําเร็จ
+        $lastCalls = Logs::select('ip_address', DB::raw('MAX(created_at) as last_call'))
+                ->where('activity_type', 'Login Failed')
+                ->whereDate('created_at', $date)
+                ->groupBy('ip_address')
+                ->get();
+
+        $loginFailed = [];
+
+        foreach ($lastCalls as $record) {
+            $lastCall = Carbon::parse($record->last_call);
+        
+            $count = Logs::where('activity_type', 'Login Failed')
+                        ->where('ip_address', $record->ip_address)
+                        ->whereBetween('created_at', [$lastCall->subMinutes(3), $lastCall])
+                        ->whereDate('created_at', $date)
+                        ->count();
+        
+            if ($count >= 5) {
+                $loginFailed[] = $record->ip_address;
+            }
+        }
+
+        // เช็คการเรียก API ที่มากเกินไป
+        $apiCallWarning = Logs::select('email', DB::raw('COUNT(*) as total_calls'), DB::raw('MAX(created_at) as last_call'))
+                            ->where('activity_type', 'Call Paper')
+                            ->whereBetween('created_at', [$date_carbon->startOfDay(), $date_carbon->endOfDay()])
+                            ->groupby('email')
+                            ->having(DB::raw('COUNT(*)'), '>=', 10)
+                            ->get();
+
+        $warning = [
+            'loginFailed' => $loginFailed,
+            'apiCallWarning' => $apiCallWarning,
+        ];
+        // ส่งวันที่ที่เลือกไปให้ blade
+        session(['selectedDate' => $date]);
+
+        // dump($date);
+      
+        return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents', 'activeUser'));
     }
 
     function profile()
@@ -68,7 +152,7 @@ class ProfileuserController extends Controller
             // $doctoral = '';
             $pos_eng = '';
             $pos_thai = '';
-            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student') ) {
+            if (Auth::user()->hasRole('admin') or Auth::user()->hasRole('student')) {
                 $request->academic_ranks_en = null;
                 $request->academic_ranks_th = null;
                 $pos_eng = null;
@@ -176,7 +260,8 @@ class ProfileuserController extends Controller
         //Validate form
         $validator = \Validator::make($request->all(), [
             'oldpassword' => [
-                'required', function ($attribute, $value, $fail) {
+                'required',
+                function ($attribute, $value, $fail) {
                     if (!\Hash::check($value, Auth::user()->password)) {
                         return $fail(__('The current password is incorrect'));
                     }
