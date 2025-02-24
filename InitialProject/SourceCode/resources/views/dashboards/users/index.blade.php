@@ -3,6 +3,8 @@
     var totalError = @json($summary['totalError']);
 </script>
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dashboardLog.css') }}">
+
 
 @section('title', 'Dashboard')
 
