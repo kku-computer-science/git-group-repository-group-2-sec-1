@@ -3,6 +3,8 @@
     var totalError = @json($summary['totalError']);
 </script>
 <script src="{{ asset('js/dashboardlog.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dashboardLog.css') }}">
+
 
 @section('title', 'Dashboard')
 
@@ -146,7 +148,7 @@
                                 <h5 class="card-title mb-0">เหตุการณ์สำคัญที่ต้องตรวจสอบ</h5>
                             </div>
                             <div class="list-group">
-                                @if($warning['loginFailed']->isNotEmpty()) 
+                                {{-- @if($warning['loginFailed']->isNotEmpty()) 
                                     @foreach($warning['loginFailed'] as $fail)
                                         <div class="list-group-item border-0 bg-light rounded mb-3">
                                             <div class="d-flex align-items-center">
@@ -163,7 +165,7 @@
                                     @endforeach
                                 @else
                                     <h6 class="mb-1">ยังไม่มีรายการแจ้งเตือนปรากฎ</h6>
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     </div>
