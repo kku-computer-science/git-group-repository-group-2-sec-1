@@ -10,7 +10,7 @@ class CreateCriticalEventsTable extends Migration
     {
         Schema::create('critical_events', function (Blueprint $table) {
             $table->id();
-            $table->string('event_type'); // 'Login' สำหรับ login success, 'Login Failed' สำหรับ login failed
+            $table->string('event_type'); // 'Login Failed', 'Call API', etc.
             $table->string('ip_address')->nullable(); // สำหรับ Login Failed
             $table->string('email')->nullable(); // สำหรับ API Requests
             $table->integer('count'); // จำนวนเหตุการณ์

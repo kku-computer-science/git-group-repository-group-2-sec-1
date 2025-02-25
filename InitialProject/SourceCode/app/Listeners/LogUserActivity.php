@@ -8,7 +8,7 @@ use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
-
+use App\Models\CriticalEvent;
 class LogUserActivity
 {
     /**
@@ -21,6 +21,32 @@ class LogUserActivity
     public function loginFailed(Failed $event)
     {
         $this->logActivity(null, 'Login Failed', 'User login failed');
+        
+        $ip = Request::ip();
+        $oneMinuteAgo = now()->subMinute();
+
+        // ค้นหา record ใน critical_events ที่มีอยู่แล้ว
+        $event = CriticalEvent::where('event_type', 'Login Failed')
+            ->where('ip_address', $ip)
+            ->where('event_time', '>=', $oneMinuteAgo)
+            ->first();
+
+        if ($event) {
+            // ถ้าพบ record แล้ว ให้อัปเดต count เพิ่ม
+            $event->increment('count');
+
+            if ($event->count >= 5) {
+                Log::warning("IP: {$ip} พบความพยายาม Login Failed เกิน 5 ครั้งใน 1 นาที!");
+            }
+        } else {
+            // ถ้ายังไม่มี record ใน 1 นาที ให้สร้างใหม่
+            CriticalEvent::create([
+                'event_type' => 'Login Failed',
+                'ip_address' => $ip,
+                'count' => 1,
+                'event_time' => now(),
+            ]);
+        }
     }
 
     /**
@@ -37,6 +63,33 @@ class LogUserActivity
     public function userAction(UserAction $event)
     {
         $this->logActivity($event->user, $event->activity_type, $event->details);
+        if($event->activity_type == 'Call API'){
+            $ip = Request::ip();
+            $oneMinuteAgo = now()->subMinute();
+    
+            // ค้นหา record ใน critical_events ที่มีอยู่แล้ว
+            $event = CriticalEvent::where('event_type', 'Call API')
+                ->where('ip_address', $ip)
+                ->where('event_time', '>=', $oneMinuteAgo)
+                ->first();
+    
+            if ($event) {
+                // ถ้าพบ record แล้ว ให้อัปเดต count เพิ่ม
+                $event->increment('count');
+    
+                if ($event->count >= 10) {
+                    Log::warning("IP: {$ip} พบความพยายาม Call API เกิน 10 ครั้งใน 1 นาที!");
+                }
+            } else {
+                // ถ้ายังไม่มี record ใน 1 นาที ให้สร้างใหม่
+                CriticalEvent::create([
+                    'event_type' => 'Call API',
+                    'ip_address' => $ip,
+                    'count' => 1,
+                    'event_time' => now(),
+                ]);
+            }
+        }
     }
 
     /**
@@ -46,7 +99,7 @@ class LogUserActivity
     {
         $ip = Request::ip();
         $userAgent = Request::header('User-Agent');
-        
+
         $log = Logs::create([
             'email' => $user->email ?? 'Guest',
             'user_id' => $user->id ?? null,
@@ -60,8 +113,9 @@ class LogUserActivity
             'details' => $details,
         ]);
         Log::info("User " . ($user->email ?? 'Guest') . " performed action: {$activityType} ({$details}) from IP: {$ip}");
-        
+
     }
+
 
     /**
      * Determine the device type from user agent.
