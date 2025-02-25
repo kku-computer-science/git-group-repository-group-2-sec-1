@@ -80,14 +80,15 @@ class ProfileuserController extends Controller
             $endTime = Carbon::parse($record->last_call)->toDateTimeString();
             $startTime = Carbon::parse($record->last_call)->subMinute(2)->toDateTimeString();
         
-            $loginAttempts = Logs::where('activity_type', 'Login Failed')
-                                 ->where('ip_address', $record->email)
+            $loginAttempts = Logs::select('ip_address')
+                                 ->where('activity_type', 'Login Failed')
+                                 ->where('ip_address', $record->ip_address)
                                  ->whereBetween('created_at', [$startTime, $endTime])
                                  ->whereDate('created_at', $date)
                                  ->get();
         
             if ($loginAttempts->count() >= 5) {
-                $loginWarnings[] = [
+                $loginFailed[] = [
                     'type' => 'Login Failed',
                     'title' => 'การล็อกอินผิดพลาดหลายครั้ง',
                     'user_pointer' => $record->ip_address,
@@ -95,6 +96,7 @@ class ProfileuserController extends Controller
                     'date' => $date,
                     'last_call' => $endTime,
                     'description' => 'IP: ' . $record->ip_address . ' - พยายามเข้าระบบ ' . $loginAttempts->count() . ' ครั้งภายใน 2 นาที',
+                    'time_diff' => Carbon::parse($endTime)->diffInMinutes(Carbon::now()),
                 ];
             }
         }
@@ -132,6 +134,7 @@ class ProfileuserController extends Controller
                     'date' => $date,
                     'last_call' => $endTime,
                     'description' => 'Email: ' . $record->email . ' - พยายามเรียก API ' . $emailCall->count() . ' ครั้งภายใน 5 นาที',
+                    'time_diff' => Carbon::parse($endTime)->diffInMinutes(Carbon::now()),
                 ];
             }
             // $apiCallWarning[] = $emailCall;
@@ -145,7 +148,7 @@ class ProfileuserController extends Controller
         // ส่งวันที่ที่เลือกไปให้ blade
         session(['selectedDate' => $date]);
 
-        // dump($apiCallWarning);
+        // dump($loginFailed);
       
         return view('dashboards.users.index', compact('summary', 'warning', 'criticalEvents', 'activeUser', 'apiLastCall', 'apiCallWarning', 'loginFailed'));
     }
