@@ -1,9 +1,10 @@
 *** Settings ***
 Documentation  Test cases for logs filter by email
+Library      SeleniumLibrary
 Resource  ../resources/common_resource.robot
 Resource  ../resources/logs_resource.robot
 Suite Setup     Open Website
-Suite Teardown  Close Website
+Suite Teardown  SeleniumLibrary.Close Browser
 
 *** Test Cases ***
 TC1: Admin login

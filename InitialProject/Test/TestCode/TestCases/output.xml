@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.0.1 (Python 3.12.5 on win32)" generated="2025-02-11T23:20:33.732217" rpa="false" schemaversion="5">
+<suite id="s1" name="Test Language" source="D:\File\CS Term 6\SoftEnProject\Test\TestCases\test_language.robot">
+<test id="s1-t1" name="TC1: Verify Default Language" line="10">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:33.983024" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:20:33.983024" elapsed="7.279043"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:20:41.262067" elapsed="0.029349"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:20:33.983024" elapsed="7.308392"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:41.292413" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:20:41.292413" elapsed="0.723152"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:20:41.291416" elapsed="0.725149"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:42.051451" level="INFO">${TEXT} = HOME</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:20:42.016565" elapsed="0.034886"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:20:42.051451" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:20:42.051451" elapsed="0.000774"/>
+</kw>
+<arg>HOME</arg>
+<status status="PASS" start="2025-02-11T23:20:42.016565" elapsed="0.035660"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:20:42.052225" elapsed="2.479405"/>
+</kw>
+<doc>Verify that the website defaults to English when first opened</doc>
+<status status="PASS" start="2025-02-11T23:20:33.983024" elapsed="10.548606"/>
+</test>
+<test id="s1-t2" name="TC2: Switch to Thai and Verify" line="15">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:44.531630" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:20:44.531630" elapsed="7.690447"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:20:52.222077" elapsed="0.429352"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:20:44.531630" elapsed="8.119799"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:52.651429" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:20:52.651429" elapsed="1.134695"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:20:52.651429" elapsed="1.134695"/>
+</kw>
+<kw name="Switch to Thai" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:53.786124" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:20:53.786124" elapsed="0.893477"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:20:54.679601" elapsed="0.824709"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:55.504310" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:20:55.504310" elapsed="1.837906"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ผลงานตีพิมพ์ (5 ปี ย้อนหลัง)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:20:57.342216" elapsed="0.427332"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:20:57.769548" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:20:53.786124" elapsed="3.983424"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:20:58.595335" level="INFO">${TEXT} = หน้าแรก</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:20:57.769548" elapsed="0.825787"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:20:58.595335" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:20:58.595335" elapsed="0.000000"/>
+</kw>
+<arg>หน้าแรก</arg>
+<status status="PASS" start="2025-02-11T23:20:57.769548" elapsed="0.825787"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:20:58.595335" elapsed="3.752936"/>
+</kw>
+<doc>Switch to Thai and verify the language change</doc>
+<status status="PASS" start="2025-02-11T23:20:44.531630" elapsed="17.816919"/>
+</test>
+<test id="s1-t3" name="TC3: Switch to Thai and Refresh" line="21">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:02.350417" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:02.350417" elapsed="7.548655"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:21:09.899072" elapsed="0.426138"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:02.348795" elapsed="7.976415"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:10.325210" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:10.325210" elapsed="1.152076"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:10.325210" elapsed="1.152076"/>
+</kw>
+<kw name="Switch to Thai" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:11.477731" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:11.477731" elapsed="0.890971"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:21:12.368702" elapsed="0.822081"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:13.190783" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:13.190783" elapsed="1.905099"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ผลงานตีพิมพ์ (5 ปี ย้อนหลัง)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:21:15.095882" elapsed="0.425706"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:15.521588" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:11.477731" elapsed="4.043857"/>
+</kw>
+<kw name="Refresh Page" owner="language_resource">
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2025-02-11T23:21:15.521588" elapsed="1.136800"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:15.521588" elapsed="1.136800"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:17.488943" level="INFO">${TEXT} = หน้าแรก</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:16.658911" elapsed="0.830032"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:21:17.488943" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:17.488943" elapsed="0.000000"/>
+</kw>
+<arg>หน้าแรก</arg>
+<status status="PASS" start="2025-02-11T23:21:16.658911" elapsed="0.830032"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:21:17.488943" elapsed="2.464108"/>
+</kw>
+<doc>Switch to Thai, refresh, and verify the language persists</doc>
+<status status="PASS" start="2025-02-11T23:21:02.348795" elapsed="17.604256"/>
+</test>
+<test id="s1-t4" name="TC4: Switch to English and Verify" line="28">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:19.953051" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:19.953051" elapsed="7.504176"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:21:27.457227" elapsed="0.449227"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:19.953051" elapsed="7.953403"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:27.907477" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:27.907477" elapsed="1.152663"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:27.906454" elapsed="1.153686"/>
+</kw>
+<kw name="Switch to Thai" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:29.060493" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:29.060493" elapsed="0.885205"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:21:29.945698" elapsed="0.824057"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:30.769755" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:30.769755" elapsed="1.881001"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ผลงานตีพิมพ์ (5 ปี ย้อนหลัง)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:21:32.650756" elapsed="0.428878"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:33.079634" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:29.060493" elapsed="4.019141"/>
+</kw>
+<kw name="Switch to English" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:33.079634" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:33.079634" elapsed="0.861082"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:21:33.940716" elapsed="0.820036"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:34.760752" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:34.760752" elapsed="1.836515"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Publications (In the Last 5 Years)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:21:36.597267" elapsed="0.425354"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:37.022621" elapsed="0.000445"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:33.079634" elapsed="3.943432"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:37.848953" level="INFO">${TEXT} = HOME</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:37.023066" elapsed="0.825887"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:21:37.848953" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:37.848953" elapsed="0.000000"/>
+</kw>
+<arg>HOME</arg>
+<status status="PASS" start="2025-02-11T23:21:37.023066" elapsed="0.825887"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:21:37.848953" elapsed="2.460689"/>
+</kw>
+<doc>Switch to English and verify the language change</doc>
+<status status="PASS" start="2025-02-11T23:21:19.953051" elapsed="20.356591"/>
+</test>
+<test id="s1-t5" name="TC5: Switch to English and Refresh" line="35">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:40.309642" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:40.309642" elapsed="7.654355"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:21:47.963997" elapsed="0.427491"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:40.309642" elapsed="8.081846"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:48.391488" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:21:48.391488" elapsed="1.152565"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:48.391488" elapsed="1.152565"/>
+</kw>
+<kw name="Switch to Thai" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:49.544053" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:49.544053" elapsed="0.887028"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:21:50.431081" elapsed="0.823642"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:51.255259" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'ไทย')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:51.254723" elapsed="1.825837"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ผลงานตีพิมพ์ (5 ปี ย้อนหลัง)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:21:53.080560" elapsed="0.425789"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:53.506349" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:49.544053" elapsed="3.962296"/>
+</kw>
+<kw name="Switch to English" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:53.506349" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:53.506349" elapsed="0.867002"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:21:54.373351" elapsed="0.822012"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:55.195363" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), 'English')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:55.195363" elapsed="1.873059"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Publications (In the Last 5 Years)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:21:57.068422" elapsed="0.423057"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:57.491479" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:53.506349" elapsed="3.985130"/>
+</kw>
+<kw name="Refresh Page" owner="language_resource">
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2025-02-11T23:21:57.491479" elapsed="1.114582"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:21:57.491479" elapsed="1.114582"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:21:59.435398" level="INFO">${TEXT} = HOME</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:21:58.606697" elapsed="0.828701"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:21:59.435398" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:21:59.435398" elapsed="0.000000"/>
+</kw>
+<arg>HOME</arg>
+<status status="PASS" start="2025-02-11T23:21:58.606697" elapsed="0.828701"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:21:59.435398" elapsed="2.470667"/>
+</kw>
+<doc>Switch to English, refresh, and verify the language persists</doc>
+<status status="PASS" start="2025-02-11T23:21:40.309642" elapsed="21.596423"/>
+</test>
+<test id="s1-t6" name="TC6: Switch to Chinese and Verify" line="43">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:01.906065" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:22:01.906065" elapsed="7.342373"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:22:09.248438" elapsed="0.427365"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:01.906065" elapsed="7.769738"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:09.675803" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:22:09.675803" elapsed="1.125271"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:09.675803" elapsed="1.125271"/>
+</kw>
+<kw name="Switch to Chinese" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:10.802026" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:10.802026" elapsed="0.887565"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:22:11.689591" elapsed="0.823710"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:12.513301" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:12.513301" elapsed="1.843627"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>發表文章 (過去 5 年)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:22:14.357100" elapsed="0.426201"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:22:14.783301" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:10.801672" elapsed="3.981629"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:15.612483" level="INFO">${TEXT} = 首頁</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:14.783301" elapsed="0.829182"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:22:15.612483" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:22:15.612483" elapsed="0.000000"/>
+</kw>
+<arg>首頁</arg>
+<status status="PASS" start="2025-02-11T23:22:14.783301" elapsed="0.829182"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:22:15.612483" elapsed="2.471675"/>
+</kw>
+<doc>Switch to Chinese and verify the language change</doc>
+<status status="PASS" start="2025-02-11T23:22:01.906065" elapsed="16.178093"/>
+</test>
+<test id="s1-t7" name="TC7: Switch to Chinese and Refresh" line="49">
+<kw name="Open Website" owner="common_resource" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:18.084158" level="INFO">Opening browser 'Chrome' to base url 'http://cs0267.cpkkuhost.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:22:18.084158" elapsed="7.353841"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-02-11T23:22:25.437999" elapsed="0.425881"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:18.084158" elapsed="7.779722"/>
+</kw>
+<kw name="Go To Main Page" owner="common_resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:25.863880" level="INFO">Opening url 'http://cs0267.cpkkuhost.com'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-02-11T23:22:25.863880" elapsed="1.064453"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:25.863880" elapsed="1.064453"/>
+</kw>
+<kw name="Switch to Chinese" owner="language_resource">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:26.928333" level="INFO">Clicking element 'id=navbarDropdownMenuLink'.</msg>
+<arg>id=navbarDropdownMenuLink</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:26.928333" elapsed="0.889895"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-02-11T23:22:27.818228" elapsed="0.827305"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:28.645533" level="INFO">Clicking element 'xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]'.</msg>
+<arg>xpath=//a[contains(@class, 'dropdown-item') and contains(text(), '中文')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:28.645533" elapsed="1.795463"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>發表文章 (過去 5 年)</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-02-11T23:22:30.440996" elapsed="0.426272"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:22:30.867268" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:26.928333" elapsed="3.938935"/>
+</kw>
+<kw name="Refresh Page" owner="language_resource">
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2025-02-11T23:22:30.867268" elapsed="1.078318"/>
+</kw>
+<status status="PASS" start="2025-02-11T23:22:30.867268" elapsed="1.078318"/>
+</kw>
+<kw name="Verify Page Language" owner="language_resource">
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2025-02-11T23:22:32.774972" level="INFO">${TEXT} = 首頁</msg>
+<var>${TEXT}</var>
+<arg>xpath=//*[@id="collapsibleNavbar"]/ul/li[1]/a</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-02-11T23:22:31.945586" elapsed="0.829386"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${TEXT}</arg>
+<arg>${EXPECTED_LANGUAGE}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2025-02-11T23:22:32.774972" elapsed="0.000000"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2025-02-11T23:22:32.774972" elapsed="0.000000"/>
+</kw>
+<arg>首頁</arg>
+<status status="PASS" start="2025-02-11T23:22:31.945586" elapsed="0.829386"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-02-11T23:22:32.774972" elapsed="2.475674"/>
+</kw>
+<doc>Switch to Chinese, refresh, and verify the language persists</doc>
+<status status="PASS" start="2025-02-11T23:22:18.084158" elapsed="17.166488"/>
+</test>
+<doc>Test the language switching functionality</doc>
+<status status="PASS" start="2025-02-11T23:20:33.732217" elapsed="121.518429"/>
+</suite>
+<statistics>
+<total>
+<stat pass="7" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="7" fail="0" skip="0" id="s1" name="Test Language">Test Language</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
