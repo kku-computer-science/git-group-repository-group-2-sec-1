@@ -56,6 +56,7 @@ class ProfileuserController extends Controller
         $loginFailed = [];
         $loginAttempts = CriticalEvent::where('event_type', 'Login Failed')
             ->whereDate('event_time', $date)
+            ->where('count', '>=', 5)
             ->get();
         foreach ($loginAttempts as $record) {
             $loginFailed[] = [
@@ -73,6 +74,7 @@ class ProfileuserController extends Controller
         $apiCallWarning = [];
         $apiCallAttempts = CriticalEvent::where('event_type', 'Call Paper')
             ->whereDate('event_time', $date)
+            ->where('count', '>=', 5)
             ->get();
 
         foreach ($apiCallAttempts as $record) {
