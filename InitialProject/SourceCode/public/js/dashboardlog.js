@@ -30,9 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateChart(errorCount) {
 
-        const labels = Object.keys(errorCount);
         const values = Object.values(errorCount);
-        // const totalErrors = values.reduce((sum, val) => sum + val, 0);
+        const labels = Object.keys(errorCount).map(label => `Error :${label} จำนวน ${errorCount[label]} ครั้ง`);
 
         if (errorCountElement) {
             errorCountElement.textContent =
@@ -53,6 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         errorChart.update();
     }
+
+    
+    
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, "rgba(13, 110, 253, 0.8)");
@@ -89,8 +91,8 @@ document.addEventListener("DOMContentLoaded", function () {
             scales: {
                 y: {
                     beginAtZero: true,
-                    suggestedMin: 0,
-                    suggestedMax: 10,
+                    suggestedMin: 0, // ตั้งค่าขั้นต่ำที่แนะนำเป็น 0
+                    suggestedMax: 10, // ตั้งค่าขั้นสูงที่แนะนำเริ่มต้นเป็น 10
                     grid: { drawBorder: false, color: "rgba(0, 0, 0, 0.1)" },
                     ticks: {
                         beginAtZero: true,
@@ -106,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         },
     });
-
+    
     datePicker.addEventListener("change", filterDataByDate);
 
     function filterDataByDate() {

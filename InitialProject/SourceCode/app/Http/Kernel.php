@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\LogErrorMiddleware::class,
+        \App\Http\Middleware\TrackUserActivity::class,
     ];
 
     /**
@@ -40,6 +41,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Language::class,
             // \App\Http\Middleware\LogErrorMiddleware::class,
+            \App\Http\Middleware\TrackUserActivity::class,
         ],
 
         'api' => [
