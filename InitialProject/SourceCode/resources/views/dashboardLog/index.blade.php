@@ -3,7 +3,6 @@
 
 
 <script>
-    const criticalEventsData = @json($criticalEvents);
     var totalError = @json($summary['totalError']);
     var selectedDate = @json(session('selectedDate', date('Y-m-d')));
 </script>
@@ -11,16 +10,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    {{-- <h5>
-        @foreach ($loginFailed as $fail)
-            @foreach ($warn as $event)
-                @foreach ($event as $value)
-                    {{ $value }}
-                @endforeach
-            @endforeach
-        @endforeach 
-    </h5> --}}
-    {{-- <h3>{{ $apiLastCall }}</h3> --}}
     <!-- Welcome Section -->
     <div class="container-fluid px-4">
         <!-- Admin Dashboard Header -->
@@ -30,7 +19,6 @@
                 <form action="{{ route('dashboard') }}" method="GET"
                     class="d-flex align-items-center dashbord-for-align pt-3">
                     <div class="input-group dashboard-input-group  d-flex align-items-center " style="max-width: 350px;">
-                        <!-- <label for="datePicker" class="input-group-text bg-light fw-medium">Select Date:</label> -->
                         <input type="date" class="form-control" id="datePicker" name="date"
                             value="{{ old('date', date('Y-m-d')) }}" required>
                         <button type="submit" class="btn btn-outline-primary btn-sm">
@@ -47,7 +35,7 @@
                         class="badge bg-light text-success border border-success d-flex align-items-center gap-2 px-2 py-2">
                         <div class="pulse-dot bg-success"></div>
                         <i class="fas fa-users"></i>
-                        <span>{{ count($activeUser) ?? '12' }} active</span>
+                        <span>{{ $activeUser }} active</span>
                     </span>
                 </div>
 
@@ -161,30 +149,6 @@
 
                         <!-- Events List Container with Fixed Height -->
                         <div class="events-container" style="max-height: 400px; overflow-y: auto;">
-                            {{-- @if (!empty($criticalEvents) && count($criticalEvents) > 0)
-                                <div class="list-group">
-                                    @foreach ($criticalEvents as $event)
-                                        @if ($event['date'] === session('selectedDate', date('Y-m-d')))
-                                            <a href="#" onclick="redirectToLogs(event, this.dataset.url, '{{ $event['type'] }}')"
-                                                data-url="{{ route('logs.index') }}" data-date="{{ $event['date'] }}"
-                                                class="list-group-item border-0 rounded mb-3 text-decoration-none p-3 d-flex align-items-center hover-shadow transition card-critical ">
-                                                <div class="text-danger me-3">
-                                                    <i class="fas fa-exclamation-triangle fa-lg"></i>
-                                                </div>
-                                                <div class="w-100">
-                                                    <h6 class="mb-2 text-danger fw-bold">{{ $event['title'] }}</h6>
-                                                    <div class="d-flex flex-column flex-md-row gap-2">
-                                                        <p class="mb-1 text-primary fw-semibold">{{ $event['email'] }}</p>
-                                                        <p class="mb-1 text-dark">{{ $event['description'] }}</p>
-                                                    </div>
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="far fa-clock me-1"></i>{{ $event['timeAgo'] }}
-                                                    </small>
-                                                </div>
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div> --}}
                             @if (!empty($apiCallWarning) || !empty($loginFailed))
                                 @if (!empty($apiCallWarning))
                                     <div class="list-group">
@@ -262,7 +226,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="d-flex align-items-center">
-                                {{-- class="icon-wrapper bg-danger-soft rounded-circle me-3 p-3" --}}
                                 <div
                                     class="icon-wrapper bg-danger-soft rounded-circle d-flex align-items-center justify-content-center p-3">
                                     <i class="fas fa-exclamation-circle text-danger fa-2x"></i>
@@ -294,8 +257,5 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{{ asset('js/dashboardlog.js') }}"></script>
     @endcan
-    <script>
-        // ส่งข้อมูล criticalEvents ไปยัง JavaScript
-        const criticalEventsData = @json($criticalEvents);
-    </script>
+    
 @endsection

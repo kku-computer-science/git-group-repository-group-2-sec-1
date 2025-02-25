@@ -63,12 +63,12 @@ class LogUserActivity
     public function userAction(UserAction $event)
     {
         $this->logActivity($event->user, $event->activity_type, $event->details);
-        if($event->activity_type == 'Call API'){
+        if($event->activity_type == 'Call Paper'){
             $ip = Request::ip();
             $oneMinuteAgo = now()->subMinute();
     
             // ค้นหา record ใน critical_events ที่มีอยู่แล้ว
-            $event = CriticalEvent::where('event_type', 'Call API')
+            $event = CriticalEvent::where('event_type', 'Call Paper')
                 ->where('ip_address', $ip)
                 ->where('event_time', '>=', $oneMinuteAgo)
                 ->first();
@@ -77,13 +77,13 @@ class LogUserActivity
                 // ถ้าพบ record แล้ว ให้อัปเดต count เพิ่ม
                 $event->increment('count');
     
-                if ($event->count >= 10) {
-                    Log::warning("IP: {$ip} พบความพยายาม Call API เกิน 10 ครั้งใน 1 นาที!");
+                if ($event->count >= 5) {
+                    Log::warning("IP: {$ip} พบความพยายาม Call Paper เกิน 5 ครั้งใน 1 นาที!");
                 }
             } else {
                 // ถ้ายังไม่มี record ใน 1 นาที ให้สร้างใหม่
                 CriticalEvent::create([
-                    'event_type' => 'Call API',
+                    'event_type' => 'Call Paper',
                     'ip_address' => $ip,
                     'count' => 1,
                     'event_time' => now(),
