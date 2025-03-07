@@ -1,0 +1,410 @@
+/**
+ * report-log.css - สไตล์สำหรับหน้ารายงานกิจกรรมผู้ใช้งาน
+ */
+
+/* ปรับ Content Wrapper */
+.content-wrapper {
+    padding: 15px;
+    max-width: 100%;
+    margin: 0;
+    min-height: calc(100vh - 56px);
+}
+
+/* สไตล์หัวข้อหลัก */
+.page-header-card {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-header-title {
+    font-weight: 600;
+}
+
+.back-button {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 0.3rem;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+}
+
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* สไตล์การ์ดฟิลเตอร์ */
+.filter-container {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: none;
+}
+
+.filter-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 0.75rem 1.25rem;
+}
+
+.date-range-container {
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.btn-generate {
+    background-color: #4e73df;
+    border-color: #4e73df;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-generate:hover {
+    background-color: #3a5fc5;
+    border-color: #3a5fc5;
+}
+
+/* สไตล์แท็กประเภทกิจกรรม */
+.activity-tag-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* ปรับปรุงสไตล์สำหรับ checkbox */
+.activity-type-checkbox {
+    margin-bottom: 0.75rem;
+    position: relative;
+ 
+}
+
+.activity-type-checkbox .form-check-input {
+    position: absolute;
+    opacity: 0;
+}
+
+.activity-tag-container {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+/* สไตล์สำหรับ label และ tag */
+.activity-type-tag {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: black;
+    width: 100%;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+/* เพิ่มไอคอนแสดงสถานะการเลือก */
+.activity-type-tag::before {
+    content: '';
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+/* กรณีเลือกแล้ว */
+.activity-type-checkbox .form-check-input:checked + .form-check-label .activity-type-tag {
+    border-color: white;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    background-color: rgb(221, 255, 221);
+}
+
+.activity-type-checkbox .form-check-input:checked + .form-check-label .activity-type-tag::before {
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* กรณี hover */
+.activity-type-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* สำหรับช่วงที่เลือกแล้ว + hover */
+.activity-type-checkbox .form-check-input:checked + .form-check-label .activity-type-tag:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* อนิเมชั่นสำหรับไอคอน */
+@keyframes pulse {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.activity-type-checkbox .form-check-input:checked + .form-check-label .activity-type-tag::before {
+    animation: pulse 0.3s ease-in-out;
+}
+
+
+
+/* สไตล์สำหรับ stats cards */
+.stat-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.stat-card-body {
+    display: flex;
+    padding: 1rem;
+    height: 100%;
+}
+
+.stat-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.3rem;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.stat-card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #5a5c69;
+    margin-bottom: 0.25rem;
+}
+
+.stat-card-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2e59d9;
+}
+
+/* สไตล์สำหรับแผนภูมิ */
+.chart-preview-container {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.375rem;
+}
+
+.btn-image {
+    background-color: #4e73df;
+    border-color: #4e73df;
+    font-size: 0.85rem;
+}
+
+.btn-image:hover {
+    background-color: #3a5fc5;
+    border-color: #3a5fc5;
+}
+
+/* สไตล์สำหรับปุ่มส่งออก */
+.btn-export {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.btn-export-pdf {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.btn-export-pdf:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.btn-export-excel {
+    background-color: #27ae60;
+    border-color: #27ae60;
+}
+
+.btn-export-excel:hover {
+    background-color: #219651;
+    border-color: #219651;
+}
+
+/* สไตล์สำหรับตาราง */
+.table {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.table th {
+    font-weight: 600;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* สไตล์สำหรับแท็กกิจกรรมในตาราง */
+.table .activity-type-tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+    display: inline-block;
+    width: auto;
+}
+
+/* สไตล์สำหรับ pagination */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-link {
+    color: #4e73df;
+    border-color: #e3e6f0;
+}
+
+.page-item.active .page-link {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+/* สไตล์สำหรับโมดัล */
+.modal-header {
+    background-color: #f8f9fa;
+}
+
+.image-preview-container {
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.375rem;
+}
+
+/* ปรับขนาดสำหรับหน้าจออุปกรณ์ขนาดเล็ก */
+@media (max-width: 768px) {
+    .page-header-title {
+        font-size: 1.25rem;
+    }
+    
+    .stat-card-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .stat-card-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .activity-type-tag {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+    }
+}
+
+/* ปรับสำหรับให้เหมาะกับหน้าจอที่มี sidebar */
+@media (min-width: 992px) {
+    .content-wrapper {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    
+    .card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* เพิ่มเติมสำหรับ loading indicator */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* เพิ่ม animation สำหรับการแสดงรายงาน */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#reportContent {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ปรับแต่งเพิ่มเติมสำหรับทำให้ fit กับ sidebar */
+@media (min-width: 768px) {
+    .content-wrapper {
+        margin-left: auto;
+        width: calc(100% - 250px); /* ปรับตามขนาด sidebar */
+        transition: all 0.3s;
+    }
+    
+    body.sidebar-collapse .content-wrapper {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* เพิ่มเติมสำหรับ dark mode (ถ้ามี) */
+@media (prefers-color-scheme: dark) {
+    .page-header-card {
+        background: linear-gradient(135deg, #3a5fc5 0%, #1c3e94 100%);
+    }
+    
+    .stat-card {
+        background-color: #2a2a2a;
+    }
+    
+    .stat-card-title {
+        color: #e0e0e0;
+    }
+    
+    .stat-card-value {
+        color: #4e73df;
+    }
+}
