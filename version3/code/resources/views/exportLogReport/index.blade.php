@@ -170,8 +170,8 @@
         </div>
 
         <div id="reportContent" style="display: none;">
-                        <!-- Export Options -->
-                        <div class="card mb-4 shadow-sm">
+            <!-- Export Options -->
+            <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-light py-3">
                     <h5 class="card-title m-0 fw-bold">
                         <i class="fas fa-file-export me-2"></i>ส่งออกรายงาน
