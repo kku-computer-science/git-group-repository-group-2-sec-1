@@ -27,7 +27,7 @@ class ExportReportController extends Controller
         return view('exportLogReport.index', [
             'activities' => json_encode($activities),
             'activityTypes' => json_encode($activityTypes)
-        ]);
+        ]); 
     }
 
     /**
