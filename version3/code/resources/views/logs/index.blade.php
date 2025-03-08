@@ -36,7 +36,8 @@
                         class="icon-refresh"></span></button>
 
                 <!-- Download Log Button -->
-                <a href="{{ route('admin.downloadLog') }}" class="btn btn-primary">Download Log</a>
+                <!-- <a href="{{ route('admin.downloadLog') }}" class="btn btn-primary">Download Log</a> -->
+                <a href="{{ route('exportLogReport.index') }}" class="btn btn-primary">Export Report</a>
             </div>
 
 
