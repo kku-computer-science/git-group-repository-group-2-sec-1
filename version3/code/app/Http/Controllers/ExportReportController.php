@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Logs;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -35,7 +37,10 @@ class ExportReportController extends Controller
      */
     private function getMockActivities()
     {
-        return [
+
+        $mock_data = [
+            ["timestamp" => "2025-03-09T08:15:23", "username" => "admin001", "ipAddress" => "192.168.1.101", "type" => "loginSuccess", "details" => "เข้าสู่ระบบสำเร็จ", "status" => "success"],
+            ["timestamp" => "2025-03-08T08:15:23", "username" => "admin001", "ipAddress" => "192.168.1.101", "type" => "loginSuccess", "details" => "เข้าสู่ระบบสำเร็จ", "status" => "success"],
             ["timestamp" => "2025-03-07T08:15:23", "username" => "admin001", "ipAddress" => "192.168.1.101", "type" => "loginSuccess", "details" => "เข้าสู่ระบบสำเร็จ", "status" => "success"],
             ["timestamp" => "2025-03-07T08:30:45", "username" => "user123", "ipAddress" => "192.168.1.102", "type" => "loginFail", "details" => "รหัสผ่านไม่ถูกต้อง", "status" => "fail"],
             ["timestamp" => "2025-03-07T09:12:10", "username" => "manager01", "ipAddress" => "192.168.1.103", "type" => "create", "details" => "สร้างรายการสินค้าใหม่ #12345", "status" => "success"],
@@ -75,6 +80,28 @@ class ExportReportController extends Controller
             ["timestamp" => "2025-03-05T16:15:45", "username" => "researcher03", "ipAddress" => "192.168.1.112", "type" => "callPaper", "details" => "ส่งบทความวิจัย #P003", "status" => "success"],
             ["timestamp" => "2025-03-04T13:50:22", "username" => "researcher01", "ipAddress" => "192.168.1.110", "type" => "callPaper", "details" => "อัพเดทบทความวิจัย #P001", "status" => "success"],
         ];
+
+        $log_data = [];
+        $raw_data = Logs::all();
+
+        foreach ($raw_data as $data) {
+            $date = new \DateTime($data->created_at);
+            $timestamp = $date->format('Y-m-d\TH:i:s');
+            $log_data[] = [
+                "timestamp" => $timestamp,
+                "username" => $data->email,
+                "ipAddress" => $data->ip_address,
+                "type" => $data->activity_type,
+                "details" => $data->activity_details,
+                "status" => $data->status,
+                "device" => $data->device,
+                "browser" => $data->browser,
+            ];
+        }
+
+        // dd($log_data);
+
+        return $log_data;
     }
 
     /**
@@ -83,14 +110,14 @@ class ExportReportController extends Controller
     private function getActivityTypes()
     {
         return [
-            "loginSuccess" => ["color" => "rgba(46, 204, 113, 0.7)", "label" => "Login Success"],
-            "loginFail" => ["color" => "rgba(231, 76, 60, 0.7)", "label" => "Login Failed"],
-            "logout" => ["color" => "rgba(52, 152, 219, 0.7)", "label" => "Logout"],
-            "error" => ["color" => "rgba(243, 156, 18, 0.7)", "label" => "Error"],
-            "create" => ["color" => "rgba(155, 89, 182, 0.7)", "label" => "Create"],
-            "update" => ["color" => "rgba(26, 188, 156, 0.7)", "label" => "Update"],
-            "delete" => ["color" => "rgba(211, 84, 0, 0.7)", "label" => "Delete"],
-            "callPaper" => ["color" => "rgba(41, 128, 185, 0.7)", "label" => "Call Paper"]
+            "Login" => ["color" => "rgba(46, 204, 113, 0.7)", "label" => "Login Success"],
+            "Login Failed" => ["color" => "rgba(231, 76, 60, 0.7)", "label" => "Login Failed"],
+            "Logout" => ["color" => "rgba(52, 152, 219, 0.7)", "label" => "Logout"],
+            "Error" => ["color" => "rgba(243, 156, 18, 0.7)", "label" => "Error"],
+            "Create" => ["color" => "rgba(155, 89, 182, 0.7)", "label" => "Create"],
+            "Update" => ["color" => "rgba(26, 188, 156, 0.7)", "label" => "Update"],
+            "Delete" => ["color" => "rgba(211, 84, 0, 0.7)", "label" => "Delete"],
+            "Call Paper" => ["color" => "rgba(41, 128, 185, 0.7)", "label" => "Call Paper"]
         ];
     }
 

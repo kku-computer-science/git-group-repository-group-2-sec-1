@@ -14,14 +14,14 @@ const itemsPerPage = 10;
  */
 function getColorClassForType(type) {
     const colorMap = {
-        'loginSuccess': 'success',
-        'loginFail': 'danger',
-        'logout': 'primary',
-        'error': 'warning',
-        'create': 'purple',
-        'update': 'info',
-        'delete': 'orange',
-        'callPaper': 'blue'
+        'Login': 'success',
+        'Login Failed': 'danger',
+        'Logout': 'primary',
+        'Error': 'warning',
+        'Create': 'purple',
+        'Update': 'info',
+        'Delete': 'orange',
+        'Call Paper': 'blue'
     };
     
     return colorMap[type] || 'secondary';
