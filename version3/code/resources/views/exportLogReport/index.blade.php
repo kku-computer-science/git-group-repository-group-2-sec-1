@@ -11,6 +11,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
 <!-- โหลดไฟล์ JavaScript ทั้งหมด -->
+<!-- เพิ่มไฟล์ debug helper -->
+<script src="{{ asset('js/exportReport/debug-helper.js') }}"></script>
 <script src="{{ asset('js/exportReport/chart-utilities.js') }}"></script>
 <script src="{{ asset('js/exportReport/table-utilities.js') }}"></script>
 <script src="{{ asset('js/exportReport/export-utilities.js') }}"></script>
@@ -306,6 +308,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
     <!-- โหลดไฟล์ JavaScript ทั้งหมด -->
+    <!-- เพิ่มไฟล์ debug helper -->
+    <script src="{{ asset('js/exportReport/debug-helper.js') }}"></script>
     <script src="{{ asset('js/exportReport/chart-utilities.js') }}"></script>
     <script src="{{ asset('js/exportReport/table-utilities.js') }}"></script>
     <script src="{{ asset('js/exportReport/export-utilities.js') }}"></script>
@@ -341,6 +345,62 @@
                 setTimeout(function () {
                     reportContent.style.display = 'block';
                 }, 300);
+            }
+        });
+    </script>
+    <script>
+        // ฟังก์ชันช่วยเหลือเพื่อบังคับให้ข้อมูลแสดง
+        function forceRenderElements() {
+            console.log('Forcing render of stats and table...');
+
+            try {
+                // ทำให้พื้นที่แสดงผลปรากฎ
+                document.getElementById('reportContent').style.display = 'block';
+
+                // บังคับสร้างสรุปกิจกรรม
+                if (typeof generateStatsSummary === 'function' &&
+                    Array.isArray(window.filteredActivities) &&
+                    typeof window.activityTypeConfig === 'object') {
+                    console.log('Regenerating stats summary...');
+                    generateStatsSummary(window.filteredActivities, window.activityTypeConfig);
+                }
+
+                // บังคับสร้างตาราง
+                if (typeof generateActivityTable === 'function' &&
+                    Array.isArray(window.filteredActivities) &&
+                    typeof window.activityTypeConfig === 'object') {
+                    console.log('Regenerating activity table...');
+                    generateActivityTable(window.filteredActivities, window.activityTypeConfig, 1);
+                }
+
+                console.log('Forced rendering complete');
+            } catch (error) {
+                console.error('Error during forced rendering:', error);
+            }
+        }
+
+        // รอให้หน้าโหลดเสร็จแล้วตรวจสอบว่าควรบังคับการแสดงผลหรือไม่
+        document.addEventListener('DOMContentLoaded', function () {
+            // ถ้ามีพารามิเตอร์ URL และ reportContent แสดงอยู่
+            const urlParams = new URLSearchParams(window.location.search);
+            if ((urlParams.has('dateRangeStart') || urlParams.has('activityType[]'))) {
+                setTimeout(function () {
+                    if (document.getElementById('reportContent').style.display !== 'none') {
+                        forceRenderElements();
+                    }
+                }, 1000);
+            }
+
+            // บังคับให้ generateReport แสดงส่วนประกอบทั้งหมด
+            const btnGenerateReport = document.getElementById('btnGenerateReport');
+            if (btnGenerateReport) {
+                const oldClickEvent = btnGenerateReport.onclick;
+                btnGenerateReport.onclick = function (e) {
+                    if (oldClickEvent) {
+                        oldClickEvent.call(this, e);
+                    }
+                    setTimeout(forceRenderElements, 500);
+                };
             }
         });
     </script>

@@ -8,73 +8,121 @@ let currentPage = 1;
 const itemsPerPage = 10;
 
 /**
+ * Get Bootstrap color class for activity type
+ * @param {string} type - Activity type
+ * @returns {string} Bootstrap color class
+ */
+function getColorClassForType(type) {
+    const colorMap = {
+        'loginSuccess': 'success',
+        'loginFail': 'danger',
+        'logout': 'primary',
+        'error': 'warning',
+        'create': 'purple',
+        'update': 'info',
+        'delete': 'orange',
+        'callPaper': 'blue'
+    };
+    
+    return colorMap[type] || 'secondary';
+}
+
+/**
  * Generate and display the activity table
  * @param {Array} activities - Filtered activities to display
  * @param {Object} activityTypeConfig - Configuration for activity types
  * @param {number} page - Page number to display
  */
 function generateActivityTable(activities, activityTypeConfig, page) {
-    currentPage = page || 1;
-    const tableBody = document.getElementById('activityTableBody');
-    tableBody.innerHTML = '';
-    
-    // Calculate pagination
-    const totalPages = Math.ceil(activities.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, activities.length);
-    
-    // Get activities for current page
-    const currentActivities = activities.slice(startIndex, endIndex);
-    
-    // Add rows to table
-    currentActivities.forEach(activity => {
-        const row = document.createElement('tr');
+    try {
+        currentPage = page || 1;
+        const tableBody = document.getElementById('activityTableBody');
+        if (!tableBody) {
+            console.error('Activity table body not found');
+            return null;
+        }
+
+        tableBody.innerHTML = '';
         
-        // Format date
-        const date = new Date(activity.timestamp);
-        const formattedDate = date.toLocaleDateString('th-TH', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        // ตรวจสอบว่ามีข้อมูลหรือไม่
+        if (!activities || !Array.isArray(activities) || activities.length === 0) {
+            console.warn('No activities to display in table');
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">ไม่พบข้อมูลกิจกรรมในช่วงเวลาที่เลือก</td></tr>';
+            return null;
+        }
+        
+        // Calculate pagination
+        const totalPages = Math.ceil(activities.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, activities.length);
+        
+        // Get activities for current page
+        const currentActivities = activities.slice(startIndex, endIndex);
+        
+        // Add rows to table
+        currentActivities.forEach(activity => {
+            const row = document.createElement('tr');
+            
+            try {
+                // Format date
+                let formattedDate = '';
+                try {
+                    const date = new Date(activity.timestamp);
+                    formattedDate = date.toLocaleDateString('th-TH', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (e) {
+                    console.warn('Error formatting date:', e);
+                    formattedDate = activity.timestamp || '';
+                }
+                
+                // Get activity type config
+                const typeConfig = activityTypeConfig && activityTypeConfig[activity.type];
+                const typeLabel = typeConfig ? typeConfig.label : activity.type;
+                
+                // Create status badge
+                const statusBadge = `<span class="badge bg-${activity.status === 'success' ? 'success' : 'danger'}">${activity.status === 'success' ? 'สำเร็จ' : 'ไม่สำเร็จ'}</span>`;
+                
+                // Create activity type badge
+                const typeClass = getColorClassForType(activity.type);
+                const typeBadge = `<span class="text-black badge activity-type-${activity.type}">${typeLabel}</span>`;
+                
+                // Set row content
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${activity.username || ''}</td>
+                    <td><span class="badge bg-secondary bg-opacity-50 text-black">${activity.ipAddress || ''}</span></td>
+                    <td>${typeBadge}</td>
+                    <td>${activity.details || ''}</td>
+                    <td>${statusBadge}</td>
+                `;
+            } catch (error) {
+                console.error('Error creating table row:', error);
+                row.innerHTML = '<td colspan="6" class="text-center">ข้อมูลไม่ถูกต้อง</td>';
+            }
+            
+            tableBody.appendChild(row);
         });
         
-        // Get activity type config
-        const typeConfig = activityTypeConfig[activity.type];
-        const typeLabel = typeConfig ? typeConfig.label : activity.type;
+        // Update table info
+        updateTableInfo(activities.length, startIndex + 1, endIndex);
         
-        // Create status badge
-        const statusBadge = `<span class="badge bg-${activity.status === 'success' ? 'success' : 'danger'}">${activity.status === 'success' ? 'สำเร็จ' : 'ไม่สำเร็จ'}</span>`;
+        // Update pagination
+        updatePagination(activities, currentPage, totalPages);
         
-        // Create activity type badge
-        const typeClass = getColorClassForType(activity.type);
-        const typeBadge = `<span class="text-black badge activity-type-${activity.type}">${typeLabel}</span>`;
-        
-        // Set row content
-        row.innerHTML = `
-            <td>${formattedDate}</td>
-            <td>${activity.username}</td>
-            <td><span class="badge bg-secondary bg-opacity-50 text-black">${activity.ipAddress}</span></td>
-            <td >${typeBadge}</td>
-            <td>${activity.details}</td>
-            <td>${statusBadge}</td>
-        `;
-        
-        tableBody.appendChild(row);
-    });
-    
-    // Update table info
-    updateTableInfo(activities.length, startIndex + 1, endIndex);
-    
-    // Update pagination
-    updatePagination(activities, currentPage, totalPages);
-    
-    return {
-        currentPage,
-        totalPages,
-        totalItems: activities.length
-    };
+        return {
+            currentPage,
+            totalPages,
+            totalItems: activities.length
+        };
+    } catch (error) {
+        console.error('Error generating activity table:', error);
+        return null;
+    }
 }
 
 /**
@@ -85,7 +133,9 @@ function generateActivityTable(activities, activityTypeConfig, page) {
  */
 function updateTableInfo(totalItems, startItem, endItem) {
     const tableInfo = document.getElementById('tableInfo');
-    tableInfo.textContent = `แสดง ${startItem} ถึง ${endItem} จากทั้งหมด ${totalItems} รายการ`;
+    if (tableInfo) {
+        tableInfo.textContent = `แสดง ${startItem} ถึง ${endItem} จากทั้งหมด ${totalItems} รายการ`;
+    }
 }
 
 /**
@@ -96,10 +146,15 @@ function updateTableInfo(totalItems, startItem, endItem) {
  */
 function updatePagination(activities, currentPage, totalPages) {
     const pagination = document.getElementById('pagination');
+    if (!pagination) {
+        console.error('Pagination element not found');
+        return;
+    }
+    
     pagination.innerHTML = '';
     
     // If no items or only one page, don't show pagination
-    if (activities.length === 0 || totalPages <= 1) {
+    if (!activities || activities.length === 0 || totalPages <= 1) {
         return;
     }
     
@@ -166,19 +221,39 @@ function updatePagination(activities, currentPage, totalPages) {
  * @returns {Array} Filtered activities
  */
 function filterActivities(allActivities, startDate, endDate, activityTypes) {
-    const start = new Date(startDate);
-    start.setHours(0, 0, 0, 0);
-    
-    const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999);
-    
-    return allActivities.filter(activity => {
-        const activityDate = new Date(activity.timestamp);
-        const isInDateRange = activityDate >= start && activityDate <= end;
-        const isSelectedType = activityTypes.includes(activity.type);
+    try {
+        if (!Array.isArray(allActivities)) {
+            console.error('Activities must be an array');
+            return [];
+        }
         
-        return isInDateRange && isSelectedType;
-    });
+        if (!Array.isArray(activityTypes)) {
+            console.error('Activity types must be an array');
+            return [];
+        }
+        
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        
+        return allActivities.filter(activity => {
+            try {
+                const activityDate = new Date(activity.timestamp);
+                const isInDateRange = activityDate >= start && activityDate <= end;
+                const isSelectedType = activityTypes.includes(activity.type);
+                
+                return isInDateRange && isSelectedType;
+            } catch (error) {
+                console.warn('Error filtering activity:', error, activity);
+                return false;
+            }
+        });
+    } catch (error) {
+        console.error('Error in filterActivities:', error);
+        return [];
+    }
 }
 
 /**
@@ -186,6 +261,15 @@ function filterActivities(allActivities, startDate, endDate, activityTypes) {
  * @returns {Array} Array of selected activity types
  */
 function getSelectedActivityTypes() {
-    const checkboxes = document.querySelectorAll('input[name="activityType[]"]:checked');
-    return Array.from(checkboxes).map(checkbox => checkbox.value);
+    try {
+        const checkboxes = document.querySelectorAll('input[name="activityType[]"]:checked');
+        if (!checkboxes || checkboxes.length === 0) {
+            console.warn('No activity type checkboxes selected');
+            return [];
+        }
+        return Array.from(checkboxes).map(checkbox => checkbox.value);
+    } catch (error) {
+        console.error('Error getting selected activity types:', error);
+        return [];
+    }
 }
