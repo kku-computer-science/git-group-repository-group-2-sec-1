@@ -44,14 +44,14 @@ function initializeActivityReport(activities, typeConfig) {
             
             // กำหนดค่าเริ่มต้นสำหรับประเภทกิจกรรม
             typeConfig = {
-                "loginSuccess": {"color": "rgba(46, 204, 113, 0.7)", "label": "Login Success"},
-                "loginFail": {"color": "rgba(231, 76, 60, 0.7)", "label": "Login Failed"},
-                "logout": {"color": "rgba(52, 152, 219, 0.7)", "label": "Logout"},
-                "error": {"color": "rgba(243, 156, 18, 0.7)", "label": "Error"},
-                "create": {"color": "rgba(155, 89, 182, 0.7)", "label": "Create"},
-                "update": {"color": "rgba(26, 188, 156, 0.7)", "label": "Update"},
-                "delete": {"color": "rgba(211, 84, 0, 0.7)", "label": "Delete"},
-                "callPaper": {"color": "rgba(41, 128, 185, 0.7)", "label": "Call Paper"}
+                "Login": {"color": "rgba(46, 204, 113, 0.7)", "label": "Login Success"},
+                "Login Failed": {"color": "rgba(231, 76, 60, 0.7)", "label": "Login Failed"},
+                "Logout": {"color": "rgba(52, 152, 219, 0.7)", "label": "Logout"},
+                "Error": {"color": "rgba(243, 156, 18, 0.7)", "label": "Error"},
+                "Create": {"color": "rgba(155, 89, 182, 0.7)", "label": "Create"},
+                "Update": {"color": "rgba(26, 188, 156, 0.7)", "label": "Update"},
+                "Delete": {"color": "rgba(211, 84, 0, 0.7)", "label": "Delete"},
+                "Call Paper": {"color": "rgba(41, 128, 185, 0.7)", "label": "Call Paper"}
             };
         }
         

@@ -227,14 +227,14 @@ function groupActivitiesByDateAndType(activities, activityTypeConfig) {
  */
 function getIconForActivityType(type) {
     const iconMap = {
-        'loginSuccess': 'fas fa-sign-in-alt',
-        'loginFail': 'fas fa-user-times',
-        'logout': 'fas fa-sign-out-alt',
-        'error': 'fas fa-exclamation-triangle',
-        'create': 'fas fa-plus-circle',
-        'update': 'fas fa-edit',
-        'delete': 'fas fa-trash-alt',
-        'callPaper': 'fas fa-file-alt'
+        'Login': 'fas fa-sign-in-alt',
+        'Login Failed': 'fas fa-user-times',
+        'Logout': 'fas fa-sign-out-alt',
+        'Error': 'fas fa-exclamation-triangle',
+        'Create': 'fas fa-plus-circle',
+        'Update': 'fas fa-edit',
+        'Delete': 'fas fa-trash-alt',
+        'Call Paper': 'fas fa-file-alt'
     };
     
     return iconMap[type] || 'fas fa-question-circle';
@@ -247,14 +247,14 @@ function getIconForActivityType(type) {
  */
 function getColorClassForType(type) {
     const colorMap = {
-        'loginSuccess': 'success',
-        'loginFail': 'danger',
-        'logout': 'primary',
-        'error': 'warning',
-        'create': 'purple',
-        'update': 'info',
-        'delete': 'orange',
-        'callPaper': 'blue'
+        'Login': 'success',
+        'Login Failed': 'danger',
+        'Logout': 'primary',
+        'Error': 'warning',
+        'Create': 'purple',
+        'Update': 'info',
+        'Delete': 'orange',
+        'Call Paper': 'blue'
     };
     
     return colorMap[type] || 'secondary';
