@@ -19,6 +19,11 @@
 <script src="{{ asset('js/exportReport/activity-report.js') }}"></script>
 <script src="{{ asset('js/exportReport/main.js') }}"></script>
 
+<style>
+    .hover-dark:hover {
+        color: #000 !important;
+    }
+</style>
 
 @section('title', 'รายงานกิจกรรมผู้ใช้งานในระบบ')
 
@@ -30,7 +35,7 @@
                 <h1 class="m-0 h4 text-white">
                     <i class="fas fa-chart-line me-2"></i>รายงานกิจกรรมผู้ใช้งานในระบบ
                 </h1>
-                <a href="{{ route('logs.index') }}" class="btn btn-outline-light btn-sm px-3">
+                <a href="{{ route('logs.index') }}" class="btn btn-outline-light btn-sm px-3 text-white  hover-dark">
                     <i class="fas fa-arrow-left me-1"></i> กลับหน้ารายการล็อก
                 </a>
             </div>
