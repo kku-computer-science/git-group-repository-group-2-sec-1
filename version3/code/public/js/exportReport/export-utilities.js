@@ -69,83 +69,55 @@ async function exportToExcel() {
     const endDate = document.getElementById('dateRangeEnd').value;
     const filename = `user-activity-report-${startDate}-to-${endDate}.xlsx`;
 
-    showLoading('กำลังสร้างไฟล์ Excel...');    
-    // Get visitor count first, then create Excel
-    getVisitorCount()
-        .then(visitorCount => {
-            try {
-                const workbook = new window.ExcelJS.Workbook();
-                const summarySheet = workbook.addWorksheet('Summary');
-                const detailsSheet = workbook.addWorksheet('Activity Details');
+    showLoading('กำลังสร้างไฟล์ Excel...');
 
-                const summaryData = generateExcelSummaryData(visiterCount);
-                summarySheet.addRows(summaryData);
+    try {
+        // Get visitor count with fallback to 0 if failed
+        const visitorCount = await getVisitorCount().catch(err => {
+            console.error('Error getting visitor count:', err);
+            return 0;
+        });
 
-                const detailsData = generateExcelDetailsData();
-                detailsSheet.addRows(detailsData);
+        const workbook = new window.ExcelJS.Workbook();
+        const summarySheet = workbook.addWorksheet('Summary');
+        const detailsSheet = workbook.addWorksheet('Activity Details');
 
-                const imageBase64 = await getCanvasImageBase64('activityChart');
+        // Generate and add data to sheets
+        const summaryData = generateExcelSummaryData(visitorCount);
+        summarySheet.addRows(summaryData);
 
-                if (imageBase64) {
-                    const imageId = workbook.addImage({
-                        base64: imageBase64,
-                        extension: 'png',
-                    });
+        const detailsData = generateExcelDetailsData();
+        detailsSheet.addRows(detailsData);
 
-                    summarySheet.addImage(imageId, {
-                        tl: { col: 1, row: summaryData.length + 2 }, // วางใต้ตาราง
-                        ext: { width: 1000, height: 400 }, // ปรับขนาด
-                    });
-                }
-
-                const buffer = await workbook.xlsx.writeBuffer();
-                window.saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), filename);
-
-                hideLoading();
-            } catch (error) {
-                console.error('Excel export error:', error);
-                hideLoading();
-                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
-            }
-        })
-        .catch(error => {
-            console.error('Error getting visitor count for Excel:', error);
-            try {
-                const workbook = new window.ExcelJS.Workbook();
-                const summarySheet = workbook.addWorksheet('Summary');
-                const detailsSheet = workbook.addWorksheet('Activity Details');
-
-                const summaryData = generateExcelSummaryData(0);
-                summarySheet.addRows(summaryData);
-
-                const detailsData = generateExcelDetailsData();
-                detailsSheet.addRows(detailsData);
-
-                const imageBase64 = await getCanvasImageBase64('activityChart');
-
-                if (imageBase64) {
-                    const imageId = workbook.addImage({
-                        base64: imageBase64,
-                        extension: 'png',
-                    });
-
-                    summarySheet.addImage(imageId, {
-                        tl: { col: 1, row: summaryData.length + 2 }, // วางใต้ตาราง
-                        ext: { width: 1000, height: 400 }, // ปรับขนาด
-                    });
-                }
-
-                const buffer = await workbook.xlsx.writeBuffer();
-                window.saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), filename);
-
-                hideLoading();
-            } catch (error) {
-                console.error('Excel export error:', error);
-                hideLoading();
-                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
-            }
+        // Add chart image if available
+        const imageBase64 = await getCanvasImageBase64('activityChart');
+        if (imageBase64) {
+            const imageId = workbook.addImage({
+                base64: imageBase64,
+                extension: 'png',
+            });
+            summarySheet.addImage(imageId, {
+                tl: { col: 1, row: summaryData.length + 2 },
+                ext: { width: 1000, height: 400 },
+            });
         }
-    });
+
+        // Save the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        window.saveAs(
+            new Blob([buffer], { 
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+            }), 
+            filename
+        );
+
+    } catch (error) {
+        console.error('Excel export error:', error);
+        alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+    } finally {
+        hideLoading();
+    }
+}
 
 /**
  * แปลง <canvas> เป็น Base64
