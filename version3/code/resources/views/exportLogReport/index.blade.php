@@ -3,6 +3,7 @@
 <script>
     window.activities = {!! $activities !!};
     window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
 </script>
 
 <!-- Libraries สำหรับกราฟและการส่งออก -->
@@ -304,10 +305,10 @@
 @section('scripts')
     <!-- ตัวแปร global สำหรับใช้ในทุก script -->
     <script>
-        window.activities = {!! $activities !!};
-        window.activityTypeConfig = {!! $activityTypes !!};
-    </script>
-
+    window.activities = {!! $activities !!};
+    window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
+</script>
     <!-- Libraries สำหรับกราฟและการส่งออก -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

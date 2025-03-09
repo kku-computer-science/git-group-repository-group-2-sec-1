@@ -62,9 +62,6 @@ function exportToPDF() {
     }, 100);
 }
 
-/**
- * Export the report as Excel
- */
 function exportToExcel() {
     // Get date range for filename
     const startDate = document.getElementById('dateRangeStart').value;
@@ -74,37 +71,66 @@ function exportToExcel() {
     // Show loading indicator
     showLoading('กำลังสร้างไฟล์ Excel...');
     
-    // Use timeout to allow loading indicator to show
-    setTimeout(() => {
-        try {
-            // Create a new workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Add summary sheet
-            const summaryData = generateExcelSummaryData();
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
-            // Add details sheet
-            const detailsData = generateExcelDetailsData();
-            const detailsWs = XLSX.utils.aoa_to_sheet(detailsData);
-            XLSX.utils.book_append_sheet(wb, detailsWs, 'Activity Details');
-            
-            // Save the workbook
-            XLSX.writeFile(wb, filename);
-            
-            // Hide loading indicator
-            hideLoading();
-        } catch (error) {
-            console.error('Excel export error:', error);
-            hideLoading();
-            alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
-        }
-    }, 100);
+    // Get visitor count first, then create Excel
+    getVisitorCount()
+        .then(visitorCount => {
+            try {
+                // Create a new workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Add summary sheet
+                const summaryData = generateExcelSummaryData(visitorCount);
+                const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+                
+                // Add details sheet
+                const detailsData = generateExcelDetailsData();
+                const detailsWs = XLSX.utils.aoa_to_sheet(detailsData);
+                XLSX.utils.book_append_sheet(wb, detailsWs, 'Activity Details');
+                
+                // Save the workbook
+                XLSX.writeFile(wb, filename);
+                
+                // Hide loading indicator
+                hideLoading();
+            } catch (error) {
+                console.error('Excel export error:', error);
+                hideLoading();
+                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+            }
+        })
+        .catch(error => {
+            console.error('Error getting visitor count for Excel:', error);
+            // Fallback to export without visitor count
+            try {
+                // Create Excel without visitor count
+                const wb = XLSX.utils.book_new();
+                
+                // Add summary sheet without visitors
+                const summaryData = generateExcelSummaryData(0);
+                const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+                
+                // Add details sheet
+                const detailsData = generateExcelDetailsData();
+                const detailsWs = XLSX.utils.aoa_to_sheet(detailsData);
+                XLSX.utils.book_append_sheet(wb, detailsWs, 'Activity Details');
+                
+                // Save the workbook
+                XLSX.writeFile(wb, filename);
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Excel export error:', error);
+                hideLoading();
+                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+            }
+        });
 }
 
 /**
  * Generate summary data for Excel export
+ * @param {number} visitorCount - Number of visitors
  * @returns {Array} Array of arrays for Excel data
  */
 function generateExcelSummaryData() {
@@ -122,6 +148,12 @@ function generateExcelSummaryData() {
     
     // Add activity counts
     data.push(['ประเภทกิจกรรม', 'จำนวน']);
+    
+    // Get visitor count
+    const visitorCount = window.visitorCount || 0;
+    
+    // Add visitor row
+    data.push(['ผู้เข้าชม', visitorCount]);
     
     // Count activities by type
     const typeCounts = {};
@@ -142,12 +174,11 @@ function generateExcelSummaryData() {
         }
     });
     
-    // Add total
-    data.push(['รวมทั้งหมด', filteredActivities.length]);
+    // Add total (with visitors)
+    data.push(['รวมทั้งหมด', filteredActivities.length + visitorCount]);
     
     return data;
 }
-
 /**
  * Generate details data for Excel export
  * @returns {Array} Array of arrays for Excel data
