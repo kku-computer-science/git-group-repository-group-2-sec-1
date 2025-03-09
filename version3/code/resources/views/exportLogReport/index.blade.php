@@ -3,6 +3,7 @@
 <script>
     window.activities = {!! $activities !!};
     window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
 </script>
 
 <!-- Libraries สำหรับกราฟและการส่งออก -->
@@ -174,35 +175,34 @@
             </div>
         </div>
 
-        <!-- Export Options -->
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-light py-3">
-                <h5 class="card-title m-0 fw-bold">
-                    <i class="fas fa-file-export me-2"></i>ส่งออกรายงาน
-                </h5>
-            </div>
-            <div class="card-body p-3 p-md-4">
-                <div class="row g-3">
-                    <div class="col-md-6 mb-2 mb-md-0">
-                        <div class="d-grid">
-                            <button id="btnExportPDF" class="btn btn-danger py-3">
-                                <i class="fas fa-file-pdf me-2"></i> ส่งออกเป็น PDF
-                            </button>
+       
+        <div id="reportContent" style="display: none;">
+            <!-- Export Options -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title m-0 fw-bold">
+                        <i class="fas fa-file-export me-2"></i>ส่งออกรายงาน
+                    </h5>
+                </div>
+                <div class="card-body p-3 p-md-4">
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <div class="d-grid">
+                                <button id="btnExportPDF" class="btn btn-danger py-3">
+                                    <i class="fas fa-file-pdf me-2"></i> ส่งออกเป็น PDF
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-grid">
-                            <button id="btnExportExcel" class="btn btn-success py-3">
-                                <i class="fas fa-file-excel me-2"></i> ส่งออกเป็น Excel
-                            </button>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button id="btnExportExcel" class="btn btn-success py-3">
+                                    <i class="fas fa-file-excel me-2"></i> ส่งออกเป็น Excel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div id="reportContent" style="display: none;">
             <!-- Quick Stats Summary -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-light py-3">
@@ -310,10 +310,10 @@
 @section('scripts')
     <!-- ตัวแปร global สำหรับใช้ในทุก script -->
     <script>
-        window.activities = {!! $activities !!};
-        window.activityTypeConfig = {!! $activityTypes !!};
-    </script>
-
+    window.activities = {!! $activities !!};
+    window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
+</script>
     <!-- Libraries สำหรับกราฟและการส่งออก -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
