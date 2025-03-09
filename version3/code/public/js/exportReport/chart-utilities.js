@@ -115,6 +115,19 @@ function generateActivityChart(activities, activityTypeConfig) {
                     tooltip: {
                         mode: 'index',
                         intersect: false
+                    },
+                    datalabels: {
+                        anchor: 'start', // เริ่มต้นจากด้านล่าง
+                        align: 'bottom', // จัดชิดด้านล่าง
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        color: '#000',
+                        formatter: function(value) {
+                            return value; 
+                        },
+                        offset: 5 // (ไม่บังคับ) เพิ่มระยะห่างจากบาร์ถ้าต้องการ
                     }
                 }
             }
@@ -227,14 +240,14 @@ function groupActivitiesByDateAndType(activities, activityTypeConfig) {
  */
 function getIconForActivityType(type) {
     const iconMap = {
-        'loginSuccess': 'fas fa-sign-in-alt',
-        'loginFail': 'fas fa-user-times',
-        'logout': 'fas fa-sign-out-alt',
-        'error': 'fas fa-exclamation-triangle',
-        'create': 'fas fa-plus-circle',
-        'update': 'fas fa-edit',
-        'delete': 'fas fa-trash-alt',
-        'callPaper': 'fas fa-file-alt'
+        'Login': 'fas fa-sign-in-alt',
+        'Login Failed': 'fas fa-user-times',
+        'Logout': 'fas fa-sign-out-alt',
+        'Error': 'fas fa-exclamation-triangle',
+        'Create': 'fas fa-plus-circle',
+        'Update': 'fas fa-edit',
+        'Delete': 'fas fa-trash-alt',
+        'Call Paper': 'fas fa-file-alt'
     };
     
     return iconMap[type] || 'fas fa-question-circle';
@@ -247,14 +260,14 @@ function getIconForActivityType(type) {
  */
 function getColorClassForType(type) {
     const colorMap = {
-        'loginSuccess': 'success',
-        'loginFail': 'danger',
-        'logout': 'primary',
-        'error': 'warning',
-        'create': 'purple',
-        'update': 'info',
-        'delete': 'orange',
-        'callPaper': 'blue'
+        'Login': 'success',
+        'Login Failed': 'danger',
+        'Logout': 'primary',
+        'Error': 'warning',
+        'Create': 'purple',
+        'Update': 'info',
+        'Delete': 'orange',
+        'Call Paper': 'blue'
     };
     
     return colorMap[type] || 'secondary';
@@ -331,9 +344,17 @@ function generateStatsSummary(activities, activityTypeConfig) {
         // Calculate total activities
         const totalActivities = activities.length;
         
-        // Create total activities stat
-        const totalStat = createStatCard('ทั้งหมด', totalActivities, 'fas fa-chart-line', 'primary');
+        // Get the visitor count that was passed from the server
+        const visitorCount = window.visitorCount || 0;
+        
+        // Create total activities stat (including visitors)
+        const totalWithVisitors = totalActivities + visitorCount;
+        const totalStat = createStatCard('ทั้งหมด', totalWithVisitors, 'fas fa-chart-line', 'primary');
         statsContainer.appendChild(totalStat);
+        
+        // Create visitors stat (always shown regardless of filters)
+        const visitorStat = createStatCard('ผู้เข้าชม', visitorCount, 'fas fa-users', 'info');
+        statsContainer.appendChild(visitorStat);
         
         // Create stat cards for each activity type with at least 1 occurrence
         activityTypes.forEach(type => {
@@ -356,3 +377,46 @@ function generateStatsSummary(activities, activityTypeConfig) {
         return {};
     }
 }
+
+/**
+ * Fetch visitor count from the API
+ * @returns {Promise<number>} Promise that resolves to the visitor count
+ */
+function getVisitorCount() {
+    return new Promise((resolve, reject) => {
+        try {
+            // Get date range for API request
+            const startDate = document.getElementById('dateRangeStart').value;
+            const endDate = document.getElementById('dateRangeEnd').value;
+            
+            // Make API request with proper path
+            // Ensure this path matches your route registration
+            fetch(`/getVisitors?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        resolve(data.data);
+                    } else {
+                        reject(new Error(data.message || 'Failed to fetch visitor count'));
+                    }
+                })
+                .catch(error => {
+                    console.error('API request error:', error);
+                    // Provide a default value if API fails
+                    console.warn('Using default visitor count due to API error');
+                    resolve(0); // Default to 0 visitors to avoid breaking the report
+                });
+        } catch (error) {
+            console.error('Error in getVisitorCount:', error);
+            // Provide a default value
+            resolve(0);
+        }
+    });
+}
+
+

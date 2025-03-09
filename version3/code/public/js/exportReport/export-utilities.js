@@ -61,50 +61,81 @@ function exportToPDF() {
         }
     }, 100);
 }
-
 /**
  * Export the report as Excel
  */
-function exportToExcel() {
-    // Get date range for filename
+async function exportToExcel() {
     const startDate = document.getElementById('dateRangeStart').value;
     const endDate = document.getElementById('dateRangeEnd').value;
     const filename = `user-activity-report-${startDate}-to-${endDate}.xlsx`;
-    
-    // Show loading indicator
+
     showLoading('กำลังสร้างไฟล์ Excel...');
-    
-    // Use timeout to allow loading indicator to show
-    setTimeout(() => {
-        try {
-            // Create a new workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Add summary sheet
-            const summaryData = generateExcelSummaryData();
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
-            // Add details sheet
-            const detailsData = generateExcelDetailsData();
-            const detailsWs = XLSX.utils.aoa_to_sheet(detailsData);
-            XLSX.utils.book_append_sheet(wb, detailsWs, 'Activity Details');
-            
-            // Save the workbook
-            XLSX.writeFile(wb, filename);
-            
-            // Hide loading indicator
-            hideLoading();
-        } catch (error) {
-            console.error('Excel export error:', error);
-            hideLoading();
-            alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+
+    try {
+        // Get visitor count with fallback to 0 if failed
+        const visitorCount = await getVisitorCount().catch(err => {
+            console.error('Error getting visitor count:', err);
+            return 0;
+        });
+
+        const workbook = new window.ExcelJS.Workbook();
+        const summarySheet = workbook.addWorksheet('Summary');
+        const detailsSheet = workbook.addWorksheet('Activity Details');
+
+        // Generate and add data to sheets
+        const summaryData = generateExcelSummaryData(visitorCount);
+        summarySheet.addRows(summaryData);
+
+        const detailsData = generateExcelDetailsData();
+        detailsSheet.addRows(detailsData);
+
+        // Add chart image if available
+        const imageBase64 = await getCanvasImageBase64('activityChart');
+        if (imageBase64) {
+            const imageId = workbook.addImage({
+                base64: imageBase64,
+                extension: 'png',
+            });
+            summarySheet.addImage(imageId, {
+                tl: { col: 1, row: summaryData.length + 2 },
+                ext: { width: 1000, height: 400 },
+            });
         }
-    }, 100);
+
+        // Save the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        window.saveAs(
+            new Blob([buffer], { 
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+            }), 
+            filename
+        );
+
+    } catch (error) {
+        console.error('Excel export error:', error);
+        alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+    } finally {
+        hideLoading();
+    }
+}
+
+/**
+ * แปลง <canvas> เป็น Base64
+ */
+async function getCanvasImageBase64(canvasId) {
+    return new Promise((resolve) => {
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+            resolve(canvas.toDataURL('image/png'));
+        } else {
+            resolve('');
+        }
+    });
 }
 
 /**
  * Generate summary data for Excel export
+ * @param {number} visitorCount - Number of visitors
  * @returns {Array} Array of arrays for Excel data
  */
 function generateExcelSummaryData() {
@@ -122,6 +153,12 @@ function generateExcelSummaryData() {
     
     // Add activity counts
     data.push(['ประเภทกิจกรรม', 'จำนวน']);
+    
+    // Get visitor count
+    const visitorCount = window.visitorCount || 0;
+    
+    // Add visitor row
+    data.push(['ผู้เข้าชม', visitorCount]);
     
     // Count activities by type
     const typeCounts = {};
@@ -142,12 +179,11 @@ function generateExcelSummaryData() {
         }
     });
     
-    // Add total
-    data.push(['รวมทั้งหมด', filteredActivities.length]);
+    // Add total (with visitors)
+    data.push(['รวมทั้งหมด', filteredActivities.length + visitorCount]);
     
     return data;
 }
-
 /**
  * Generate details data for Excel export
  * @returns {Array} Array of arrays for Excel data
@@ -156,7 +192,7 @@ function generateExcelDetailsData() {
     const data = [];
     
     // Add headers
-    data.push(['วันที่และเวลา', 'ชื่อผู้ใช้', 'IP Address', 'ประเภทกิจกรรม', 'รายละเอียด', 'สถานะ']);
+    data.push(['วันที่และเวลา', 'ชื่อผู้ใช้', 'IP Address', 'ประเภทกิจกรรม', 'รายละเอียด', 'อุปกรณ์', 'เบราว์เซอร์']);
     
     // Add activity rows
     filteredActivities.forEach(activity => {
@@ -168,9 +204,6 @@ function generateExcelDetailsData() {
         const typeConfig = activityTypeConfig[activity.type];
         const typeLabel = typeConfig ? typeConfig.label : activity.type;
         
-        // Get status label
-        const statusLabel = activity.status === 'success' ? 'สำเร็จ' : 'ไม่สำเร็จ';
-        
         // Add row
         data.push([
             formattedDate,
@@ -178,7 +211,8 @@ function generateExcelDetailsData() {
             activity.ipAddress,
             typeLabel,
             activity.details,
-            statusLabel
+            activity.device,
+            activity.browser
         ]);
     });
     

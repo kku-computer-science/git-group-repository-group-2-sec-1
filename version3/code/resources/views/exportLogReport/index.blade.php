@@ -3,12 +3,18 @@
 <script>
     window.activities = {!! $activities !!};
     window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
 </script>
 
 <!-- Libraries สำหรับกราฟและการส่งออก -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <!-- โหลดไฟล์ JavaScript ทั้งหมด -->
 <!-- เพิ่มไฟล์ debug helper -->
@@ -78,7 +84,7 @@
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
                                         <input type="checkbox" id="activityLoginSuccess" name="activityType[]"
-                                            value="loginSuccess" class="form-check-input" checked>
+                                            value="Login" class="form-check-input" checked>
                                         <label for="activityLoginSuccess" class="form-check-label">
                                             <i class="fas fa-sign-in-alt me-1"></i>Login Success
                                         </label>
@@ -88,7 +94,7 @@
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
                                         <input type="checkbox" id="activityLoginFail" name="activityType[]"
-                                            value="loginFail" class="form-check-input" checked>
+                                            value="Login Failed" class="form-check-input" checked>
                                         <label for="activityLoginFail" class="form-check-label">
                                             <i class="fas fa-user-times me-1"></i>Login Failed
                                         </label>
@@ -97,7 +103,7 @@
 
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
-                                        <input type="checkbox" id="activityLogout" name="activityType[]" value="logout"
+                                        <input type="checkbox" id="activityLogout" name="activityType[]" value="Logout"
                                             class="form-check-input" checked>
                                         <label for="activityLogout" class="form-check-label">
                                             <i class="fas fa-sign-out-alt me-1"></i>Logout
@@ -107,7 +113,7 @@
 
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
-                                        <input type="checkbox" id="activityCreate" name="activityType[]" value="create"
+                                        <input type="checkbox" id="activityCreate" name="activityType[]" value="Create"
                                             class="form-check-input" checked>
                                         <label for="activityCreate" class="form-check-label">
                                             <i class="fas fa-plus-circle me-1"></i>Create
@@ -117,7 +123,7 @@
 
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
-                                        <input type="checkbox" id="activityUpdate" name="activityType[]" value="update"
+                                        <input type="checkbox" id="activityUpdate" name="activityType[]" value="Update"
                                             class="form-check-input" checked>
                                         <label for="activityUpdate" class="form-check-label">
                                             <i class="fas fa-edit me-1"></i>Update
@@ -127,7 +133,7 @@
 
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
-                                        <input type="checkbox" id="activityDelete" name="activityType[]" value="delete"
+                                        <input type="checkbox" id="activityDelete" name="activityType[]" value="Delete"
                                             class="form-check-input" checked>
                                         <label for="activityDelete" class="form-check-label">
                                             <i class="fas fa-trash-alt me-1"></i>Delete
@@ -137,7 +143,7 @@
 
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
-                                        <input type="checkbox" id="activityError" name="activityType[]" value="error"
+                                        <input type="checkbox" id="activityError" name="activityType[]" value="Error"
                                             class="form-check-input" checked>
                                         <label for="activityError" class="form-check-label">
                                             <i class="fas fa-exclamation-triangle me-1"></i>Error
@@ -148,7 +154,7 @@
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-check">
                                         <input type="checkbox" id="activityCallPaper" name="activityType[]"
-                                            value="callPaper" class="form-check-input" checked>
+                                            value="Call Paper" class="form-check-input" checked>
                                         <label for="activityCallPaper" class="form-check-label">
                                             <i class="fas fa-file-alt me-1"></i>Call Paper
                                         </label>
@@ -169,7 +175,34 @@
             </div>
         </div>
 
+       
         <div id="reportContent" style="display: none;">
+            <!-- Export Options -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title m-0 fw-bold">
+                        <i class="fas fa-file-export me-2"></i>ส่งออกรายงาน
+                    </h5>
+                </div>
+                <div class="card-body p-3 p-md-4">
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <div class="d-grid">
+                                <button id="btnExportPDF" class="btn btn-danger py-3">
+                                    <i class="fas fa-file-pdf me-2"></i> ส่งออกเป็น PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button id="btnExportExcel" class="btn btn-success py-3">
+                                    <i class="fas fa-file-excel me-2"></i> ส่งออกเป็น Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Quick Stats Summary -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-light py-3">
@@ -203,33 +236,6 @@
                 </div>
             </div>
 
-            <!-- Export Options -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-light py-3">
-                    <h5 class="card-title m-0 fw-bold">
-                        <i class="fas fa-file-export me-2"></i>ส่งออกรายงาน
-                    </h5>
-                </div>
-                <div class="card-body p-3 p-md-4">
-                    <div class="row g-3">
-                        <div class="col-md-6 mb-2 mb-md-0">
-                            <div class="d-grid">
-                                <button id="btnExportPDF" class="btn btn-danger py-3">
-                                    <i class="fas fa-file-pdf me-2"></i> ส่งออกเป็น PDF
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-grid">
-                                <button id="btnExportExcel" class="btn btn-success py-3">
-                                    <i class="fas fa-file-excel me-2"></i> ส่งออกเป็น Excel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Activity Table -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-light py-3">
@@ -247,7 +253,8 @@
                                     <th class="fw-bold py-3"><i class="fas fa-network-wired me-1"></i>IP Address</th>
                                     <th class="fw-bold py-3"><i class="fas fa-tag me-1"></i>ประเภทกิจกรรม</th>
                                     <th class="fw-bold py-3"><i class="fas fa-info-circle me-1"></i>รายละเอียด</th>
-                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>สถานะ</th>
+                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>อุปกรณ์</th>
+                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>เบราว์เซอร์</th>
                                 </tr>
                             </thead>
                             <tbody id="activityTableBody">
@@ -303,10 +310,10 @@
 @section('scripts')
     <!-- ตัวแปร global สำหรับใช้ในทุก script -->
     <script>
-        window.activities = {!! $activities !!};
-        window.activityTypeConfig = {!! $activityTypes !!};
-    </script>
-
+    window.activities = {!! $activities !!};
+    window.activityTypeConfig = {!! $activityTypes !!};
+    window.visitorCount = {!! $visitorCount !!};
+</script>
     <!-- Libraries สำหรับกราฟและการส่งออก -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

@@ -14,14 +14,14 @@ const itemsPerPage = 10;
  */
 function getColorClassForType(type) {
     const colorMap = {
-        'loginSuccess': 'success',
-        'loginFail': 'danger',
-        'logout': 'primary',
-        'error': 'warning',
-        'create': 'purple',
-        'update': 'info',
-        'delete': 'orange',
-        'callPaper': 'blue'
+        'Login': 'success',
+        'Login Failed': 'danger',
+        'Logout': 'primary',
+        'Error': 'warning',
+        'Create': 'purple',
+        'Update': 'info',
+        'Delete': 'orange',
+        'Call Paper': 'blue'
     };
     
     return colorMap[type] || 'secondary';
@@ -98,7 +98,8 @@ function generateActivityTable(activities, activityTypeConfig, page) {
                     <td><span class="badge bg-secondary bg-opacity-50 text-black">${activity.ipAddress || ''}</span></td>
                     <td>${typeBadge}</td>
                     <td>${activity.details || ''}</td>
-                    <td>${statusBadge}</td>
+                    <td>${activity.device || ''}</td>
+                    <td>${activity.browser || ''}</td>
                 `;
             } catch (error) {
                 console.error('Error creating table row:', error);

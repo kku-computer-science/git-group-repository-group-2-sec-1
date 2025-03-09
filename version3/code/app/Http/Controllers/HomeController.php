@@ -10,12 +10,32 @@ use Bibtex;
 use RenanBr\BibTexParser\Listener;
 use RenanBr\BibTexParser\Parser;
 use RenanBr\BibTexParser\Processor;
+use Illuminate\Support\Facades\Session;
+
 
 class HomeController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+
+
+        $sessionId = Session::getId(); // ดึง session ID ของผู้ใช้
+        $ip = $request->header('X-Forwarded-For') ?? $request->ip();
+
+        // ตรวจสอบว่ามี session นี้ใน database หรือยัง
+        $exists = DB::table('visitors')->where('session_id', $sessionId)->exists();
+
+        if (!$exists) {
+            DB::table('visitors')->insert([
+                'session_id' => $sessionId,
+                'ip_address' => $ip,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+
         //$papers = Paper::all()->orderBy, 'DESC');
         $papers = [];
         $year = range(Carbon::now()->year - 4, Carbon::now()->year);
