@@ -115,6 +115,19 @@ function generateActivityChart(activities, activityTypeConfig) {
                     tooltip: {
                         mode: 'index',
                         intersect: false
+                    },
+                    datalabels: {
+                        anchor: 'start', // เริ่มต้นจากด้านล่าง
+                        align: 'bottom', // จัดชิดด้านล่าง
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        color: '#000',
+                        formatter: function(value) {
+                            return value; 
+                        },
+                        offset: 5 // (ไม่บังคับ) เพิ่มระยะห่างจากบาร์ถ้าต้องการ
                     }
                 }
             }
