@@ -65,42 +65,61 @@ function exportToPDF() {
 /**
  * Export the report as Excel
  */
-function exportToExcel() {
-    // Get date range for filename
+async function exportToExcel() {
     const startDate = document.getElementById('dateRangeStart').value;
     const endDate = document.getElementById('dateRangeEnd').value;
     const filename = `user-activity-report-${startDate}-to-${endDate}.xlsx`;
-    
-    // Show loading indicator
+
     showLoading('กำลังสร้างไฟล์ Excel...');
-    
-    // Use timeout to allow loading indicator to show
-    setTimeout(() => {
-        try {
-            // Create a new workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Add summary sheet
-            const summaryData = generateExcelSummaryData();
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
-            // Add details sheet
-            const detailsData = generateExcelDetailsData();
-            const detailsWs = XLSX.utils.aoa_to_sheet(detailsData);
-            XLSX.utils.book_append_sheet(wb, detailsWs, 'Activity Details');
-            
-            // Save the workbook
-            XLSX.writeFile(wb, filename);
-            
-            // Hide loading indicator
-            hideLoading();
-        } catch (error) {
-            console.error('Excel export error:', error);
-            hideLoading();
-            alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+
+    try {
+        const workbook = new window.ExcelJS.Workbook();
+        const summarySheet = workbook.addWorksheet('Summary');
+        const detailsSheet = workbook.addWorksheet('Activity Details');
+
+        const summaryData = generateExcelSummaryData();
+        summarySheet.addRows(summaryData);
+
+        const detailsData = generateExcelDetailsData();
+        detailsSheet.addRows(detailsData);
+
+        const imageBase64 = await getCanvasImageBase64('activityChart');
+
+        if (imageBase64) {
+            const imageId = workbook.addImage({
+                base64: imageBase64,
+                extension: 'png',
+            });
+
+            summarySheet.addImage(imageId, {
+                tl: { col: 1, row: summaryData.length + 2 }, // วางใต้ตาราง
+                ext: { width: 1000, height: 400 }, // ปรับขนาด
+            });
         }
-    }, 100);
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        window.saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), filename);
+
+        hideLoading();
+    } catch (error) {
+        console.error('Excel export error:', error);
+        hideLoading();
+        alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel');
+    }
+}
+
+/**
+ * แปลง <canvas> เป็น Base64
+ */
+async function getCanvasImageBase64(canvasId) {
+    return new Promise((resolve) => {
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+            resolve(canvas.toDataURL('image/png'));
+        } else {
+            resolve('');
+        }
+    });
 }
 
 /**
