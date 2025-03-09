@@ -20,9 +20,24 @@ class LogUserActivity
     }
     public function loginFailed(Failed $event)
     {
-        $this->logActivity(null, 'Login Failed', 'User login failed');
-
+        
+       
         $ip = Request::header('X-Forwarded-For') ?? Request::ip(); // รองรับ Reverse Proxy
+        $userAgent = Request::header('User-Agent');
+        $log = Logs::create([
+            'email' => $event->credentials['email'] ?? $event->credentials['username'] ?? 'Guest',
+            'user_id' => null,
+            'first_name' => null,
+            'last_name' => null,
+            'role' => null,
+            'ip_address' => $ip,
+            'browser' => $userAgent,
+            'device' => $this->getDeviceType($userAgent),
+            'activity_type' => 'Login Failed',
+            'details' => 'User login failed',
+        ]);
+        Log::info("User " . ($event->credentials['email'] ?? $event->credentials['username'] ?? 'Guest') . " performed action: Login Failed (User login failed) from IP: {$ip}");
+        
         $oneMinuteAgo = now()->subMinute();
 
         // ค้นหา record ใน critical_events ที่มีอยู่แล้ว
