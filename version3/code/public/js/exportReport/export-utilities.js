@@ -156,7 +156,7 @@ function generateExcelDetailsData() {
     const data = [];
     
     // Add headers
-    data.push(['วันที่และเวลา', 'ชื่อผู้ใช้', 'IP Address', 'ประเภทกิจกรรม', 'รายละเอียด', 'สถานะ']);
+    data.push(['วันที่และเวลา', 'ชื่อผู้ใช้', 'IP Address', 'ประเภทกิจกรรม', 'รายละเอียด', 'อุปกรณ์', 'เบราว์เซอร์']);
     
     // Add activity rows
     filteredActivities.forEach(activity => {
@@ -168,9 +168,6 @@ function generateExcelDetailsData() {
         const typeConfig = activityTypeConfig[activity.type];
         const typeLabel = typeConfig ? typeConfig.label : activity.type;
         
-        // Get status label
-        const statusLabel = activity.status === 'success' ? 'สำเร็จ' : 'ไม่สำเร็จ';
-        
         // Add row
         data.push([
             formattedDate,
@@ -178,7 +175,8 @@ function generateExcelDetailsData() {
             activity.ipAddress,
             typeLabel,
             activity.details,
-            statusLabel
+            activity.device,
+            activity.browser
         ]);
     });
     

@@ -92,7 +92,7 @@ class ExportReportController extends Controller
                 "username" => $data->email,
                 "ipAddress" => $data->ip_address,
                 "type" => $data->activity_type,
-                "details" => $data->activity_details,
+                "details" => $data->details,
                 "status" => $data->status,
                 "device" => $data->device,
                 "browser" => $data->browser,
