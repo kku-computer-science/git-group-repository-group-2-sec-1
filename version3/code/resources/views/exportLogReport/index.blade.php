@@ -247,7 +247,8 @@
                                     <th class="fw-bold py-3"><i class="fas fa-network-wired me-1"></i>IP Address</th>
                                     <th class="fw-bold py-3"><i class="fas fa-tag me-1"></i>ประเภทกิจกรรม</th>
                                     <th class="fw-bold py-3"><i class="fas fa-info-circle me-1"></i>รายละเอียด</th>
-                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>สถานะ</th>
+                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>อุปกรณ์</th>
+                                    <th class="fw-bold py-3"><i class="fas fa-check-circle me-1"></i>เบราว์เซอร์</th>
                                 </tr>
                             </thead>
                             <tbody id="activityTableBody">

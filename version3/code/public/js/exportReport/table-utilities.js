@@ -98,7 +98,8 @@ function generateActivityTable(activities, activityTypeConfig, page) {
                     <td><span class="badge bg-secondary bg-opacity-50 text-black">${activity.ipAddress || ''}</span></td>
                     <td>${typeBadge}</td>
                     <td>${activity.details || ''}</td>
-                    <td>${statusBadge}</td>
+                    <td>${activity.device || ''}</td>
+                    <td>${activity.browser || ''}</td>
                 `;
             } catch (error) {
                 console.error('Error creating table row:', error);
