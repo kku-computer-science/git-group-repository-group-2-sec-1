@@ -33,7 +33,7 @@ function exportToPDF() {
     setTimeout(() => {
         try {
             // Get the report content
-            const content = document.getElementById('reportContent');
+            const content = document.getElementById('t');
             
             // Generate PDF options
             const options = {
@@ -53,7 +53,7 @@ function exportToPDF() {
                     console.error('PDF generation error:', err);
                     hideLoading();
                     alert('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF');
-                });
+                });reportConten
         } catch (error) {
             console.error('PDF export error:', error);
             hideLoading();
