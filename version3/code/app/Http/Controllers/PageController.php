@@ -33,14 +33,13 @@ class PageController extends Controller
 
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Product'));
         $researchGroup=ResearchGroup::find($request->group_id);
         
         $products = Product::with('group')->where('id', '=', $request->group_id);
-
+        
         $this->authorize('create',[Product::class, $request->group_id]);
         
-
+        
         $data = new product();
         $file = $request->file;
         $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -52,6 +51,7 @@ class PageController extends Controller
         //$researchGroup=ResearchGroup::find($request->group_id);
         $data->group()->associate($researchGroup);
         $data->save();
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Product'));
 
         return redirect()->back();
     }
@@ -71,19 +71,19 @@ class PageController extends Controller
     }
 
     public function delete(Request $request) {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Product'));
-
+        
         $file = product::find($request->id);
         //$researchGroup=ResearchGroup::find($request->group_id);
         
         //$file = Product::with('group')->where('id', '=', $request->group_id);
-
+        
         $this->authorize('delete',[Product::class, $request->group_id]);
         //unlink(public_path('assets/' .$file->file));
         //dd(public_path('assets/' . $file));
         //unlink(public_path('assets/' . $file->file));
         unlink(public_path('files/'.$file->file)); 
         product::where("id", $file->id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Product'));
         
         
         //$p=product::where("id", $file->id);
@@ -96,7 +96,6 @@ class PageController extends Controller
     
     public function uploadFile(Request $request, $id) {
         dd($request);
-        event(new \App\Events\UserAction(Auth::user(), 'Upload', 'Upload File'));
         $data = Product::find($id);
         $file = $request->file;
         $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -104,6 +103,7 @@ class PageController extends Controller
         $data->file = $filename;
         
         $data->save();
+        event(new \App\Events\UserAction(Auth::user(), 'Upload', 'Upload File'));
 
         return redirect()->back();
     }

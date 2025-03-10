@@ -23,7 +23,6 @@ class ScopuscallController extends Controller
      */
     public function create($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Call Paper', 'User searched for papers on Scopus'));
         //$data = User::all();
         //$data = User::find(46);
         //return $id;
@@ -32,21 +31,21 @@ class ScopuscallController extends Controller
         //$data = User::role('teacher')->get();
         //return $data;
         //foreach ($data as $name) {
-
+            
         $fname = substr($data['fname_en'], 0, 1);
         $lname = $data['lname_en'];
         $id    = $data['id'];
-
+        
         $url = Http::get('https://api.elsevier.com/content/search/scopus?', [
             'query' => "AUTHOR-NAME(" . "$lname" . "," . "$fname" . ")",
             'apikey' => '6ab3c2a01c29f0e36b00c8fa1d013f83',
-        ])->json();
-
-
+            ])->json();
+            
+            
         //$check=$url["search-results"]["entry"];
         $content = $url["search-results"]["entry"];
-
-
+        
+        
         $links = $url["search-results"]["link"];
         //print_r($links);
         do {
@@ -63,6 +62,7 @@ class ScopuscallController extends Controller
                 }
             }
         } while ($ref != 'prev');
+        event(new \App\Events\UserAction(Auth::user(), 'Call Paper', 'User searched for papers on Scopus'));
 
         foreach ($content as $item) {
             if (array_key_exists('error', $item)) {

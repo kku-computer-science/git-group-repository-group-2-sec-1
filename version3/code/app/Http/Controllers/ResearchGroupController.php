@@ -52,7 +52,6 @@ class ResearchGroupController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Group'));
         $request->validate([
             'group_name_th' => 'required',
             'group_name_en' => 'required',
@@ -73,12 +72,13 @@ class ResearchGroupController extends Controller
         $researchGroup->user()->attach($head, ['role' => 1]);
         if ($request->moreFields) {
             foreach ($request->moreFields as $key => $value) {
-
+                
                 if ($value['userid'] != null) {
                     $researchGroup->user()->attach($value, ['role' => 2]);
                 }
             }
         }
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Group'));
         return redirect()->route('researchGroups.index')->with('success', 'research group created successfully.');
     }
 
@@ -123,18 +123,17 @@ class ResearchGroupController extends Controller
      */
     public function update(Request $request, ResearchGroup $researchGroup)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Group'));
         $request->validate([
             'group_name_th' => 'required',
             'group_name_en' => 'required',
-
+            
         ]);
         $input = $request->all();
         if ($request->group_image) {
             //dd($request->file('group_image'));
             $input['group_image'] = time() . '.' . $request->group_image->extension();
             //$file = $request->file('image');
-
+            
             //$url = Storage::putFileAs('images', $file, $name . '.' . $file->extension());
             //dd($input['group_image']);
             $request->group_image->move(public_path('img'), $input['group_image']);
@@ -145,15 +144,16 @@ class ResearchGroupController extends Controller
         $researchGroup->user()->attach(array(
             $head => array('role' => 1),
         ));
-
+        
         if ($request->moreFields) {
             foreach ($request->moreFields as $key => $value) {
-
+                
                 if ($value['userid'] != null) {
                     $researchGroup->user()->attach($value, ['role' => 2]);
                 }
             }
         }
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Group'));
         return redirect()->route('researchGroups.index')
             ->with('success', 'researchGroups updated successfully');
     }
@@ -166,9 +166,9 @@ class ResearchGroupController extends Controller
      */
     public function destroy(ResearchGroup $researchGroup)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Group'));
         $this->authorize('delete', $researchGroup);
         $researchGroup->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Group'));
         return redirect()->route('researchGroups.index')
             ->with('success', 'researchGroups deleted successfully');
     }
