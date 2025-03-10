@@ -20,47 +20,141 @@ function initExportUtilities(activities, typeConfig) {
 /**
  * Export the report as PDF
  */
+function generateTableHTML(data) {
+    let table = `
+        <style>
+            @media print {
+                @page { size: A4; margin: 10mm; }
+                body { margin: 0; padding: 0; }
+            }
+            .report-table {
+                width: 716px;
+                border-collapse: collapse;
+                font-family: Arial, sans-serif;
+            }
+            .report-table th, .report-table td {
+                border: 1px solid #000;
+                padding: 4px;
+                vertical-align: top;
+            }
+            .report-table th {
+                background: #f0f0f0;
+                font-weight: bold;
+            }
+            .details-column {
+                max-width: 200px;
+                word-break: break-all;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                hyphens: auto;
+            }
+        </style>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%; font-size: 10pt;">วันที่และเวลา</th>
+                    <th style="width: 15%; font-size: 10pt;">ผู้ใช้</th>
+                    <th style="width: 15%; font-size: 10pt;">IP Address</th>
+                    <th style="width: 15%; font-size: 10pt;">ประเภทกิจกรรม</th>
+                    <th style="width: 35%; font-size: 10pt;">รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    data.forEach((activity, index) => {
+        console.log(`Row ${index}:`, activity); // ตรวจสอบข้อมูล
+        table += `
+            <tr>
+                <td style="font-size: 7pt;">${activity.timestamp || '-'}</td>
+                <td style="font-size: 7pt;">${activity.username || '-'}</td>
+                <td style="font-size: 7pt;">${activity.ipAddress || '-'}</td>
+                <td style="font-size: 7pt;">${activity.type || '-'}</td>
+                <td class="details-column" style="font-size: 7pt;">${activity.details || '-'}</td>
+            </tr>`;
+    });
+
+    table += `</tbody></table>`;
+    return table;
+}
+
 function exportToPDF() {
-    // Get date range for filename
     const startDate = document.getElementById('dateRangeStart').value;
     const endDate = document.getElementById('dateRangeEnd').value;
     const filename = `user-activity-report-${startDate}-to-${endDate}.pdf`;
+    const chart = document.getElementById('activityChart');
+    const summaryData = generateExcelSummaryData();
     
-    // Show loading indicator
     showLoading('กำลังสร้างไฟล์ PDF...');
-    
-    // Use timeout to allow loading indicator to show
-    setTimeout(() => {
-        try {
-            // Get the report content
-            const content = document.getElementById('reportContent');
-            
-            // Generate PDF options
-            const options = {
-                margin: 10,
-                filename: filename,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            
-            // Generate PDF
-            html2pdf().from(content).set(options).save()
-                .then(() => {
-                    hideLoading();
-                })
-                .catch(err => {
-                    console.error('PDF generation error:', err);
-                    hideLoading();
-                    alert('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF');
-                });
-        } catch (error) {
-            console.error('PDF export error:', error);
-            hideLoading();
-            alert('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF');
+
+    const tempContainer = document.createElement('div');
+
+    const chartImagePromise = new Promise((resolve) => {
+        if (chart.tagName === 'CANVAS') {
+            const chartImage = chart.toDataURL('image/png');
+            resolve(`<div class="chart-container"><img src="${chartImage}" style="max-width: 716px; height: 250px;" /></div>`);
+        } else {
+            // หากไม่ใช่ canvas ให้ใช้ HTML เดิม
+            resolve(`<div class="chart-container">${chart.outerHTML}</div>`);
         }
-    }, 100);
+    });
+
+    chartImagePromise.then((chartHTML) => {
+        console.log('Filtered Activities:', filteredActivities);
+        const tableHTML = generateTableHTML(filteredActivities);
+        
+        let summaryTableHTML = '<table class="summary-table"><tbody>';
+        summaryData.forEach(row => {
+            summaryTableHTML += '<tr>';
+            row.forEach(cell => {
+                summaryTableHTML += `<td>${cell}</td>`;
+            });
+            summaryTableHTML += '</tr>';
+        });
+        summaryTableHTML += '</tbody></table>';
+
+        // รวม chart และ table เข้าด้วยกัน
+        tempContainer.innerHTML = `${summaryTableHTML}<br/><br/>${chartHTML}<br/><br/>${tableHTML}`;
+        tempContainer.style = "font-family: 'TH Sarabun New', sans-serif;";
+
+        const options = {
+            margin: [10, 10, 10, 10],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { 
+                scale: 3,
+                useCORS: true,
+                width: 716,
+                scrollY: 0,
+                windowHeight: 2000 // ปรับตามความสูงที่ต้องการ
+            },
+            jsPDF: { 
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait',
+                putOnlyUsedFonts: true,
+                compress: true
+            },
+            pagebreak: { 
+                mode: ['avoid-all', 'css', 'legacy'],
+                avoid: 'tr',
+                before: '.report-table tr:nth-child(30)'
+            }
+        };
+
+        html2pdf().from(tempContainer).set(options).save()
+            .then(() => {
+                document.body.removeChild(tempContainer);
+                hideLoading();
+            })
+            .catch(err => {
+                console.error('PDF generation error:', err);
+                document.body.removeChild(tempContainer);
+                hideLoading();
+                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF');
+            });
+    });
 }
+
 /**
  * Export the report as Excel
  */
