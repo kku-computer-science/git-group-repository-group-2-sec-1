@@ -224,9 +224,7 @@
                         <i class="fas fa-chart-bar me-2"></i>กราฟสรุปกิจกรรมผู้ใช้งาน
                     </h5>
                     <div class="chart-actions">
-                        <button id="btnPreviewGraph" class="btn btn-primary btn-sm px-3">
-                            <i class="fas fa-image me-1"></i> บันทึกเป็นภาพ
-                        </button>
+                        
                     </div>
                 </div>
                 <div class="card-body p-3 p-md-4">
