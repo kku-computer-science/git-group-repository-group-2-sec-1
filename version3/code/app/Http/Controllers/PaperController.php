@@ -67,7 +67,6 @@ class PaperController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Paper'));
         $this->validate($request, [
             'paper_name' => 'required|unique:papers,paper_name',
             'paper_type' => 'required',
@@ -81,6 +80,7 @@ class PaperController extends Controller
             'paper_doi' => 'required',
         ]);
         $input = $request->except(['_token']);
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Paper'));
 
         $key = $input['keyword'];
         $key = explode(', ', $key);
@@ -213,7 +213,6 @@ class PaperController extends Controller
      */
     public function update(Request $request, Paper $paper)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Paper'));
         $this->validate($request, [
             //'paper_name' => 'required|unique:papers,paper_name',
             'paper_type' => 'required',
@@ -235,12 +234,13 @@ class PaperController extends Controller
             array_push($myNewArray, $a);
         }
         $input['keyword'] = $myNewArray;
-//return $input;
+        //return $input;
         $paper->update($input);
-
+        
         $paper->author()->detach();
         $paper->teacher()->detach();
         $paper->source()->detach();
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Paper'));
 
         foreach ($request->sources as $key => $value) {
             $v = Source_data::select('id')->where('source_name', '=', $value)->get();

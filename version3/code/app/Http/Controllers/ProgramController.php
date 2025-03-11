@@ -52,20 +52,19 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Program'));
         $r = $request->validate([
             'program_name_th' => 'required',
             'program_name_en' => 'required',
             'degree' => 'required',
             'department' => 'required',
-
+            
         ]);
-
+        
         $proId = $request->pro_id;
         $pro = Program::find($proId);
         $degree = Degree::find($request->degree);
         $department = Department::find($request->department);
-
+        
         //return $degree;
         //$degree -> program() -> sync($pro);
         if (!$pro) {
@@ -74,7 +73,7 @@ class ProgramController extends Controller
             //$pro2->degree()->associate($degree);
             $pro2 = $pro2->degree()->associate($degree);
             $pro2 = $pro2->department()->associate($department);
-
+            
             $pro2->program_name_en = $request->program_name_en;
             $pro2->program_name_th = $request->program_name_th;
             $pro2->save();
@@ -82,8 +81,8 @@ class ProgramController extends Controller
             //$pro2->department()->associate($department);
             // $pro2 = $pro2->department()->save($department);
             // $pro2 = $pro2->degree()->save($degree);
-
-
+            
+            
             //$pro2->degree()->associate($degree)->save();
             //$pro2->department()->associate($department)->save();
             //return $pro;
@@ -95,16 +94,18 @@ class ProgramController extends Controller
             $pro = $pro->department()->associate($department);
             $pro->save();
             $pro::updateOrCreate(['id' => $proId], ['program_name_en' => $request->program_name_en, 'program_name_th' => $request->program_name_th]);
-        
+            
             
         }
         
         //$pro->save();
         //$pro2::updateOrCreate(['id' => $proId], ['program_name_en' => $request->program_name_en, 'program_name_th' => $request->program_name_th]);
         
-
-        if (empty($request->pro_id))
+        
+        if (empty($request->pro_id)){
             $msg = 'Program entry created successfully.';
+            event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Program'));
+        }
         else
             $msg = 'Program data is updated successfully';
         return redirect()->route('programs.index')->with('success', $msg);
@@ -153,8 +154,8 @@ class ProgramController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Program'));
         $pro = Program::where('id', $id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Program'));
         return response()->json($pro);
     }
 }

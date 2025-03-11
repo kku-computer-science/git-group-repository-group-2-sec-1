@@ -20,61 +20,14 @@ function initExportUtilities(activities, typeConfig) {
 /**
  * Export the report as PDF
  */
-function generateTableHTML(data) {
-    let table = `
-        <style>
-            @media print {
-                @page { size: A4; margin: 10mm; }
-                body { margin: 0; padding: 0; }
-            }
-            .report-table {
-                width: 716px;
-                border-collapse: collapse;
-                font-family: Arial, sans-serif;
-            }
-            .report-table th, .report-table td {
-                border: 1px solid #000;
-                padding: 4px;
-                vertical-align: top;
-            }
-            .report-table th {
-                background: #f0f0f0;
-                font-weight: bold;
-            }
-            .details-column {
-                max-width: 200px;
-                word-break: break-all;
-                overflow-wrap: break-word;
-                word-wrap: break-word;
-                hyphens: auto;
-            }
-        </style>
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th style="width: 20%; font-size: 10pt;">วันที่และเวลา</th>
-                    <th style="width: 15%; font-size: 10pt;">ผู้ใช้</th>
-                    <th style="width: 15%; font-size: 10pt;">IP Address</th>
-                    <th style="width: 15%; font-size: 10pt;">ประเภทกิจกรรม</th>
-                    <th style="width: 35%; font-size: 10pt;">รายละเอียด</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-    data.forEach((activity, index) => {
-        console.log(`Row ${index}:`, activity); // ตรวจสอบข้อมูล
-        table += `
-            <tr>
-                <td style="font-size: 7pt;">${activity.timestamp || '-'}</td>
-                <td style="font-size: 7pt;">${activity.username || '-'}</td>
-                <td style="font-size: 7pt;">${activity.ipAddress || '-'}</td>
-                <td style="font-size: 7pt;">${activity.type || '-'}</td>
-                <td class="details-column" style="font-size: 7pt;">${activity.details || '-'}</td>
-            </tr>`;
-    });
-
-    table += `</tbody></table>`;
-    return table;
+function generateTableData(data) {
+    return data.map(activity => [
+        activity.timestamp || '-',
+        activity.username || '-',
+        activity.ipAddress || '-',
+        activity.type || '-',
+        activity.details || '-'
+    ]);
 }
 
 function exportToPDF() {
@@ -83,76 +36,95 @@ function exportToPDF() {
     const filename = `user-activity-report-${startDate}-to-${endDate}.pdf`;
     const chart = document.getElementById('activityChart');
     const summaryData = generateExcelSummaryData();
-    
+
     showLoading('กำลังสร้างไฟล์ PDF...');
+    
+    // ใช้ตัวแปร thSarabunNewBase64 ที่ประกาศไว้ในไฟล์ font-data.js 
+    // ตัวแปรนี้จะสามารถเข้าถึงได้เพราะเราได้โหลดไฟล์ font-data.js ก่อนหน้านี้ในไฟล์ HTML
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    });
+    
+    try {
+        doc.addFileToVFS('THSarabunNew.ttf', thSarabunNewBase64);
+        doc.addFont('THSarabunNew.ttf', 'THSarabunNew', 'normal');
+        doc.setFont('THSarabunNew');
+    } catch (e) {
+        console.error('Font loading error:', e);
+        doc.setFont('helvetica'); // ใช้ฟอนต์สำรองถ้ามีปัญหา
+    }
 
-    const tempContainer = document.createElement('div');
+    console.log(summaryData);
+    // console.log(summaryData.slice(2));
 
-    const chartImagePromise = new Promise((resolve) => {
-        if (chart.tagName === 'CANVAS') {
+    const filteredSummaryData = summaryData.filter(row => Array.isArray(row) && row.length > 0);
+
+    // Header
+    doc.setFontSize(16);
+    doc.text('รายงานกิจกรรมผู้ใช้', 10, 20);
+    
+
+    // Summary Table
+    doc.autoTable({
+        head: [summaryData[2]],
+        body: filteredSummaryData.slice(2),
+        startY: 30,
+        margin: { left: 10, right: 10 },
+        styles: { font: 'THSarabunNew', fontSize: 7 },
+        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+        theme: 'striped'
+    });
+    
+    // Chart
+    let chartAdded = false;
+    
+    if (chart && chart.tagName === 'CANVAS') {
+        try {
             const chartImage = chart.toDataURL('image/png');
-            resolve(`<div class="chart-container"><img src="${chartImage}" style="max-width: 716px; height: 250px;" /></div>`);
-        } else {
-            // หากไม่ใช่ canvas ให้ใช้ HTML เดิม
-            resolve(`<div class="chart-container">${chart.outerHTML}</div>`);
+            const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+            const chartHeight = 70; // กำหนดความสูงคงที่
+            
+            doc.addImage(
+                chartImage, 
+                'PNG', 
+                10, 
+                doc.lastAutoTable.finalY + 10, 
+                pdfWidth, 
+                chartHeight
+            );
+            
+            chartAdded = true;
+        } catch (e) {
+            console.error('Chart image error:', e);
         }
+    }
+    
+    // Report Table
+    const tableData = generateTableData(filteredActivities);
+    doc.autoTable({
+        head: [['วันที่และเวลา', 'ผู้ใช้', 'IP Address', 'ประเภทกิจกรรม', 'รายละเอียด']],
+        body: tableData,
+        startY: chartAdded ? doc.lastAutoTable.finalY + 80 : doc.lastAutoTable.finalY + 10,
+        margin: { left: 10, right: 10 },
+        styles: { font: 'THSarabunNew', fontSize: 7, cellPadding: 1 },
+        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontSize: 10 },
+        columnStyles: {
+            0: { cellWidth: 40 },
+            1: { cellWidth: 30 },
+            2: { cellWidth: 30 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 60 }
+        },
+        theme: 'striped',
+        pageBreak: 'auto'
     });
-
-    chartImagePromise.then((chartHTML) => {
-        console.log('Filtered Activities:', filteredActivities);
-        const tableHTML = generateTableHTML(filteredActivities);
-        
-        let summaryTableHTML = '<table class="summary-table"><tbody>';
-        summaryData.forEach(row => {
-            summaryTableHTML += '<tr>';
-            row.forEach(cell => {
-                summaryTableHTML += `<td>${cell}</td>`;
-            });
-            summaryTableHTML += '</tr>';
-        });
-        summaryTableHTML += '</tbody></table>';
-
-        // รวม chart และ table เข้าด้วยกัน
-        tempContainer.innerHTML = `${summaryTableHTML}<br/><br/>${chartHTML}<br/><br/>${tableHTML}`;
-        tempContainer.style = "font-family: 'TH Sarabun New', sans-serif;";
-
-        const options = {
-            margin: [10, 10, 10, 10],
-            filename: filename,
-            image: { type: 'jpeg', quality: 0.95 },
-            html2canvas: { 
-                scale: 3,
-                useCORS: true,
-                width: 716,
-                scrollY: 0,
-                windowHeight: 2000 // ปรับตามความสูงที่ต้องการ
-            },
-            jsPDF: { 
-                unit: 'mm',
-                format: 'a4',
-                orientation: 'portrait',
-                putOnlyUsedFonts: true,
-                compress: true
-            },
-            pagebreak: { 
-                mode: ['avoid-all', 'css', 'legacy'],
-                avoid: 'tr',
-                before: '.report-table tr:nth-child(30)'
-            }
-        };
-
-        html2pdf().from(tempContainer).set(options).save()
-            .then(() => {
-                document.body.removeChild(tempContainer);
-                hideLoading();
-            })
-            .catch(err => {
-                console.error('PDF generation error:', err);
-                document.body.removeChild(tempContainer);
-                hideLoading();
-                alert('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF');
-            });
-    });
+    
+    doc.save(filename);
+    hideLoading();
 }
 
 /**

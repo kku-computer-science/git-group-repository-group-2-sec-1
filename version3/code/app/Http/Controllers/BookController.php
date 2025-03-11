@@ -67,13 +67,12 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Book'));
         $this->validate($request, [
             'ac_name' => 'required',
             //'ac_sourcetitle' => 'required',
             'ac_year' => 'required',
         ]);
-
+        
         $input = $request->except(['_token']);
         $input['ac_type'] = 'book';
         $acw = Academicwork::create($input);
@@ -81,6 +80,7 @@ class BookController extends Controller
         $id = auth()->user()->id;
         $user = User::find($id);
         $user->academicworks()->attach($acw);
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Book'));
         return redirect()->route('books.index')->with('success', 'book created successfully.');
     }
 
@@ -118,7 +118,6 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Book'));
         //return $id;
         $book = Academicwork::find($id);
         //return $book;
@@ -127,11 +126,12 @@ class BookController extends Controller
             //'ac_sourcetitle' => 'required',
             'ac_year' => 'required',
         ]);
-
+        
         $input = $request->except(['_token']);
         $input['ac_type'] = 'book';
-
+        
         $book->update($input);
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Book'));
     
         return redirect()->route('books.index')
                         ->with('success','Book updated successfully');
@@ -145,10 +145,10 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Book'));
         $book = Academicwork::find($id);
         $this->authorize('delete', $book);
         $book->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Book'));
 
         return redirect()->route('books.index')
             ->with('success', 'Product deleted successfully');

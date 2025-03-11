@@ -50,14 +50,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {   
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Post'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
         ]);
         $input = $request->except(['_token']);
-    
+        
         Post::create($input);
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Post'));
     
         return redirect()->route('posts.index')
             ->with('success','Post created successfully.');
@@ -98,15 +98,15 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Post'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
         ]);
-
+        
         $post = Post::find($id);
-    
+        
         $post->update($request->all());
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Post'));
     
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully.');
@@ -120,8 +120,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Post'));
         Post::find($id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Post'));
     
         return redirect()->route('posts.index')
             ->with('success', 'Post deleted successfully.');

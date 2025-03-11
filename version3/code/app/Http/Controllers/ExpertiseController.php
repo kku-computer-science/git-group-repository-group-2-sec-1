@@ -47,11 +47,11 @@ class ExpertiseController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Expertise'));
         $r = $request->validate([
             'expert_name' => 'required',
-
+            
         ]);
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Expertise'));
         $exp = Expertise::find($request->exp_id);
         //return $exp;
         $exp_id = $request->exp_id;
@@ -128,11 +128,11 @@ class ExpertiseController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Expertise'));
         //dd($id);
         $exp = Expertise::where('id', $id)->delete();
         $msg = 'Expertise entry created successfully.';
         if (auth()->user()->hasRole('admin')) {
+            event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Expertise'));
             return redirect()->route('experts.index')->with('success', $msg);
         } else {
             //return response()->json(['status'=>1,'msg'=>'Your expertise info has been update successfuly.']);

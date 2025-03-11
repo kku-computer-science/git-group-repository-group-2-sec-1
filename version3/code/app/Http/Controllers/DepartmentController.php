@@ -49,15 +49,15 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Department'));
         $this->validate($request, [
             'department_name_th' => 'required',
             'department_name_th' => 'required',
         ]);
         $input = $request->except(['_token']);
-    
+        
         Department::create($input);
-    
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Department'));
+        
         return redirect()->route('departments.index')
             ->with('success','departments created successfully.');
     }
@@ -95,8 +95,8 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Department'));
         $department->update($request->all());
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Department'));
         return redirect()->route('departments.index')
                         ->with('success','Department updated successfully');
     }
@@ -109,8 +109,8 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Department'));
         $department->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Department'));
         return redirect()->route('departments.index')
                         ->with('success','Department delete successfully');
     }

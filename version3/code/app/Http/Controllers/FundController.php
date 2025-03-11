@@ -1,7 +1,7 @@
 <?php
-  
+
 namespace App\Http\Controllers;
-   
+
 use App\Models\Fund;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 class FundController extends Controller
-
 {
     /**
      * Display a listing of the resource.
@@ -20,27 +19,24 @@ class FundController extends Controller
     {
         //$funds = Fund::latest()->paginate(5);
         $id = auth()->user()->id;
-        if( auth()->user()->HasRole('admin') ){
+        if (auth()->user()->HasRole('admin')) {
             $funds = Fund::with('User')->get();
-        }
-        elseif( auth()->user()->HasRole('headproject') ){
+        } elseif (auth()->user()->HasRole('headproject')) {
             $funds = Fund::with('User')->get();
-            
-        }
-        elseif( auth()->user()->HasRole('staff') ){
+
+        } elseif (auth()->user()->HasRole('staff')) {
             $funds = Fund::with('User')->get();
-            
-        }
-        else{
-            $funds=User::find($id)->fund()->get();
+
+        } else {
+            $funds = User::find($id)->fund()->get();
             //$researchProjects=User::find($id)->researchProject()->latest()->paginate(5);
-            
+
             //$researchProjects = ResearchProject::with('User')->latest()->paginate(5);
         }
 
-        return view('funds.index',compact('funds'));
+        return view('funds.index', compact('funds'));
     }
-     
+
     /**
      * Show the form for creating a new resource.
      *
@@ -50,7 +46,7 @@ class FundController extends Controller
     {
         return view('funds.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -59,35 +55,35 @@ class FundController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Fund'));
         $request->validate([
             'fund_name' => 'required',
             'fund_type' => 'required',
-            'support_resource'=> 'required',
+            'support_resource' => 'required',
         ]);
-    //return $request->all();
+        //return $request->all();
         //Fund::create($request->all());
         $user = User::find(Auth::user()->id);
         //return $request->all();
         // if($request->has('pos')){
         //     $fund_type = $request->fund_type_etc ;
-            
+
         // }else{
         //     $fund_type = $request->fund_type;
-            
+
         // }
 
         //$fund = $request->all();
         //$fund['fund_type'] = $fund_type;
         //return $fund ;
-        $input=$request->all();
-        if($request->fund_type == 'ทุนภายนอก'){
-            $input['fund_level']=null;
+        $input = $request->all();
+        if ($request->fund_type == 'ทุนภายนอก') {
+            $input['fund_level'] = null;
         }
         $user->fund()->Create($input);
-        return redirect()->route('funds.index')->with('success','fund created successfully.');
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Fund'));
+        return redirect()->route('funds.index')->with('success', 'fund created successfully.');
     }
-     
+
     /**
      * Display the specified resource.
      *
@@ -96,9 +92,9 @@ class FundController extends Controller
      */
     public function show(Fund $fund)
     {
-        return view('funds.show',compact('fund'));
-    } 
-     
+        return view('funds.show', compact('fund'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -108,12 +104,12 @@ class FundController extends Controller
     public function edit($id)
     {
         //return $id;
-        $fu_id = Crypt::decrypt($id);  
-        $fund=Fund::find($fu_id);
+        $fu_id = Crypt::decrypt($id);
+        $fund = Fund::find($fu_id);
         $this->authorize('update', $fund);
-        return view('funds.edit',compact('fund'));
+        return view('funds.edit', compact('fund'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -123,21 +119,21 @@ class FundController extends Controller
      */
     public function update(Request $request, Fund $fund)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Fund'));
         // $request->validate([
         //     'name' => 'required',
         //     'detail' => 'required',
         // ]);
-    //return $request->all();
-        $input=$request->all();
-        if($request->fund_type == 'ทุนภายนอก'){
-            $input['fund_level']=null;
+        //return $request->all();
+        $input = $request->all();
+        if ($request->fund_type == 'ทุนภายนอก') {
+            $input['fund_level'] = null;
         }
         $fund->update($input);
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Fund'));
         return redirect()->route('funds.index')
-                        ->with('success','Fund updated successfully');
+            ->with('success', 'Fund updated successfully');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -146,10 +142,10 @@ class FundController extends Controller
      */
     public function destroy(Fund $fund)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Fund'));
         $fund->delete();
-    
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Fund'));
+
         return redirect()->route('funds.index')
-                        ->with('success','Fund deleted successfully');
+            ->with('success', 'Fund deleted successfully');
     }
 }

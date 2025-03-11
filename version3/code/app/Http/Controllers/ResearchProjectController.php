@@ -64,7 +64,6 @@ class ResearchProjectController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Project'));
         $request->validate(
             [
                 'project_name' => 'required',
@@ -142,6 +141,7 @@ class ResearchProjectController extends Controller
         //$user = User::find(auth()->user()->id);
         //$user->researchProject()->attach(2);
 
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Research Project'));
         LogHelper::writeLog('upload research', 'Research uploaded: ' . $researchProject->project_name . ' by ' . Auth::user()->email);
 
         return redirect()->route('researchProjects.index')->with('success', 'research projects created successfully.');
@@ -188,7 +188,6 @@ class ResearchProjectController extends Controller
      */
     public function update(Request $request, ResearchProject $researchProject)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Project'));
         $request->validate(
             [
                 //'project_name' => 'required|max:200',
@@ -261,6 +260,7 @@ class ResearchProjectController extends Controller
         $researchProject->update($request->all());
 
         LogHelper::writeLog('edit research', 'Research updated: ' . $researchProject->project_name . ' by ' . Auth::user()->email);
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Research Project'));
         return redirect()->route('researchProjects.index')
             ->with('success', 'Research Project updated successfully');
     }
@@ -273,9 +273,9 @@ class ResearchProjectController extends Controller
      */
     public function destroy(ResearchProject $researchProject)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Project'));
         $this->authorize('delete', $researchProject);
         $researchProject->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Research Project'));
         return redirect()->route('researchProjects.index')
             ->with('success', 'Research Project deleted successfully');
     }

@@ -51,12 +51,12 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Permission'));
         $this->validate($request, [
             'name' => 'required|unique:permissions,name',
         ]);
-    
+        
         Permission::create(['name' => $request->input('name')]);
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Permission'));
     
         return redirect()->route('permissions.index')
             ->with('success', 'Permission created successfully.');
@@ -97,14 +97,14 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Permission'));
         $this->validate($request, [
             'name' => 'required'
         ]);
-    
+        
         $permission = Permission::find($id);
         $permission->name = $request->input('name');
         $permission->save();
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Permission'));
         
         return redirect()->route('permissions.index')
             ->with('success', 'Permission updated successfully.');
@@ -118,8 +118,8 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Permission'));
         Permission::find($id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Permission'));
         
         return redirect()->route('permissions.index')
             ->with('success', 'Permission deleted successfully');
