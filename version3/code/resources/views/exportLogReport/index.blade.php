@@ -7,6 +7,8 @@
 </script>
 
 <!-- Libraries สำหรับกราฟและการส่งออก -->
+{{-- <script src="/js/exportReport/font-data.js"></script> --}}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
@@ -15,9 +17,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <!-- โหลดไฟล์ JavaScript ทั้งหมด -->
 <!-- เพิ่มไฟล์ debug helper -->
+<script src="{{ asset('js/exportReport/font-data.js') }}"></script>
 <script src="{{ asset('js/exportReport/debug-helper.js') }}"></script>
 <script src="{{ asset('js/exportReport/chart-utilities.js') }}"></script>
 <script src="{{ asset('js/exportReport/table-utilities.js') }}"></script>
