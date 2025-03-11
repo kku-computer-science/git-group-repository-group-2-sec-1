@@ -1,0 +1,212 @@
+/* ==================== */
+/* Variables */
+/* ==================== */
+:root {
+    --primary-gradient: linear-gradient(120deg, #4e73df 0%, #224abe 100%);
+    --transition-speed: 0.3s;
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --border-radius: 1rem;
+    --soft-opacity: 0.1;
+}
+
+/* ==================== */
+/* Cards */
+/* ==================== */
+.hover-card {
+    transition: all var(--transition-speed) ease-in-out;
+    border-radius: var(--border-radius);
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+}
+
+/* ==================== */
+/* Sections */
+/* ==================== */
+.welcome-section {
+    background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius);
+}
+
+/* ==================== */
+/* Text */
+/* ==================== */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ==================== */
+/* Icons */
+/* ==================== */
+.icon-wrapper {
+    /* width: 48px;
+    height: 48px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed) ease;
+}
+
+/* ==================== */
+/* Background Colors */
+/* ==================== */
+.bg-primary-soft { background-color: rgba(78, 115, 223, var(--soft-opacity)); }
+.bg-success-soft { background-color: rgba(40, 167, 69, var(--soft-opacity)); }
+.bg-info-soft { background-color: rgba(23, 162, 184, var(--soft-opacity)); }
+.bg-warning-soft { background-color: rgba(255, 193, 7, var(--soft-opacity)); }
+.bg-danger-soft { background-color: rgba(220, 53, 69, var(--soft-opacity)); }
+
+/* ==================== */
+/* Buttons */
+/* ==================== */
+.btn-modern {
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all var(--transition-speed) ease;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+}
+
+.hover-shadow {
+    transition: all var(--transition-speed) ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    background-color: #f8f9fa;
+}
+
+/* ==================== */
+/* Scrollbar */
+/* ==================== */
+.events-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.events-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.events-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.events-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ==================== */
+/* Animations */
+/* ==================== */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(25, 135, 84, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+    }
+}
+
+/* ==================== */
+/* Input Groups */
+/* ==================== */
+.input-group {
+    height: 100%;
+}
+
+.input-group-text {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-right: 0;
+}
+
+.input-group .form-control {
+    border-left: 0;
+    border-right: 0;
+}
+
+.input-group .btn {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.input-group .form-control:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.input-group .form-control:focus + .btn {
+    border-color: #ced4da;
+}
+
+.dashboard-input-group {
+    height: 100%;
+}
+
+.dashboard-input-group .input-group-text,
+.dashboard-input-group .form-control,
+.dashboard-input-group .btn {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* ==================== */
+/* Utility Classes */
+/* ==================== */
+.dashbord-for-align {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.btn-sm {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* ==================== */
+/* Responsive Design */
+/* ==================== */
+@media (max-width: 768px) {
+    .d-flex.justify-content-between,
+    .d-flex.align-items-center.gap-4,
+    .d-flex.align-items-center.gap-3 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem !important;
+    }
+
+    .input-group.dashboard-input-group {
+        width: 100%;
+    }
+
+    .btn-modern {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
