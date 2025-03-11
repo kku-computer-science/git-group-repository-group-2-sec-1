@@ -60,15 +60,15 @@ class PatentController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(auth()->user(), 'Create', 'Create Patent'));
         $this->validate($request, [
             'ac_name' => 'required',
             'ac_type' => 'required',
             'ac_year' => 'required',
             'ac_refnumber' => 'required',
         ]);
-
+        
         $input = $request->except(['_token']);
+        event(new \App\Events\UserAction(auth()->user(), 'Create', 'Create Patent'));
         //return $input;
         //$input['ac_type'] = 'patent';
         //$input['paper_yearpub'] = $input['paper_yearpub'];
@@ -173,7 +173,6 @@ class PatentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(auth()->user(), 'Update', 'Update Patent'));
         $patent = Academicwork::find($id);
         //return $book;
         $input = $request->except(['_token']);
@@ -183,38 +182,39 @@ class PatentController extends Controller
             'ac_year' => $request->ac_year,
             'ac_refnumber' => $request->ac_refnumber,
         ]);
+        event(new \App\Events\UserAction(auth()->user(), 'Update', 'Update Patent'));
         $acw = $patent;
         // foreach ($request->input('name') as $key => $value) {
-        //     if (Author::where('author_name', '=', $value)->first() == null) {
-        //         $author = new Author;
-        //         $author->author_name = $value;
-        //         $author->save();
-        //         $book->author()->attach($author);
-        //     } else {
-        //         $author = Author::where('author_name', '=', $value)->first();
-        //         $authorid = $author->id;
-        //         $book->author()->detach($authorid);
-        //         $book->author()->attach($authorid);
-        //     }
-        // }
-        $patent->user()->detach();
-        $x = 1;
-
-        $length = count($request->moreFields);
-        foreach ($request->moreFields as $key => $value) {
-            if ($value['userid'] != null) {
-                if ($x === 1) {
-                    $acw->user()->attach($value, ['author_type' => 1]);
-                } else if ($x === $length) {
-                    $acw->user()->attach($value, ['author_type' => 3]);
-                } else {
-                    $acw->user()->attach($value, ['author_type' => 2]);
-                }
-                //$acw->user()->attach($value);
-            }
-            $x++;
-        }
-
+            //     if (Author::where('author_name', '=', $value)->first() == null) {
+                //         $author = new Author;
+                //         $author->author_name = $value;
+                //         $author->save();
+                //         $book->author()->attach($author);
+                //     } else {
+                    //         $author = Author::where('author_name', '=', $value)->first();
+                    //         $authorid = $author->id;
+                    //         $book->author()->detach($authorid);
+                    //         $book->author()->attach($authorid);
+                    //     }
+                    // }
+                    $patent->user()->detach();
+                    $x = 1;
+                    
+                    $length = count($request->moreFields);
+                    foreach ($request->moreFields as $key => $value) {
+                        if ($value['userid'] != null) {
+                            if ($x === 1) {
+                                $acw->user()->attach($value, ['author_type' => 1]);
+                            } else if ($x === $length) {
+                                $acw->user()->attach($value, ['author_type' => 3]);
+                            } else {
+                                $acw->user()->attach($value, ['author_type' => 2]);
+                            }
+                            //$acw->user()->attach($value);
+                        }
+                        $x++;
+                    }
+                    
         $patent->author()->detach();
         $x = 1;
         if (isset($input['fname'][0]) and (!empty($input['fname'][0]))){
@@ -264,10 +264,10 @@ class PatentController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(auth()->user(), 'Delete', 'Delete Patent'));
         $patent = Academicwork::find($id);
         $this->authorize('delete', $patent);
         $patent->delete();
+        event(new \App\Events\UserAction(auth()->user(), 'Delete', 'Delete Patent'));
 
         return redirect()->route('patents.index')
             ->with('success', 'Product deleted successfully');

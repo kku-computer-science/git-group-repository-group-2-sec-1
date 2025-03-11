@@ -13,21 +13,21 @@ class FileUpload extends Controller
   }
 
   public function fileUpload(Request $req){
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create File'));
-        $req->validate([
-        'file' => 'required|mimes:pdf|max:10240'
+      $req->validate([
+          'file' => 'required|mimes:pdf|max:10240'
         ]);
-
+        
         $fileModel = new File;
-
+        
         if($req->file()) {
             $fileName = time().'_'.$req->file->getClientOriginalName();
             $filePath = $req->file('file')->storeAs('uploads', $fileName, 'public');
-
+            
             $fileModel->name = time().'_'.$req->file->getClientOriginalName();
             $fileModel->file_path = '/storage/' . $filePath;
             $fileModel->save();
-
+            event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create File'));
+            
             return back()
             ->with('success','File has been uploaded.')
             ->with('file', $fileName);
@@ -47,15 +47,15 @@ class FileUpload extends Controller
      }
 public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update File'));
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
         ]);
-
+        
         $post = Post::find($id);
-    
+        
         $post->update($request->all());
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update File'));
     
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully.');

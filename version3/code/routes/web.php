@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportReportController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -110,11 +111,19 @@ Route::group(['middleware' => ['isAdmin', 'auth', 'PreventBackHistory']], functi
     // Route::resource('dashboard',DashboardController::class);
 
     Route::get('importfiles', [ImportExportController::class, 'index'])->name('importfiles');
+    Route::get('/getVisitors', [ExportReportController::class, 'getVisitors']);
+
+    
 
 });
 Route::group(['middleware' => ['isAdmin']], function () {
+
     // Route::get('/dashboard', [ProfileuserController::class, 'dashboardIndex'])->name('dashboard');
     Route::get('/download-log', [LogController::class, 'downloadLog'])->name('admin.downloadLog');
+    // if u write the function ,please write the route here
+    Route::get('/export-log-report', [ExportReportController::class, 'index'])->name('exportLogReport.index');
+    Route::get('/getVisitors', [ExportReportController::class, 'getVisitors']);
+
 });
 
 

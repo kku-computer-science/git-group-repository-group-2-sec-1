@@ -54,14 +54,14 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Role'));
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
-    
+        
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Role'));
     
         return redirect()->route('roles.index')
             ->with('success', 'Role created successfully.');
@@ -111,17 +111,17 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Role'));
         $this->validate($request, [
             'name' => 'required',
             'permission' => 'required',
         ]);
-    
+        
         $role = Role::find($id);
         $role->name = $request->input('name');
         $role->save();
-    
+        
         $role->syncPermissions($request->input('permission'));
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Role'));
     
         return redirect()->route('roles.index')
             ->with('success', 'Role updated successfully.');
@@ -135,8 +135,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Role'));   
         Role::find($id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Role'));   
         
         return redirect()->route('roles.index')
             ->with('success', 'Role deleted successfully');

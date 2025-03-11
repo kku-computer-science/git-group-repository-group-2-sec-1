@@ -17,7 +17,7 @@ class CourseController extends Controller
     {
         $courses = Course::paginate(10);
         //return $programs;
-		return view('courses.index',compact('courses'))->with('i', (request()->input('page', 1) - 1) * 10);
+        return view('courses.index', compact('courses'))->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -27,7 +27,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -38,7 +38,6 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Course'));
         $r = $request->validate([
             'course_code' => 'required',
             'course_name' => 'required',
@@ -48,14 +47,15 @@ class CourseController extends Controller
         $course = Course::find($courseId);
         $degree = Degree::find(2);
         //$course=Course::updateOrCreate(['id' => $courseId], ['course_code' => $request->course_code, 'course_name' => $request->course_name]);
-        
+
         $degree->course()->updateOrCreate(['id' => $courseId], ['course_code' => $request->course_code, 'course_name' => $request->course_name]);
-    
-        
+
+
         if (empty($request->pro_id))
             $msg = 'Customer entry created successfully.';
         else
             $msg = 'Customer data is updated successfully';
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create Course'));
         return redirect()->route('courses.index')->with('success', $msg);
 
     }
@@ -80,8 +80,8 @@ class CourseController extends Controller
     public function edit($id)
     {
         $where = array('id' => $id);
-		$course = Course::where($where)->first();
-		return response()->json($course);
+        $course = Course::where($where)->first();
+        return response()->json($course);
     }
 
     /**
@@ -104,8 +104,8 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Course'));
         $course = Course::where('id', $id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete Course'));
         return response()->json($course);
     }
 }

@@ -75,7 +75,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'lname_en' => 'required',
@@ -87,10 +86,10 @@ class UserController extends Controller
             // 'position' => 'required',
             'sub_cat' => 'required',
         ]);
-
+        
         //$input = $request->all();
         //$input['password'] = Hash::make($input['password']);
-
+        
         //$user = User::create($input);
         $user = User::create([
             'email' => $request->email,
@@ -101,16 +100,17 @@ class UserController extends Controller
             'lname_th' => $request->lname_th,
             // 'position' =>  $request->position,
         ]);
-
+        
         $user->assignRole($request->roles);
-
+        
         //dd($request->deps->id);
         $pro_id = $request->sub_cat;
         //return $pro_id;
         //$dep = Program::where('department_name_EN','=',$request->deps)->first()->id;
         $program = Program::find($pro_id);
-
+        
         $user = $user->program()->associate($program)->save();
+        event(new \App\Events\UserAction(Auth::user(), 'Create', 'Create User'));
 
         return redirect()->route('users.index')
             ->with('success', 'User created successfully.');
@@ -137,14 +137,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        event(new \App\Events\UserAction(Auth::user(), 'Edit', 'Edit User'));
         $user = User::find($id);
         $departments = Department::all();
         $id = $user->program->department_id;
         $programs = Program::whereHas('department', function ($q) use ($id) {
             $q->where('id', '=', $id);
         })->get();
-
+        
         $roles = Role::pluck('name', 'name')->all();
         $deps = Department::pluck('department_name_EN', 'department_name_EN')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
@@ -161,7 +160,6 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update User'));
         $this->validate($request, [
             'fname_en' => 'required',
             'fname_th' => 'required',
@@ -171,31 +169,32 @@ class UserController extends Controller
             'password' => 'confirmed',
             'roles' => 'required'
         ]);
-
+        
         $input = $request->all();
-
+        
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
             event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Password'));
         } else {
             $input = Arr::except($input, array('password'));
         }
-
+        
         $user = User::find($id);
         $user->update($input);
-
+        
         DB::table('model_has_roles')
-            ->where('model_id', $id)
-            ->delete();
-
+        ->where('model_id', $id)
+        ->delete();
+        
         $user->assignRole($request->input('roles'));
         $pro_id = $request->sub_cat;
         $program = Program::find($pro_id);
         $user->program()->associate($program);
         $user->save();
-
+        
         $user->update($request->all());
-
+        
+        event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update User'));
         LogHelper::writeLog('edit user', 'User updated: ' . $user->email);
 
         return redirect()->route('users.index')
@@ -211,8 +210,8 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete User'));
         User::find($id)->delete();
+        event(new \App\Events\UserAction(Auth::user(), 'Delete', 'Delete User'));
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');
     }

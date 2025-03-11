@@ -110,8 +110,6 @@ class ProfileuserController extends Controller
     function updateInfo(Request $request)
     {
         event(new \App\Events\UserAction(Auth::user(), 'Update', 'Update Profile'));
-
-
         $validator = Validator::make($request->all(), [
             'fname_en' => 'required',
             'lname_en' => 'required',
